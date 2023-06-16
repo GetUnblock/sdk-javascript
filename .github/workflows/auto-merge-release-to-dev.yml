@@ -9,15 +9,15 @@ jobs:
     timeout-minutes: 2
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set Git config
-      run: |
+      - uses: actions/checkout@v2
+      - name: Set Git config
+        run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "Github Actions"
-    - name: Merge master back to dev
-      run: |
+      - name: Merge release back to dev
+        run: |
           git fetch --unshallow
           git checkout dev
           git pull
-          git merge --no-ff master -m "Auto-merge master back to dev"
+          it merge --no-ff origin/${{ github.event.pull_request.head.ref }} -m "Auto-merge release back to dev"
           git push
