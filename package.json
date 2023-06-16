@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
-    "lint": "eslint '(src|tests)/**/*.{ts,js}'",
+    "lint": "eslint 'src/**/*.{ts,js}' 'tests/**/*.{ts,js}'",
+    "prettier": "prettier --check '(src|tests)/**/*.{ts,js,json}'",
     "format": "prettier --write '(src|tests)/**/*.{ts,js,json}'",
     "pre-commit": "prettier -c ./(src|tests) && eslint ./(src|tests) && npx jest -o",
     "start": "tsc && node dist/index.js",
