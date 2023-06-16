@@ -19,5 +19,5 @@ jobs:
           git fetch --unshallow
           git checkout dev
           git pull
-          git merge --no-ff origin/${{ github.event.pull_request.head.ref }} -m "Auto-merge release back to dev"
+          git merge --no-ff origin/${{ github.event.pull_request.base.ref }} -m "Auto-merge: ${{ github.event.pull_request.title }}"
           git push
