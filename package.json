@@ -40,6 +40,11 @@
     "collectCoverageFrom": [
       "**/src/**/*.ts"
     ],
+    "coverageThreshold": {
+      "global": {
+        "lines": 90
+      }
+    },
     "coverageDirectory": "<rootDir>/../coverage",
     "testEnvironment": "node"
   }
