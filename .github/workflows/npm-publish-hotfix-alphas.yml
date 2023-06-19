@@ -33,9 +33,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          registry-url: 'https://registry.npmjs.org'
       - run: npm ci
       - run: npm run build
       - run: |
           PACKAGE_VERSION="$(cut -c 9- <<<'${{github.ref_name}}')"
           npm version "${PACKAGE_VERSION}-fix.${{ steps.current-time.outputs.formattedTime }}"
       - run: npm publish --tag alpha
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
