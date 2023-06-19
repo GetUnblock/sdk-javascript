@@ -3,7 +3,7 @@ name: Publish Release Alpha
 on:
   pull_request:
     branches: [release/**/*]
-    types: [synchronize, ready_for_review]
+    types: [synchronize, ready_for_review, opened]
 
 jobs:
   build:
@@ -36,5 +36,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm run build
-      - run: npm version "${PACKAGE_VERSION}-alpha.${{ steps.current-time.outputs.formattedTime }}"
+      - run: |
+          PACKAGE_VERSION="$(cut -c 10- <<<'${{github.event.pull_request.base.ref}}')"
+          npm version "${PACKAGE_VERSION}-alpha.${{ steps.current-time.outputs.formattedTime }}"
       - run: npm publish --tag alpha

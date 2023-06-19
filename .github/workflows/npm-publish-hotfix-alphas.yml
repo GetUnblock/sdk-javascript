@@ -35,5 +35,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm run build
-      - run: npm version "${PACKAGE_VERSION}-fix.${{ steps.current-time.outputs.formattedTime }}"
+      - run: |
+          PACKAGE_VERSION="$(cut -c 9- <<<'${{github.ref_name}}')"
+          npm version "${PACKAGE_VERSION}-fix.${{ steps.current-time.outputs.formattedTime }}"
       - run: npm publish --tag alpha
