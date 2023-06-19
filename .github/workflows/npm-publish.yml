@@ -1,0 +1,34 @@
+name: Publish Version
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set Git config
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Github Actions"
+      - name: Create branch for alpha deploy
+        run: |
+          PACKAGE_VERSION="$(cut -c 2- <<<'${{github.ref_name}}')"
+          git fetch --unshallow
+          git checkout -b "stable-${PACKAGE_VERSION}"
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run build
+      - run: npm version "${PACKAGE_VERSION}"
+      - run: npm publish

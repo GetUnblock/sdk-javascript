@@ -1,6 +1,6 @@
 {
-  "name": "sdk-javascript",
-  "version": "0.0.1",
+  "name": "@getunblock/sdk",
+  "version": "0.1.0",
   "description": "SDK for Unblock API.",
   "main": "dist/index.js",
   "scripts": {

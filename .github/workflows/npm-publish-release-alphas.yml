@@ -1,0 +1,40 @@
+name: Publish Release Alpha
+
+on:
+  pull_request:
+    branches: [release/**/*]
+    types: [synchronize, ready_for_review]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set Git config
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Github Actions"
+      - name: Create branch for alpha deploy
+        run: |
+          PACKAGE_VERSION="$(cut -c 10- <<<'${{github.event.pull_request.base.ref}}')"
+          git fetch --unshallow
+          git checkout -b "alpha-${PACKAGE_VERSION}"
+      - name: Get current time
+        uses: josStorer/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYYMMDDHHmmss
+          utcOffset: '+00:00'
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run build
+      - run: npm version "${PACKAGE_VERSION}-alpha.${{ steps.current-time.outputs.formattedTime }}"
+      - run: npm publish --tag alpha
