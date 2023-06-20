@@ -1,29 +1,32 @@
-import { FacadeFactory, IFacadeFactory } from './FacadeFactory';
-import { AuthFacade, IAuthFacade } from './auth/AuthFacade';
+import { IServiceFactory, ServiceFactory } from './ServiceFactory';
+import { AuthService, IAuthService } from './auth/AuthService';
 import { SdkSettings, SdkSettingsParams } from './definitions';
 
 export interface ISingleton {
-  auth: IAuthFacade;
+  auth: IAuthService;
   setup(props: SdkSettings): Promise<void>;
 }
 
 export class Singleton implements ISingleton {
   private static instance: Singleton;
 
-  private authFacade: IAuthFacade;
+  private authService: IAuthService;
 
-  private constructor(private facadeFactory: IFacadeFactory, private props: SdkSettings) {
-    this.authFacade = new AuthFacade(this.props);
+  private constructor(private ServiceFactory: IServiceFactory, private props: SdkSettings) {
+    this.authService = new AuthService(this.props);
   }
 
   public static getInstance(): Singleton {
     if (!Singleton.instance) {
       const props: SdkSettings = {
+        timeoutMs: 10000,
+        prod: false,
+        apiKey: '1235',
         prodUrl: 'https://getunblock.com',
         sandBoxUrl: 'https://sandbox.getunblock.com',
       };
-      const facadeFactory = new FacadeFactory(props);
-      Singleton.instance = new Singleton(facadeFactory, props);
+      const serviceFactory: IServiceFactory = new ServiceFactory(props);
+      Singleton.instance = new Singleton(serviceFactory, props);
     }
 
     return Singleton.instance;
@@ -44,13 +47,12 @@ export class Singleton implements ISingleton {
     throw new Error('Method not implemented.');
   }
 
-  // For the SDK this will act like a static value... Don't you think it could be typed as AUTH instead??
-  get auth(): IAuthFacade {
+  get auth(): IAuthService {
     // If settings are defined
-    if (!this.authFacade) {
-      this.authFacade = this.facadeFactory.createAuthFacade();
+    if (!this.authService) {
+      this.authService = this.ServiceFactory.createAuthService();
     }
-    return this.authFacade;
+    return this.authService;
     // Else thorw exception
   }
 }

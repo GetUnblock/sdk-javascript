@@ -25,16 +25,20 @@ export type SessionRequest = {
 };
 
 // Responses
-type SiweLoginResponse = {
+export type SiweLoginResponse = {
   userUuid: string;
   unblockSessionId: string;
 };
 
-type CodeLoginResponse = {
+export type EmailLoginResponse = {
   message: string;
   userUuid: string;
 };
 
 export type LoginResponse = {
   authenticationMethod: AuthenticationMethod;
-} & (SiweLoginResponse | CodeLoginResponse);
+} & (SiweLoginResponse | EmailLoginResponse);
+
+export type SessionResponse = {
+  session_id: string;
+};
