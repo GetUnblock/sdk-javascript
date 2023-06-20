@@ -1,9 +1,8 @@
-import { HelloWorld } from '../src/index';
+import { SDK } from '../src';
+import { Singleton } from '../src/Singleton';
 
-describe('hello-world', () => {
-  it('isValid', () => {
-    const obj = new HelloWorld();
-
-    expect(obj.sayHello()).toBe('Hello World');
+describe('index', () => {
+  it('Should SDK be defined', () => {
+    expect(SDK).toBeInstanceOf(Singleton);
   });
 });

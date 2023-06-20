@@ -1,5 +1,3 @@
-export class HelloWorld {
-  sayHello(): string {
-    return 'Hello World';
-  }
-}
+import { ISingleton, Singleton } from './Singleton';
+
+export const SDK: ISingleton = Singleton.getInstance();
