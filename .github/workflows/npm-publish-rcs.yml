@@ -3,12 +3,13 @@ name: Publish Release Candidate
 on:
   pull_request:
     branches: [main]
-    types: [synchronize, ready_for_review]
+    types: [synchronize, ready_for_review, opened]
 
 jobs:
   publish-rc-from-release:
     if: contains(github.ref_name, 'release') && github.event.pull_request.draft == false
     runs-on: ubuntu-latest
+    environment: PROD
     strategy:
       matrix:
         node-version: [18.x]
@@ -46,6 +47,7 @@ jobs:
   publish-rc-from-hotfix:
     if: contains(github.ref_name, 'hotfix') && github.event.pull_request.draft == false
     runs-on: ubuntu-latest
+    environment: PROD
     strategy:
       matrix:
         node-version: [18.x]
