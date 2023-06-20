@@ -40,5 +40,5 @@ export type LoginResponse = {
 } & (SiweLoginResponse | EmailLoginResponse);
 
 export type SessionResponse = {
-  session_id: string;
+  sessionId: string;
 };

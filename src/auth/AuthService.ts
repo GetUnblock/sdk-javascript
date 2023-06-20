@@ -11,7 +11,7 @@ import {
   SiweLoginResponse,
 } from './definitions';
 
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 
 export interface IAuthService {
   login(data: LoginRequest): Promise<LoginResponse>;
@@ -56,10 +56,22 @@ export class AuthService implements IAuthService {
         Authorization: apiKey,
       },
     };
-
-    const response: AxiosResponse<SessionResponse> = await this.axiosClient.get(path, config);
-
-    return response.data;
+    try {
+      const response: AxiosResponse<{ session_id: string }> = await this.axiosClient.get(
+        path,
+        config,
+      );
+      return {
+        sessionId: response.data.session_id,
+      };
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const axiosError = error as AxiosError;
+        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
+      } else {
+        throw new Error(`Unexpected error': ${error}`);
+      }
+    }
   }
 
   private async authenticateSiwe(credentials: SiweLoginRequest): Promise<SiweLoginResponse> {
@@ -80,13 +92,15 @@ export class AuthService implements IAuthService {
       },
     };
 
-    const response: AxiosResponse<SiweLoginResponse> = await this.axiosClient.post(
-      path,
-      body,
-      config,
-    );
+    const response: AxiosResponse<{
+      user_uuid: string;
+      unblock_session_id: string;
+    }> = await this.axiosClient.post(path, body, config);
 
-    return response.data;
+    return {
+      userUuid: response.data.user_uuid,
+      unblockSessionId: response.data.unblock_session_id,
+    };
   }
 
   private async authenticateEmail(credentials: EmailLoginRequest): Promise<EmailLoginResponse> {
@@ -106,12 +120,13 @@ export class AuthService implements IAuthService {
       },
     };
 
-    const response: AxiosResponse<EmailLoginResponse> = await this.axiosClient.post(
-      path,
-      body,
-      config,
-    );
-
-    return response.data;
+    const response: AxiosResponse<{
+      user_uuid: string;
+      message: string;
+    }> = await this.axiosClient.post(path, body, config);
+    return {
+      message: response.data.message,
+      userUuid: response.data.user_uuid,
+    };
   }
 }
