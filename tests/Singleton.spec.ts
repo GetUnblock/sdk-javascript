@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import * as SingletonModule from '../src/Singleton';
-import { AuthFacade } from '../src/auth/AuthFacade';
+import { AuthService } from '../src/auth/AuthService';
 import { SdkSettings } from '../src/definitions';
 
 describe('Singleton', () => {
@@ -15,7 +15,7 @@ describe('Singleton', () => {
   describe('auth', () => {
     it('Should return a AuthService type', () => {
       const SDK = Singleton.getInstance();
-      expect(SDK.auth).toBeInstanceOf(AuthFacade);
+      expect(SDK.auth).toBeInstanceOf(AuthService);
     });
   });
 
@@ -30,6 +30,7 @@ describe('Singleton', () => {
         sandBoxUrl: 'https://sandbox.getunblock.com',
         apiKey: `API-Key ${faker.datatype.string(128)}`,
         prod: false,
+        timeoutMs: 10000,
       };
 
       // Act
@@ -49,6 +50,7 @@ describe('Singleton', () => {
         sandBoxUrl: 'https://sandbox.getunblock.com',
         apiKey: `API-Key ${faker.datatype.string(128)}`,
         prod: false,
+        timeoutMs: 10000,
       };
 
       let resultedError;

@@ -2,13 +2,11 @@ import { SdkSettings } from '../definitions';
 import {
   AuthenticationMethod,
   EmailLoginRequest,
-  EmailLoginResponse,
   LoginRequest,
   LoginResponse,
   SessionRequest,
   SessionResponse,
   SiweLoginRequest,
-  SiweLoginResponse,
 } from './definitions';
 
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
@@ -30,13 +28,11 @@ export class AuthService implements IAuthService {
   login(credentials: LoginRequest): Promise<LoginResponse> {
     switch (credentials.authenticationMethod) {
       case AuthenticationMethod.SIWE:
-        this.authenticateSiwe(credentials);
-        break;
+        return this.authenticateSiwe(credentials);
       case AuthenticationMethod.EMAIL:
-        this.authenticateEmail(credentials);
+        return this.authenticateEmail(credentials);
         break;
     }
-    throw new Error('Method not implemented.');
   }
 
   async emailSession(credentials: SessionRequest): Promise<SessionResponse> {
@@ -74,7 +70,7 @@ export class AuthService implements IAuthService {
     }
   }
 
-  private async authenticateSiwe(credentials: SiweLoginRequest): Promise<SiweLoginResponse> {
+  private async authenticateSiwe(credentials: SiweLoginRequest): Promise<LoginResponse> {
     const { message, signature } = credentials;
     const { apiKey } = this.props;
 
@@ -98,12 +94,13 @@ export class AuthService implements IAuthService {
     }> = await this.axiosClient.post(path, body, config);
 
     return {
+      authenticationMethod: AuthenticationMethod.SIWE,
       userUuid: response.data.user_uuid,
       unblockSessionId: response.data.unblock_session_id,
     };
   }
 
-  private async authenticateEmail(credentials: EmailLoginRequest): Promise<EmailLoginResponse> {
+  private async authenticateEmail(credentials: EmailLoginRequest): Promise<LoginResponse> {
     const { userUuid } = credentials;
     const { apiKey } = this.props;
 
@@ -125,6 +122,7 @@ export class AuthService implements IAuthService {
       message: string;
     }> = await this.axiosClient.post(path, body, config);
     return {
+      authenticationMethod: AuthenticationMethod.EMAIL,
       message: response.data.message,
       userUuid: response.data.user_uuid,
     };
