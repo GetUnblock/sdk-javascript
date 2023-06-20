@@ -34,7 +34,7 @@ export class Singleton implements ISingleton {
       Object.assign(this.props, props);
     } else {
       // Handle errors better in short future
-      throw new Error('');
+      throw new Error('Error to be defined');
     }
   }
 

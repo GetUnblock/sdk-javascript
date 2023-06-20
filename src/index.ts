@@ -1,3 +1,4 @@
 import { ISingleton, Singleton } from './Singleton';
 
-export const SDK: ISingleton = Singleton.getInstance();
+const SDK: ISingleton = Singleton.getInstance();
+export default SDK;

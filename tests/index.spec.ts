@@ -1,4 +1,4 @@
-import { SDK } from '../src';
+import SDK from '../src';
 import { Singleton } from '../src/Singleton';
 
 describe('index', () => {
