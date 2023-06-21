@@ -31,7 +31,6 @@ export class AuthService implements IAuthService {
         return this.authenticateSiwe(credentials);
       case AuthenticationMethod.EMAIL:
         return this.authenticateEmail(credentials);
-        break;
     }
   }
 
@@ -41,7 +40,7 @@ export class AuthService implements IAuthService {
 
     const path = '/auth/login/session';
     const params = {
-      userUuid: userUuid,
+      user_uuid: userUuid,
       code: code,
     };
 
@@ -57,6 +56,7 @@ export class AuthService implements IAuthService {
         path,
         config,
       );
+
       return {
         sessionId: response.data.session_id,
       };
@@ -88,16 +88,25 @@ export class AuthService implements IAuthService {
       },
     };
 
-    const response: AxiosResponse<{
-      user_uuid: string;
-      unblock_session_id: string;
-    }> = await this.axiosClient.post(path, body, config);
+    try {
+      const response: AxiosResponse<{
+        user_uuid: string;
+        unblock_session_id: string;
+      }> = await this.axiosClient.post(path, body, config);
 
-    return {
-      authenticationMethod: AuthenticationMethod.SIWE,
-      userUuid: response.data.user_uuid,
-      unblockSessionId: response.data.unblock_session_id,
-    };
+      return {
+        authenticationMethod: AuthenticationMethod.SIWE,
+        userUuid: response.data.user_uuid,
+        unblockSessionId: response.data.unblock_session_id,
+      };
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const axiosError = error as AxiosError;
+        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
+      } else {
+        throw new Error(`Unexpected error': ${error}`);
+      }
+    }
   }
 
   private async authenticateEmail(credentials: EmailLoginRequest): Promise<LoginResponse> {
@@ -117,14 +126,24 @@ export class AuthService implements IAuthService {
       },
     };
 
-    const response: AxiosResponse<{
-      user_uuid: string;
-      message: string;
-    }> = await this.axiosClient.post(path, body, config);
-    return {
-      authenticationMethod: AuthenticationMethod.EMAIL,
-      message: response.data.message,
-      userUuid: response.data.user_uuid,
-    };
+    try {
+      const response: AxiosResponse<{
+        user_uuid: string;
+        message: string;
+      }> = await this.axiosClient.post(path, body, config);
+
+      return {
+        authenticationMethod: AuthenticationMethod.EMAIL,
+        message: response.data.message,
+        userUuid: response.data.user_uuid,
+      };
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const axiosError = error as AxiosError;
+        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
+      } else {
+        throw new Error(`Unexpected error': ${error}`);
+      }
+    }
   }
 }

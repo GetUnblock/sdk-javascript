@@ -1,4 +1,10 @@
-import { ISingleton, Singleton } from './Singleton';
+import { SDK } from './SDK';
+import { ServiceFactory } from './ServiceFactory';
+import { SdkSettings } from './definitions';
 
-const SDK: ISingleton = Singleton.getInstance();
-export default SDK;
+let createdInstanceCount = 0;
+const GetUnblock = (props: SdkSettings): SDK => {
+  createdInstanceCount++;
+  return new SDK(createdInstanceCount, new ServiceFactory(props), props);
+};
+export default GetUnblock;
