@@ -57,11 +57,13 @@ export type NewRemoteUserBankAccount = {
   sortCode: string;
 };
 
-// REQUESTS
-export type RemoteUserBankAccountRequest = {
+export type UserSessionData = {
   unblockSessionID: string;
   userUuid: string;
-} & CreateRemoteUserBankAccount;
+};
+
+// REQUESTS
+export type RemoteUserBankAccountRequest = UserSessionData & CreateRemoteUserBankAccount;
 
 // RESPONSES
 export type RemoteUserBankAccountResponse = NewRemoteUserBankAccount;

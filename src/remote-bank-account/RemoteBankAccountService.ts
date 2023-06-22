@@ -8,13 +8,14 @@ import {
   UnblockEurAccountDetails,
   UnblockGbpAccountDetails,
   UnblockRemoteUserBankAccount,
+  UserSessionData,
 } from './definitions';
 
 export interface IRemoteBankAccount {
   createRemoteUserBankAccount(
     dto: RemoteUserBankAccountRequest,
   ): Promise<RemoteUserBankAccountResponse>;
-  getAllremoteBankAccounts(dto: any): Promise<void>;
+  getAllRemoteBankAccounts(dto: UserSessionData): Promise<RemoteUserBankAccountResponse[]>;
   changeMainUserRemoteBankAccount(dto: any): Promise<void>;
   getRemoteBankAccountByUuid(dto: any): Promise<void>;
 }
@@ -84,21 +85,8 @@ export class RemoteBankAccountService implements IRemoteBankAccount {
         body,
         config,
       );
-      const newRemoteBankAccount: NewRemoteUserBankAccount = {
-        firstName: response.data.first_name,
-        lastName: response.data.last_name,
-        currency: response.data.currency,
-        mainBeneficiary: response.data.main_beneficiary,
-        iban: response.data.iban,
-        bic: response.data.bic,
-        accountNumber: response.data.account_number,
-        createdAt: response.data.created_at,
-        updatedAt: response.data.updated_at,
-        accountName: response.data.account_name,
-        bankName: response.data.bank_name,
-        uuid: response.data.uuid,
-        sortCode: response.data.sort_code,
-      };
+      const newRemoteBankAccount: NewRemoteUserBankAccount =
+        this.mapToRemoteUserBankAccountResponse([response.data])[0];
 
       return newRemoteBankAccount;
     } catch (error) {
@@ -111,25 +99,35 @@ export class RemoteBankAccountService implements IRemoteBankAccount {
     }
   }
 
-  async getAllremoteBankAccounts(dto: any): Promise<void> {
-    console.log(dto);
-    return;
+  async getAllRemoteBankAccounts(dto: UserSessionData): Promise<RemoteUserBankAccountResponse[]> {
+    const path = `/user/${dto.userUuid}/bank-account/remote`;
+    const config = {
+      headers: {
+        accept: 'application/json',
+        Authorization: this.props.apiKey,
+        'unblock-session-id': dto.unblockSessionID,
+      },
+    };
 
-    // const options = {
-    //   method: 'GET',
-    //   url: 'https://sandbox.getunblock.com/user/user_uuid/bank-account/remote',
-    //   headers: {accept: 'application/json'}
-    // };
+    try {
+      const resposne: AxiosResponse<UnblockRemoteUserBankAccount[]> = await this.axiosClient.get(
+        path,
+        config,
+      );
 
-    // axios
-    //   .request(options)
-    //   .then(function (response) {
-    //     console.log(response.data);
-    //   })
-    //   .catch(function (error) {
-    //     console.error(error);
-    //   });
+      const remoteUserBankAccounts: RemoteUserBankAccountResponse[] =
+        this.mapToRemoteUserBankAccountResponse(resposne.data);
+      return remoteUserBankAccounts;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const axiosError = error as AxiosError;
+        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
+      } else {
+        throw new Error(`Unexpected error': ${error}`);
+      }
+    }
   }
+
   async changeMainUserRemoteBankAccount(dto: any): Promise<void> {
     console.log(dto);
 
@@ -140,6 +138,7 @@ export class RemoteBankAccountService implements IRemoteBankAccount {
     // };
     return;
   }
+
   async getRemoteBankAccountByUuid(dto: any): Promise<void> {
     console.log(dto);
     // const options = {
@@ -149,5 +148,25 @@ export class RemoteBankAccountService implements IRemoteBankAccount {
     // };
 
     return;
+  }
+
+  private mapToRemoteUserBankAccountResponse(
+    input: UnblockRemoteUserBankAccount[],
+  ): NewRemoteUserBankAccount[] {
+    return input.map((item) => ({
+      firstName: item.first_name,
+      lastName: item.last_name,
+      currency: item.currency,
+      mainBeneficiary: item.main_beneficiary,
+      iban: item.iban,
+      bic: item.bic,
+      accountNumber: item.account_number,
+      createdAt: item.created_at,
+      updatedAt: item.updated_at,
+      accountName: item.account_name,
+      bankName: item.bank_name,
+      uuid: item.uuid,
+      sortCode: item.sort_code,
+    }));
   }
 }
