@@ -3,12 +3,17 @@
   "version": "0.1.0",
   "description": "SDK for Unblock API.",
   "main": "dist/index.js",
+  "files": [
+    "dist",
+    "README.md",
+    "package.json"
+  ],
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
     "lint": "eslint 'src/**/*.{ts,js}' 'tests/**/*.{ts,js}'",
     "prettier": "prettier --check '(src|tests)/**/*.{ts,js,json}'",
     "format": "prettier --write '(src|tests)/**/*.{ts,js,json}'",
-    "pre-commit": "prettier -c ./src && prettier -c ./tests && eslint ./src && eslint ./tests && npx jest -o",
+    "pre-commit": "prettier -c ./src && prettier -c ./tests && eslint ./src && eslint ./tests",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "prepare": "husky install"
@@ -16,13 +21,15 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "axios": "^1.4.0"
+    "axios": "^1.4.0",
+    "luxon": "^3.3.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@types/jest": "^29.5.2",
+    "@types/luxon": "^3.3.0",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
-    "@faker-js/faker": "^7.6.0",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
