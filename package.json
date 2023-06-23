@@ -9,7 +9,7 @@
     "prettier": "prettier --check '(src|tests)/**/*.{ts,js,json}'",
     "format": "prettier --write '(src|tests)/**/*.{ts,js,json}'",
     "pre-commit": "prettier -c ./src && prettier -c ./tests && eslint ./src && eslint ./tests && npx jest -o",
-    "start": "tsc && node dist/index.js",
+    "build-and-run": "tsc tsc --build tsconfig.build.json && node dist/index.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "prepare": "husky install"
