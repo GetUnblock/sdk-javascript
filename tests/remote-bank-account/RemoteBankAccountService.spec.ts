@@ -142,6 +142,7 @@ describe('RemoteBankAccountService', () => {
         resultedPath = path;
 
         const axiosResponse = {
+          status: 200,
           data: '',
         } as AxiosResponse<any>;
 
@@ -297,6 +298,38 @@ describe('RemoteBankAccountService', () => {
       expect(resultedError).toBeInstanceOf(Error);
       expect((resultedError as Error).message).toBe(expectedErrorMesage);
     });
+
+    it('should throw invalid account details error', async () => {
+      // Arrange
+      const invalidDto = {
+        ...dtoEur,
+        accountDetails: {
+          invalidProperty: '',
+        },
+      };
+
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+      jest.spyOn(axiosClient, 'post').mockResolvedValueOnce('');
+
+      const expectedErrorMesage = 'Invalid account details';
+      let resultedError;
+
+      // Act
+      const service = new RemoteBankAccountService(props);
+
+      try {
+        await service.createRemoteUserBankAccount(
+          invalidDto as unknown as RemoteUserBankAccountRequest,
+        );
+      } catch (error) {
+        resultedError = error;
+      }
+
+      // Assert
+      expect(axiosClient.post).not.toHaveBeenCalled();
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
   });
 
   describe('getAllRemoteBankAccounts', () => {
@@ -320,6 +353,7 @@ describe('RemoteBankAccountService', () => {
         resultedPath = path;
 
         const axiosResponse = {
+          status: 200,
           data: [],
         } as AxiosResponse<any>;
 
@@ -556,6 +590,134 @@ describe('RemoteBankAccountService', () => {
 
   describe('getRemoteBankAccountByUuid', () => {
     // Happy
+    it('should call axios with correct method, path, body and config', async () => {
+      // Arrange
+      const expectedPath = `/user/${userUuid}/bank-account/remote/${uuid}`;
+      const expectedConfig = {
+        headers: {
+          accept: 'application/json',
+          Authorization: props.apiKey,
+          'unblock-session-id': unblockSessionID,
+        },
+      };
+
+      let resultedPath, resultedConfig;
+
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+      jest.spyOn(axiosClient, 'get').mockImplementationOnce((path, config) => {
+        resultedConfig = config;
+        resultedPath = path;
+
+        const axiosResponse = {
+          status: 200,
+          data: '',
+        } as AxiosResponse<any>;
+
+        return Promise.resolve(axiosResponse);
+      });
+
+      // Act
+      const service = new RemoteBankAccountService(props);
+      await service.getRemoteBankAccountByUuid({ ...userSessionData, accountUuid: uuid });
+
+      // Assert
+      expect(axiosClient.get).toBeCalledTimes(1);
+      expect(resultedPath).toBe(expectedPath);
+      expect(resultedConfig).toStrictEqual(expectedConfig);
+    });
+
+    it('should return a remote bank account', async () => {
+      // Arrange
+
+      const expectedResponse: RemoteUserBankAccountResponse = {
+        firstName: firstName,
+        lastName: lastName,
+        currency: accountDetailsGbp.currency,
+        mainBeneficiary: dtoGbp.mainBeneficiary,
+        iban: '',
+        bic: bic,
+        accountNumber: accountDetailsGbp.accountNumber,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+        accountName: dtoGbp.accountName,
+        bankName: bankName,
+        uuid: uuid,
+        sortCode: accountDetailsGbp.sortCode,
+      };
+
+      const responseData: UnblockRemoteUserBankAccount = {
+        first_name: firstName,
+        last_name: lastName,
+        currency: bodyAccountDetailsGbp.currency,
+        main_beneficiary: bodyGbp.main_beneficiary,
+        iban: '',
+        bic: bic,
+        account_number: bodyAccountDetailsGbp.account_number,
+        created_at: createdAt,
+        updated_at: updatedAt,
+        account_name: bodyGbp.account_name,
+        bank_name: bankName,
+        uuid: uuid,
+        sort_code: bodyAccountDetailsGbp.sort_code,
+      };
+
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+      jest.spyOn(axiosClient, 'get').mockResolvedValueOnce({ data: responseData });
+
+      // Act
+      const service = new RemoteBankAccountService(props);
+      const result = await service.getRemoteBankAccountByUuid({
+        ...userSessionData,
+        accountUuid: uuid,
+      });
+
+      // Assert
+      expect(result).toStrictEqual(expectedResponse);
+    });
+
     // Sad
+    it('should throw expected Axios error', async () => {
+      // Arrange
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
+
+      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      let resultedError;
+
+      // Act
+      const service = new RemoteBankAccountService(props);
+
+      try {
+        await service.getRemoteBankAccountByUuid({ ...userSessionData, accountUuid: uuid });
+      } catch (error) {
+        resultedError = error;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
+
+    it('should throw expected error', async () => {
+      // Arrange
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
+
+      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      let resultedError;
+
+      // Act
+      const service = new RemoteBankAccountService(props);
+
+      try {
+        await service.getRemoteBankAccountByUuid({ ...userSessionData, accountUuid: uuid });
+      } catch (error) {
+        resultedError = error;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
   });
 });

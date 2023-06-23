@@ -17,7 +17,9 @@ export interface IRemoteBankAccount {
   ): Promise<RemoteUserBankAccountResponse>;
   getAllRemoteBankAccounts(dto: UserSessionData): Promise<RemoteUserBankAccountResponse[]>;
   changeMainUserRemoteBankAccount(dto: UserSessionData & { accountUuid: string }): Promise<void>;
-  getRemoteBankAccountByUuid(dto: any): Promise<void>;
+  getRemoteBankAccountByUuid(
+    dto: UserSessionData & { accountUuid: string },
+  ): Promise<RemoteUserBankAccountResponse>;
 }
 
 export class RemoteBankAccountService implements IRemoteBankAccount {
@@ -34,7 +36,6 @@ export class RemoteBankAccountService implements IRemoteBankAccount {
    * Creates a remote user bank account.
    *
    * @param {RemoteUserBankAccountRequest} dto - An object containing user uuid, session id and account information.
-   *
    * @returns {Promise<RemoteUserBankAccountResponse>} A promise that resolves to a response object containing the new bank account details.
    *
    * @throws {Error} Will throw an error if the API request fails or if an unexpected error occurs.
@@ -99,6 +100,14 @@ export class RemoteBankAccountService implements IRemoteBankAccount {
     }
   }
 
+  /**
+   * Retrieve all remote bank accounts for the user
+   *
+   * @param {UserSessionData} dto - An object containing user session data
+   * @returns {Promise<RemoteUserBankAccountResponse[]>} - Returns a promise that resolves to an array of remote bank account responses if the retrieval was successful
+   *
+   * @throws Will throw an error if the Axios request fails, either due to an API error or an unexpected error.
+   */
   async getAllRemoteBankAccounts(dto: UserSessionData): Promise<RemoteUserBankAccountResponse[]> {
     const path = `/user/${dto.userUuid}/bank-account/remote`;
     const config = {
@@ -127,6 +136,14 @@ export class RemoteBankAccountService implements IRemoteBankAccount {
     }
   }
 
+  /**
+   * Change the user's main remote bank account
+   *
+   * @param {UserSessionData & { accountUuid: string }} dto - An object containing user session data and the UUID of the account to be changed
+   * @returns {Promise<void>} - Returns a promise that resolves to void if the change was successful
+   *
+   * @throws Will throw an error if the Axios request fails, either due to an API error or an unexpected error.
+   */
   async changeMainUserRemoteBankAccount(
     dto: UserSessionData & { accountUuid: string },
   ): Promise<void> {
@@ -158,15 +175,42 @@ export class RemoteBankAccountService implements IRemoteBankAccount {
     }
   }
 
-  async getRemoteBankAccountByUuid(dto: any): Promise<void> {
-    console.log(dto);
-    // const options = {
-    //   method: 'GET',
-    //   url: 'https://sandbox.getunblock.com/user/user_uuid/bank-account/remote/account_uuid',
-    //   headers: {accept: 'application/json'}
-    // };
+  /**
+   * Retrieve a remote bank account for the user by account UUID
+   *
+   * @param {UserSessionData & { accountUuid: string }} dto - An object containing user session data and the UUID of the account to be retrieved
+   * @returns {Promise<RemoteUserBankAccountResponse>} - Returns a promise that resolves to a remote bank account response if the retrieval was successful
+   *
+   * @throws Will throw an error if the Axios request fails, either due to an API error or an unexpected error.
+   */
+  async getRemoteBankAccountByUuid(
+    dto: UserSessionData & { accountUuid: string },
+  ): Promise<RemoteUserBankAccountResponse> {
+    const path = `/user/${dto.userUuid}/bank-account/remote/${dto.accountUuid}`;
+    const config = {
+      headers: {
+        accept: 'application/json',
+        Authorization: this.props.apiKey,
+        'unblock-session-id': dto.unblockSessionID,
+      },
+    };
 
-    return;
+    try {
+      const response: AxiosResponse<UnblockRemoteUserBankAccount> = await this.axiosClient.get(
+        path,
+        config,
+      );
+      const remoteUserBankAccounts: RemoteUserBankAccountResponse =
+        this.mapToRemoteUserBankAccountResponse([response.data])[0];
+      return remoteUserBankAccounts;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const axiosError = error as AxiosError;
+        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
+      } else {
+        throw new Error(`Unexpected error': ${error}`);
+      }
+    }
   }
 
   private mapToRemoteUserBankAccountResponse(
