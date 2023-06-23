@@ -5,7 +5,15 @@ import { AuthenticationMethod, LoginRequest, SessionRequest } from '../../src/au
 import { SdkSettings } from '../../src/definitions';
 
 describe('AuthService', () => {
+  jest.mock('axios');
+  const mockedAxios = axios as jest.Mocked<typeof axios>;
+  let axiosClient: AxiosInstance;
   let props: SdkSettings;
+
+  beforeAll(() => {
+    axiosClient = mockedAxios.create();
+  });
+
   beforeEach(() => {
     props = {
       prodUrl: 'https://getunblock.com',
@@ -15,6 +23,11 @@ describe('AuthService', () => {
       timeoutMs: 10000,
     };
   });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
   describe('login', () => {
     // Happy
     it('Should call axios POST with expected headers and body for SIWE authentication', async () => {
@@ -30,9 +43,6 @@ describe('AuthService', () => {
       const expectedUnblockSessionId = faker.datatype.uuid();
       const expectedUserUuid = faker.datatype.uuid();
 
-      const axiosClient = {
-        post: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockImplementationOnce((path, body, config) => {
         resultedBody = body;
@@ -91,9 +101,6 @@ describe('AuthService', () => {
       let resultedPath, resultedBody, resultedConfig;
       const expectedMessage = faker.lorem.sentence();
 
-      const axiosClient = {
-        post: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockImplementationOnce((path, body, config) => {
         resultedBody = body;
@@ -156,9 +163,7 @@ describe('AuthService', () => {
           [faker.random.word()]: faker.datatype.string,
         },
       } as AxiosResponse);
-      const axiosClient = {
-        post: jest.fn(),
-      } as unknown as AxiosInstance;
+
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(axiosError);
 
@@ -191,9 +196,6 @@ describe('AuthService', () => {
         [faker.random.word()]: faker.datatype.string,
       };
 
-      const axiosClient = {
-        post: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(randomError);
 
@@ -228,9 +230,7 @@ describe('AuthService', () => {
           [faker.random.word()]: faker.datatype.string,
         },
       } as AxiosResponse);
-      const axiosClient = {
-        post: jest.fn(),
-      } as unknown as AxiosInstance;
+
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(axiosError);
 
@@ -261,9 +261,7 @@ describe('AuthService', () => {
       const randomError = {
         [faker.random.word()]: faker.datatype.string,
       };
-      const axiosClient = {
-        post: jest.fn(),
-      } as unknown as AxiosInstance;
+
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(randomError);
 
@@ -297,9 +295,6 @@ describe('AuthService', () => {
       let resultedPath, resultedConfig;
       const expectedUnblockSessionId = faker.datatype.uuid();
 
-      const axiosClient = {
-        get: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockImplementationOnce((path, config) => {
         resultedConfig = config;
@@ -356,9 +351,7 @@ describe('AuthService', () => {
           [faker.random.word()]: faker.datatype.string,
         },
       } as AxiosResponse);
-      const axiosClient = {
-        get: jest.fn(),
-      } as unknown as AxiosInstance;
+
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
 
@@ -389,9 +382,7 @@ describe('AuthService', () => {
       const randomError = {
         [faker.random.word()]: faker.datatype.string,
       };
-      const axiosClient = {
-        get: jest.fn(),
-      } as unknown as AxiosInstance;
+
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
