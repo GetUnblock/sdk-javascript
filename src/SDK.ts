@@ -1,16 +1,19 @@
 import { IServiceFactory } from './ServiceFactory';
 import { IAuthService } from './auth/AuthService';
 import { SdkSettings } from './definitions';
+import { IKycService } from './kyc/KycService';
 import { IRemoteBankAccount } from './remote-bank-account/RemoteBankAccountService';
 
 export class SDK {
   private authService: IAuthService;
   private remoteBankAccountService: IRemoteBankAccount;
+  private kycService: IKycService;
 
   constructor(private ServiceFactory: IServiceFactory, private props: SdkSettings) {
     // this.healthCheck();
     this.authService = this.ServiceFactory.createAuthService();
     this.remoteBankAccountService = this.ServiceFactory.createRemoteBankAccountService();
+    this.kycService = this.ServiceFactory.createKycService();
   }
 
   private async healthCheck(): Promise<boolean> {
@@ -24,5 +27,8 @@ export class SDK {
 
   get remoteBankAccount(): IRemoteBankAccount {
     return this.remoteBankAccountService;
+  }
+  get kyc(): IKycService {
+    return this.kycService;
   }
 }
