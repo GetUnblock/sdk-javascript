@@ -149,8 +149,9 @@ describe('RemoteBankAccountService', () => {
         return Promise.resolve(axiosResponse);
       });
 
-      // Act
       const service = new RemoteBankAccountService(props);
+
+      // Act
       await service.createRemoteUserBankAccount(dtoGbp);
 
       // Assert
@@ -199,8 +200,9 @@ describe('RemoteBankAccountService', () => {
         data: responseData,
       });
 
-      // Act
       const service = new RemoteBankAccountService(props);
+
+      // Act
       const result = await service.createRemoteUserBankAccount(dtoGbp);
 
       // Assert
@@ -246,8 +248,9 @@ describe('RemoteBankAccountService', () => {
         data: responseData,
       });
 
-      // Act
       const service = new RemoteBankAccountService(props);
+
+      // Act
       const result = await service.createRemoteUserBankAccount(dtoEur);
 
       // Assert
@@ -263,8 +266,9 @@ describe('RemoteBankAccountService', () => {
       const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
 
-      // Act
       const service = new RemoteBankAccountService(props);
+
+      // Act
 
       try {
         await service.createRemoteUserBankAccount(dtoEur);
@@ -285,8 +289,9 @@ describe('RemoteBankAccountService', () => {
       const expectedErrorMesage = `Unexpected error': ${randomError}`;
       let resultedError;
 
-      // Act
       const service = new RemoteBankAccountService(props);
+
+      // Act
 
       try {
         await service.createRemoteUserBankAccount(dtoEur);
@@ -314,8 +319,9 @@ describe('RemoteBankAccountService', () => {
       const expectedErrorMesage = 'Invalid account details';
       let resultedError;
 
-      // Act
       const service = new RemoteBankAccountService(props);
+
+      // Act
 
       try {
         await service.createRemoteUserBankAccount(
@@ -360,8 +366,9 @@ describe('RemoteBankAccountService', () => {
         return Promise.resolve(axiosResponse);
       });
 
-      // Act
       const service = new RemoteBankAccountService(props);
+
+      // Act
       await service.getAllRemoteBankAccounts(userSessionData);
 
       // Assert
@@ -442,8 +449,9 @@ describe('RemoteBankAccountService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockResolvedValueOnce({ data: responseData });
 
-      // Act
       const service = new RemoteBankAccountService(props);
+
+      // Act
       const result = await service.getAllRemoteBankAccounts(userSessionData);
 
       // Assert
@@ -459,8 +467,9 @@ describe('RemoteBankAccountService', () => {
       const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
 
-      // Act
       const service = new RemoteBankAccountService(props);
+
+      // Act
 
       try {
         await service.getAllRemoteBankAccounts(userSessionData);
@@ -481,8 +490,9 @@ describe('RemoteBankAccountService', () => {
       const expectedErrorMesage = `Unexpected error': ${randomError}`;
       let resultedError;
 
-      // Act
       const service = new RemoteBankAccountService(props);
+
+      // Act
 
       try {
         await service.getAllRemoteBankAccounts(userSessionData);
@@ -528,8 +538,9 @@ describe('RemoteBankAccountService', () => {
         return Promise.resolve(axiosResponse);
       });
 
-      // Act
       const service = new RemoteBankAccountService(props);
+
+      // Act
       await service.changeMainUserRemoteBankAccount({
         ...userSessionData,
         accountUuid: uuid,
@@ -551,8 +562,9 @@ describe('RemoteBankAccountService', () => {
       const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
 
-      // Act
       const service = new RemoteBankAccountService(props);
+
+      // Act
 
       try {
         await service.changeMainUserRemoteBankAccount({ ...userSessionData, accountUuid: uuid });
@@ -573,8 +585,9 @@ describe('RemoteBankAccountService', () => {
       const expectedErrorMesage = `Unexpected error': ${randomError}`;
       let resultedError;
 
-      // Act
       const service = new RemoteBankAccountService(props);
+
+      // Act
 
       try {
         await service.changeMainUserRemoteBankAccount({ ...userSessionData, accountUuid: uuid });
@@ -616,8 +629,9 @@ describe('RemoteBankAccountService', () => {
         return Promise.resolve(axiosResponse);
       });
 
-      // Act
       const service = new RemoteBankAccountService(props);
+
+      // Act
       await service.getRemoteBankAccountByUuid({ ...userSessionData, accountUuid: uuid });
 
       // Assert
@@ -664,8 +678,9 @@ describe('RemoteBankAccountService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockResolvedValueOnce({ data: responseData });
 
-      // Act
       const service = new RemoteBankAccountService(props);
+
+      // Act
       const result = await service.getRemoteBankAccountByUuid({
         ...userSessionData,
         accountUuid: uuid,
@@ -684,8 +699,9 @@ describe('RemoteBankAccountService', () => {
       const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
 
-      // Act
       const service = new RemoteBankAccountService(props);
+
+      // Act
 
       try {
         await service.getRemoteBankAccountByUuid({ ...userSessionData, accountUuid: uuid });
@@ -706,8 +722,9 @@ describe('RemoteBankAccountService', () => {
       const expectedErrorMesage = `Unexpected error': ${randomError}`;
       let resultedError;
 
-      // Act
       const service = new RemoteBankAccountService(props);
+
+      // Act
 
       try {
         await service.getRemoteBankAccountByUuid({ ...userSessionData, accountUuid: uuid });
