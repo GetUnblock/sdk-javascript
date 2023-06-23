@@ -277,7 +277,7 @@ describe('RemoteBankAccountService', () => {
       expect((resultedError as Error).message).toBe(expectedErrorMesage);
     });
 
-    it('should throw expected error', async () => {
+    it('should throw unexpected error', async () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(randomError);
@@ -473,7 +473,7 @@ describe('RemoteBankAccountService', () => {
       expect((resultedError as Error).message).toBe(expectedErrorMesage);
     });
 
-    it('should throw expected error', async () => {
+    it('should throw unexpected error', async () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
@@ -565,7 +565,7 @@ describe('RemoteBankAccountService', () => {
       expect((resultedError as Error).message).toBe(expectedErrorMesage);
     });
 
-    it('should throw expected error', async () => {
+    it('should throw unexpected error', async () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'patch').mockRejectedValueOnce(randomError);
@@ -698,7 +698,7 @@ describe('RemoteBankAccountService', () => {
       expect((resultedError as Error).message).toBe(expectedErrorMesage);
     });
 
-    it('should throw expected error', async () => {
+    it('should throw unexpected error', async () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
