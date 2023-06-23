@@ -16,7 +16,7 @@ export interface IRemoteBankAccount {
     dto: RemoteUserBankAccountRequest,
   ): Promise<RemoteUserBankAccountResponse>;
   getAllRemoteBankAccounts(dto: UserSessionData): Promise<RemoteUserBankAccountResponse[]>;
-  changeMainUserRemoteBankAccount(dto: any): Promise<void>;
+  changeMainUserRemoteBankAccount(dto: UserSessionData & { accountUuid: string }): Promise<void>;
   getRemoteBankAccountByUuid(dto: any): Promise<void>;
 }
 
@@ -110,13 +110,12 @@ export class RemoteBankAccountService implements IRemoteBankAccount {
     };
 
     try {
-      const resposne: AxiosResponse<UnblockRemoteUserBankAccount[]> = await this.axiosClient.get(
+      const response: AxiosResponse<UnblockRemoteUserBankAccount[]> = await this.axiosClient.get(
         path,
         config,
       );
-
       const remoteUserBankAccounts: RemoteUserBankAccountResponse[] =
-        this.mapToRemoteUserBankAccountResponse(resposne.data);
+        this.mapToRemoteUserBankAccountResponse(response.data);
       return remoteUserBankAccounts;
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -128,15 +127,35 @@ export class RemoteBankAccountService implements IRemoteBankAccount {
     }
   }
 
-  async changeMainUserRemoteBankAccount(dto: any): Promise<void> {
-    console.log(dto);
+  async changeMainUserRemoteBankAccount(
+    dto: UserSessionData & { accountUuid: string },
+  ): Promise<void> {
+    const path = `/user/${dto.userUuid}/bank-account/remote`;
 
-    // const options = {
-    //   method: 'PATCH',
-    //   url: 'https://sandbox.getunblock.com/user/user_uuid/bank-account/remote',
-    //   headers: {accept: 'application/json', 'content-type': 'application/json'}
-    // };
-    return;
+    const body: { account_uuid: string } = {
+      account_uuid: dto.accountUuid,
+    };
+
+    const config = {
+      headers: {
+        'content-type': 'application/json',
+        accept: 'application/json',
+        Authorization: this.props.apiKey,
+        'unblock-session-id': dto.unblockSessionID,
+      },
+    };
+
+    try {
+      await this.axiosClient.patch(path, body, config);
+      return;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const axiosError = error as AxiosError;
+        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
+      } else {
+        throw new Error(`Unexpected error': ${error}`);
+      }
+    }
   }
 
   async getRemoteBankAccountByUuid(dto: any): Promise<void> {
