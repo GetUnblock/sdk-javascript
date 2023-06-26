@@ -26,7 +26,15 @@ import {
 } from '../utils';
 
 describe('KycService', () => {
+  jest.mock('axios');
+  const mockedAxios = axios as jest.Mocked<typeof axios>;
+  let axiosClient: AxiosInstance;
   let props: SdkSettings;
+
+  beforeAll(() => {
+    axiosClient = mockedAxios.create();
+  });
+
   beforeEach(() => {
     props = {
       prodUrl: 'https://getunblock.com',
@@ -35,6 +43,10 @@ describe('KycService', () => {
       prod: faker.datatype.boolean(),
       timeoutMs: 10000,
     };
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
   describe('createKYCApplicant', () => {
@@ -53,9 +65,6 @@ describe('KycService', () => {
       };
 
       let resultedPath, resultedBody, resultedConfig;
-      const axiosClient = {
-        put: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockImplementationOnce((path, body, config) => {
         resultedBody = body;
@@ -119,9 +128,6 @@ describe('KycService', () => {
           [faker.random.word()]: faker.datatype.string,
         },
       } as AxiosResponse);
-      const axiosClient = {
-        put: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(axiosError);
 
@@ -158,9 +164,6 @@ describe('KycService', () => {
         [faker.random.word()]: faker.datatype.string,
       };
 
-      const axiosClient = {
-        put: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(randomError);
 
@@ -194,9 +197,6 @@ describe('KycService', () => {
       const expectedResponse: GetAccessTokenForUserApplicantResponse = {
         token: faker.datatype.hexadecimal({ length: 128 }),
       };
-      const axiosClient = {
-        get: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockImplementationOnce((path, config) => {
         resultedConfig = config;
@@ -246,9 +246,6 @@ describe('KycService', () => {
           [faker.random.word()]: faker.datatype.string,
         },
       } as AxiosResponse);
-      const axiosClient = {
-        get: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
 
@@ -277,10 +274,6 @@ describe('KycService', () => {
       const randomError = {
         [faker.random.word()]: faker.datatype.string,
       };
-
-      const axiosClient = {
-        get: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
@@ -317,9 +310,6 @@ describe('KycService', () => {
 
       let resultedPath, resultedBody, resultedConfig;
       const expectedResponse: UploadKycDocumentResponse = { uploadUuid: faker.datatype.uuid() };
-      const axiosClient = {
-        put: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockImplementationOnce((path, body, config) => {
         resultedBody = body;
@@ -377,9 +367,6 @@ describe('KycService', () => {
           [faker.random.word()]: faker.datatype.string,
         },
       } as AxiosResponse);
-      const axiosClient = {
-        put: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(axiosError);
 
@@ -414,9 +401,6 @@ describe('KycService', () => {
         [faker.random.word()]: faker.datatype.string,
       };
 
-      const axiosClient = {
-        put: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(randomError);
 
@@ -464,9 +448,6 @@ describe('KycService', () => {
         });
       }
 
-      const axiosClient = {
-        get: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockImplementationOnce((path, config) => {
         resultedConfig = config;
@@ -537,9 +518,6 @@ describe('KycService', () => {
           [faker.random.word()]: faker.datatype.string,
         },
       } as AxiosResponse);
-      const axiosClient = {
-        get: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
 
@@ -568,10 +546,6 @@ describe('KycService', () => {
       const randomError = {
         [faker.random.word()]: faker.datatype.string,
       };
-
-      const axiosClient = {
-        get: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
@@ -602,9 +576,6 @@ describe('KycService', () => {
       };
 
       let resultedPath, resultedBody, resultedConfig;
-      const axiosClient = {
-        post: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockImplementationOnce((path, body, config) => {
         resultedBody = body;
@@ -651,9 +622,6 @@ describe('KycService', () => {
           [faker.random.word()]: faker.datatype.string,
         },
       } as AxiosResponse);
-      const axiosClient = {
-        post: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(axiosError);
 
@@ -683,9 +651,6 @@ describe('KycService', () => {
         [faker.random.word()]: faker.datatype.string,
       };
 
-      const axiosClient = {
-        post: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(randomError);
 
@@ -724,9 +689,6 @@ describe('KycService', () => {
         });
       }
 
-      const axiosClient = {
-        get: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockImplementationOnce((path, config) => {
         resultedConfig = config;
@@ -777,9 +739,7 @@ describe('KycService', () => {
           [faker.random.word()]: faker.datatype.string,
         },
       } as AxiosResponse);
-      const axiosClient = {
-        get: jest.fn(),
-      } as unknown as AxiosInstance;
+
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
 
@@ -809,9 +769,6 @@ describe('KycService', () => {
         [faker.random.word()]: faker.datatype.string,
       };
 
-      const axiosClient = {
-        get: jest.fn(),
-      } as unknown as AxiosInstance;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 

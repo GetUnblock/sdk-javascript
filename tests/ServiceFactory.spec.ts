@@ -15,6 +15,7 @@ describe('ServiceFactory', () => {
       timeoutMs: 10000,
     };
   });
+
   it('Should create an AuthService instance', () => {
     // Arrange
     const factory = new ServiceFactory(props);
@@ -35,5 +36,16 @@ describe('ServiceFactory', () => {
 
     // Assert
     expect(service).toBeInstanceOf(KycService);
+  });
+
+  it('Should create an UserService instance', () => {
+    // Arrange
+    const factory = new ServiceFactory(props);
+
+    // Act
+    const service = factory.createAuthService();
+
+    // Assert
+    expect(service).toBeInstanceOf(AuthService);
   });
 });
