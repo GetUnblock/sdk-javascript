@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
+import Country from 'src/enums/Country';
 import { SdkSettings } from '../../src/definitions';
 import { RemoteBankAccountService } from '../../src/remote-bank-account/RemoteBankAccountService';
 import {
@@ -64,7 +65,7 @@ describe('RemoteBankAccountService', () => {
     userUuid: userUuid,
     unblockSessionID: unblockSessionID,
     accountName: faker.finance.accountName(),
-    accountCountry: faker.address.countryCode(),
+    accountCountry: faker.address.countryCode() as Country,
     beneficiaryCountry: faker.address.countryCode(),
     mainBeneficiary: faker.datatype.boolean(),
     accountDetails: accountDetailsGbp,
@@ -74,7 +75,7 @@ describe('RemoteBankAccountService', () => {
     userUuid: userUuid,
     unblockSessionID: unblockSessionID,
     accountName: faker.finance.accountName(),
-    accountCountry: faker.address.countryCode(),
+    accountCountry: faker.address.countryCode() as Country,
     beneficiaryCountry: faker.address.countryCode(),
     mainBeneficiary: faker.datatype.boolean(),
     accountDetails: accountDetailsGbp,

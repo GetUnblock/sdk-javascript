@@ -15,8 +15,11 @@ export interface IRemoteBankAccount {
   createRemoteUserBankAccount(
     dto: RemoteUserBankAccountRequest,
   ): Promise<RemoteUserBankAccountResponse>;
+
   getAllRemoteBankAccounts(dto: UserSessionData): Promise<RemoteUserBankAccountResponse[]>;
+
   changeMainUserRemoteBankAccount(dto: UserSessionData & { accountUuid: string }): Promise<void>;
+
   getRemoteBankAccountByUuid(
     dto: UserSessionData & { accountUuid: string },
   ): Promise<RemoteUserBankAccountResponse>;
@@ -109,11 +112,12 @@ export class RemoteBankAccountService implements IRemoteBankAccount {
    * @throws Will throw an error if the Axios request fails, either due to an API error or an unexpected error.
    */
   async getAllRemoteBankAccounts(dto: UserSessionData): Promise<RemoteUserBankAccountResponse[]> {
+    const { apiKey } = this.props;
     const path = `/user/${dto.userUuid}/bank-account/remote`;
     const config = {
       headers: {
         accept: 'application/json',
-        Authorization: this.props.apiKey,
+        Authorization: apiKey,
         'unblock-session-id': dto.unblockSessionID,
       },
     };
@@ -147,6 +151,7 @@ export class RemoteBankAccountService implements IRemoteBankAccount {
   async changeMainUserRemoteBankAccount(
     dto: UserSessionData & { accountUuid: string },
   ): Promise<void> {
+    const { apiKey } = this.props;
     const path = `/user/${dto.userUuid}/bank-account/remote`;
 
     const body: { account_uuid: string } = {
@@ -157,7 +162,7 @@ export class RemoteBankAccountService implements IRemoteBankAccount {
       headers: {
         'content-type': 'application/json',
         accept: 'application/json',
-        Authorization: this.props.apiKey,
+        Authorization: apiKey,
         'unblock-session-id': dto.unblockSessionID,
       },
     };
@@ -186,11 +191,12 @@ export class RemoteBankAccountService implements IRemoteBankAccount {
   async getRemoteBankAccountByUuid(
     dto: UserSessionData & { accountUuid: string },
   ): Promise<RemoteUserBankAccountResponse> {
+    const { apiKey } = this.props;
     const path = `/user/${dto.userUuid}/bank-account/remote/${dto.accountUuid}`;
     const config = {
       headers: {
         accept: 'application/json',
-        Authorization: this.props.apiKey,
+        Authorization: apiKey,
         'unblock-session-id': dto.unblockSessionID,
       },
     };
