@@ -3,6 +3,7 @@ import { SDK } from '../src/SDK';
 import { ServiceFactory } from '../src/ServiceFactory';
 import { AuthService } from '../src/auth/AuthService';
 import { SdkSettings } from '../src/definitions';
+import { ExchangeRatesService } from '../src/exchange-rates/ExchangeRatesService';
 import { KycService } from '../src/kyc/KycService';
 import { UserService } from '../src/user/UserService';
 
@@ -51,6 +52,18 @@ describe('SDK', () => {
 
       // Assert
       expect(sdk.user).toBeInstanceOf(UserService);
+    });
+  });
+
+  describe('exchangeRates', () => {
+    it('Should return a UserService type', () => {
+      // Arrange
+      const serviceFactory = new ServiceFactory(props);
+
+      const sdk = new SDK(serviceFactory, props);
+
+      // Assert
+      expect(sdk.exchangeRates).toBeInstanceOf(ExchangeRatesService);
     });
   });
 });

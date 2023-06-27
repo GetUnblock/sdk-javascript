@@ -1,6 +1,7 @@
 import { IServiceFactory } from './ServiceFactory';
 import { IAuthService } from './auth/AuthService';
 import { SdkSettings } from './definitions';
+import { IExchangeRatesService } from './exchange-rates/ExchangeRatesService';
 import { IKycService } from './kyc/KycService';
 import { IRemoteBankAccount } from './remote-bank-account/RemoteBankAccountService';
 import { IUserService } from './user/UserService';
@@ -10,6 +11,7 @@ export class SDK {
   private remoteBankAccountService: IRemoteBankAccount;
   private kycService: IKycService;
   private userService: IUserService;
+  private exchangeRatesService: IExchangeRatesService;
 
   constructor(private ServiceFactory: IServiceFactory, private props: SdkSettings) {
     // this.healthCheck();
@@ -17,6 +19,7 @@ export class SDK {
     this.remoteBankAccountService = this.ServiceFactory.createRemoteBankAccountService();
     this.kycService = this.ServiceFactory.createKycService();
     this.userService = this.ServiceFactory.createUserService();
+    this.exchangeRatesService = this.ServiceFactory.createExchangeRatesService();
   }
 
   private async healthCheck(): Promise<boolean> {
@@ -38,5 +41,9 @@ export class SDK {
 
   get user(): IUserService {
     return this.userService;
+  }
+
+  get exchangeRates(): IExchangeRatesService {
+    return this.exchangeRatesService;
   }
 }

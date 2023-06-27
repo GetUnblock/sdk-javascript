@@ -64,18 +64,10 @@ describe('KycService', () => {
         userUuid: faker.datatype.uuid(),
       };
 
-      let resultedPath, resultedBody, resultedConfig;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'put').mockImplementationOnce((path, body, config) => {
-        resultedBody = body;
-        resultedConfig = config;
-        resultedPath = path;
-
-        const axiosResponse = {
-          data: {},
-        } as AxiosResponse;
-        return Promise.resolve(axiosResponse);
-      });
+      jest.spyOn(axiosClient, 'put').mockResolvedValue({
+        data: {},
+      } as AxiosResponse);
 
       const expectedPath = `/user/${createKYCApplicantParams.userUuid}/kyc/applicant`;
       const expectedBody = {
@@ -102,10 +94,9 @@ describe('KycService', () => {
       const response = await service.createKYCApplicant(createKYCApplicantParams);
 
       // Assert
+      expect(axiosClient.put).toHaveBeenCalledTimes(1);
+      expect(axiosClient.put).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
       expect(response.created).toBeTruthy();
-      expect(resultedBody).toStrictEqual(expectedBody);
-      expect(resultedPath).toStrictEqual(expectedPath);
-      expect(resultedConfig).toStrictEqual(expectedConfig);
     });
 
     // Sad
@@ -193,24 +184,17 @@ describe('KycService', () => {
         userUuid: faker.datatype.uuid(),
       };
 
-      let resultedPath, resultedConfig;
       const expectedResponse: GetAccessTokenForUserApplicantResponse = {
         token: faker.datatype.hexadecimal({ length: 128 }),
       };
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockImplementationOnce((path, config) => {
-        resultedConfig = config;
-        resultedPath = path;
-
-        const axiosResponse = {
-          data: {
-            token: expectedResponse.token,
-          },
-        } as AxiosResponse<{
-          token: string;
-        }>;
-        return Promise.resolve(axiosResponse);
-      });
+      jest.spyOn(axiosClient, 'get').mockResolvedValue({
+        data: {
+          token: expectedResponse.token,
+        },
+      } as AxiosResponse<{
+        token: string;
+      }>);
 
       const expectedPath = `/user/${getAccessTokenForUserApplicantParams.userUuid}/kyc/applicant/token`;
 
@@ -228,9 +212,9 @@ describe('KycService', () => {
       );
 
       // Assert
+      expect(axiosClient.get).toHaveBeenCalledTimes(1);
+      expect(axiosClient.get).toHaveBeenLastCalledWith(expectedPath, expectedConfig);
       expect(response).toStrictEqual(expectedResponse);
-      expect(resultedPath).toStrictEqual(expectedPath);
-      expect(resultedConfig).toStrictEqual(expectedConfig);
     });
 
     // Sad
@@ -308,19 +292,11 @@ describe('KycService', () => {
         userUuid: faker.datatype.uuid(),
       };
 
-      let resultedPath, resultedBody, resultedConfig;
       const expectedResponse: UploadKycDocumentResponse = { uploadUuid: faker.datatype.uuid() };
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'put').mockImplementationOnce((path, body, config) => {
-        resultedBody = body;
-        resultedConfig = config;
-        resultedPath = path;
-
-        const axiosResponse = {
-          data: { upload_uuid: expectedResponse.uploadUuid },
-        } as AxiosResponse<{ upload_uuid: string }>;
-        return Promise.resolve(axiosResponse);
-      });
+      jest.spyOn(axiosClient, 'put').mockResolvedValue({
+        data: { upload_uuid: expectedResponse.uploadUuid },
+      } as AxiosResponse<{ upload_uuid: string }>);
 
       const expectedPath = `/user/${uploadKycDocumentParams.userUuid}/kyc/document`;
       const expectedBody = {
@@ -343,10 +319,9 @@ describe('KycService', () => {
       const response = await service.uploadKycDocument(uploadKycDocumentParams);
 
       // Assert
+      expect(axiosClient.put).toHaveBeenCalledTimes(1);
+      expect(axiosClient.put).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
       expect(response).toStrictEqual(expectedResponse);
-      expect(resultedBody).toStrictEqual(expectedBody);
-      expect(resultedPath).toStrictEqual(expectedPath);
-      expect(resultedConfig).toStrictEqual(expectedConfig);
     });
 
     // Sad
@@ -430,7 +405,6 @@ describe('KycService', () => {
         userUuid: faker.datatype.uuid(),
       };
 
-      let resultedPath, resultedConfig;
       const expectedResponse: GetUploadedKycDocumentsForUserResponse[] = [];
       for (let i = 0; i < faker.datatype.number(5); i++) {
         expectedResponse.push({
@@ -449,40 +423,35 @@ describe('KycService', () => {
       }
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockImplementationOnce((path, config) => {
-        resultedConfig = config;
-        resultedPath = path;
 
-        type AuxResponse = {
-          uuid: string;
-          doc_type: string;
-          doc_subtype?: string;
-          name: string;
-          country: string;
-          status: string;
-          upload_errors?: string;
-          verification_errors?: string;
-          created_at: string;
-          updated_at: string;
-          check_uuid: string;
-        }[];
-        const axiosResponse = {
-          data: expectedResponse.map((item) => ({
-            uuid: item.uuid,
-            doc_type: item.documentType,
-            doc_subtype: item.documentSubType,
-            name: item.name,
-            country: item.country,
-            status: item.status,
-            upload_errors: item.uploadErrors,
-            verification_errors: item.verificationErrors,
-            created_at: item.createdAt,
-            updated_at: item.updatedAt,
-            check_uuid: item.checkUuid,
-          })),
-        } as AxiosResponse<AuxResponse>;
-        return Promise.resolve(axiosResponse);
-      });
+      type AuxResponse = {
+        uuid: string;
+        doc_type: string;
+        doc_subtype?: string;
+        name: string;
+        country: string;
+        status: string;
+        upload_errors?: string;
+        verification_errors?: string;
+        created_at: string;
+        updated_at: string;
+        check_uuid: string;
+      }[];
+      jest.spyOn(axiosClient, 'get').mockResolvedValue({
+        data: expectedResponse.map((item) => ({
+          uuid: item.uuid,
+          doc_type: item.documentType,
+          doc_subtype: item.documentSubType,
+          name: item.name,
+          country: item.country,
+          status: item.status,
+          upload_errors: item.uploadErrors,
+          verification_errors: item.verificationErrors,
+          created_at: item.createdAt,
+          updated_at: item.updatedAt,
+          check_uuid: item.checkUuid,
+        })),
+      } as AxiosResponse<AuxResponse>);
 
       const expectedPath = `/user/${getUploadedKycDocumentsForUserParams.userUuid}/kyc/document`;
 
@@ -493,16 +462,16 @@ describe('KycService', () => {
         },
       };
       const service = new KycService(props);
-      // Act
 
+      // Act
       const response = await service.getUploadedKycDocumentsForUser(
         getUploadedKycDocumentsForUserParams,
       );
 
       // Assert
+      expect(axiosClient.get).toHaveBeenCalledTimes(1);
+      expect(axiosClient.get).toHaveBeenLastCalledWith(expectedPath, expectedConfig);
       expect(response).toStrictEqual(expectedResponse);
-      expect(resultedPath).toStrictEqual(expectedPath);
-      expect(resultedConfig).toStrictEqual(expectedConfig);
     });
 
     // Sad
@@ -575,18 +544,10 @@ describe('KycService', () => {
         userUuid: faker.datatype.uuid(),
       };
 
-      let resultedPath, resultedBody, resultedConfig;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'post').mockImplementationOnce((path, body, config) => {
-        resultedBody = body;
-        resultedConfig = config;
-        resultedPath = path;
-
-        const axiosResponse = {
-          data: {},
-        } as AxiosResponse;
-        return Promise.resolve(axiosResponse);
-      });
+      jest.spyOn(axiosClient, 'post').mockResolvedValue({
+        data: {},
+      } as AxiosResponse);
 
       const expectedPath = `/user/${startKycVerificationParams.userUuid}/kyc/verification`;
       const expectedBody = {};
@@ -603,10 +564,9 @@ describe('KycService', () => {
       const response = await service.startKycVerification(startKycVerificationParams);
 
       // Assert
+      expect(axiosClient.post).toHaveBeenCalledTimes(1);
+      expect(axiosClient.post).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
       expect(response.started).toBeTruthy();
-      expect(resultedBody).toStrictEqual(expectedBody);
-      expect(resultedPath).toStrictEqual(expectedPath);
-      expect(resultedConfig).toStrictEqual(expectedConfig);
     });
 
     // Sad
@@ -680,7 +640,6 @@ describe('KycService', () => {
         userUuid: faker.datatype.uuid(),
       };
 
-      let resultedPath, resultedConfig;
       const expectedResponse: GetRequiredKycInformationResponse[] = [];
       for (let i = 0; i < faker.datatype.number(5); i++) {
         expectedResponse.push({
@@ -690,22 +649,16 @@ describe('KycService', () => {
       }
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockImplementationOnce((path, config) => {
-        resultedConfig = config;
-        resultedPath = path;
-
-        type AuxResponse = {
-          document_class: string;
-          one_of_document_type: DocumentType;
-        }[];
-        const axiosResponse = {
-          data: expectedResponse.map((item) => ({
-            document_class: item.documentClass,
-            one_of_document_type: item.documentType,
-          })) as AuxResponse,
-        } as AxiosResponse<AuxResponse>;
-        return Promise.resolve(axiosResponse);
-      });
+      type AuxResponse = {
+        document_class: string;
+        one_of_document_type: DocumentType;
+      }[];
+      jest.spyOn(axiosClient, 'get').mockResolvedValue({
+        data: expectedResponse.map((item) => ({
+          document_class: item.documentClass,
+          one_of_document_type: item.documentType,
+        })) as AuxResponse,
+      } as AxiosResponse<AuxResponse>);
 
       const expectedPath = `/user/${getRequiredKycInformationParams.userUuid}/kyc/verification`;
 
@@ -721,9 +674,9 @@ describe('KycService', () => {
       const response = await service.getRequiredKycInformation(getRequiredKycInformationParams);
 
       // Assert
+      expect(axiosClient.get).toHaveBeenCalledTimes(1);
+      expect(axiosClient.get).toHaveBeenLastCalledWith(expectedPath, expectedConfig);
       expect(response).toStrictEqual(expectedResponse);
-      expect(resultedPath).toStrictEqual(expectedPath);
-      expect(resultedConfig).toStrictEqual(expectedConfig);
     });
 
     // Sad
