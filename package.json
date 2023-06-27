@@ -56,6 +56,11 @@
       }
     },
     "coverageDirectory": "<rootDir>/../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "openHandlesTimeout": 3000,
+    "roots": [
+      "<rootDir>/src/",
+      "<rootDir>/tests/"
+    ]
   }
 }
