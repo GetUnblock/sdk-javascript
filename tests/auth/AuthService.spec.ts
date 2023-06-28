@@ -39,27 +39,19 @@ describe('AuthService', () => {
         signature: faker.datatype.hexadecimal({ length: 128 }),
       };
 
-      let resultedPath, resultedBody, resultedConfig;
       const expectedUnblockSessionId = faker.datatype.uuid();
       const expectedUserUuid = faker.datatype.uuid();
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'post').mockImplementationOnce((path, body, config) => {
-        resultedBody = body;
-        resultedConfig = config;
-        resultedPath = path;
-
-        const axiosResponse = {
-          data: {
-            unblock_session_id: expectedUnblockSessionId,
-            user_uuid: expectedUserUuid,
-          },
-        } as AxiosResponse<{
-          user_uuid: string;
-          unblock_session_id: string;
-        }>;
-        return Promise.resolve(axiosResponse);
-      });
+      jest.spyOn(axiosClient, 'post').mockResolvedValue({
+        data: {
+          unblock_session_id: expectedUnblockSessionId,
+          user_uuid: expectedUserUuid,
+        },
+      } as AxiosResponse<{
+        user_uuid: string;
+        unblock_session_id: string;
+      }>);
 
       const expectedPath = '/auth/login';
       const expectedBody = {
@@ -80,9 +72,8 @@ describe('AuthService', () => {
       const response = await service.login(credentials);
 
       // Assert
-      expect(resultedBody).toStrictEqual(expectedBody);
-      expect(resultedConfig).toStrictEqual(expectedConfig);
-      expect(resultedPath).toBe(expectedPath);
+      expect(axiosClient.post).toHaveBeenCalledTimes(1);
+      expect(axiosClient.post).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
       expect(response).toStrictEqual({
         authenticationMethod: AuthenticationMethod.SIWE,
         userUuid: expectedUserUuid,
@@ -98,27 +89,18 @@ describe('AuthService', () => {
         userUuid: faker.datatype.uuid(),
       };
 
-      let resultedPath, resultedBody, resultedConfig;
       const expectedMessage = faker.lorem.sentence();
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'post').mockImplementationOnce((path, body, config) => {
-        resultedBody = body;
-        resultedConfig = config;
-        resultedPath = path;
-
-        const axiosResponse = {
-          data: {
-            message: expectedMessage,
-            user_uuid: credentials.userUuid,
-          },
-        } as AxiosResponse<{
-          user_uuid: string;
-          message: string;
-        }>;
-        return Promise.resolve(axiosResponse);
-      });
-
+      jest.spyOn(axiosClient, 'post').mockResolvedValue({
+        data: {
+          message: expectedMessage,
+          user_uuid: credentials.userUuid,
+        },
+      } as AxiosResponse<{
+        user_uuid: string;
+        message: string;
+      }>);
       const expectedPath = '/auth/login';
       const expectedBody = {
         user_uuid: credentials.userUuid,
@@ -137,9 +119,8 @@ describe('AuthService', () => {
       const response = await service.login(credentials);
 
       // Assert
-      expect(resultedBody).toStrictEqual(expectedBody);
-      expect(resultedConfig).toStrictEqual(expectedConfig);
-      expect(resultedPath).toBe(expectedPath);
+      expect(axiosClient.post).toHaveBeenCalledTimes(1);
+      expect(axiosClient.post).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
       expect(response).toStrictEqual({
         authenticationMethod: AuthenticationMethod.EMAIL,
         message: expectedMessage,
@@ -292,23 +273,16 @@ describe('AuthService', () => {
         userUuid: faker.datatype.uuid(),
       };
 
-      let resultedPath, resultedConfig;
       const expectedUnblockSessionId = faker.datatype.uuid();
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockImplementationOnce((path, config) => {
-        resultedConfig = config;
-        resultedPath = path;
-
-        const axiosResponse = {
-          data: {
-            session_id: expectedUnblockSessionId,
-          },
-        } as AxiosResponse<{
-          session_id: string;
-        }>;
-        return Promise.resolve(axiosResponse);
-      });
+      jest.spyOn(axiosClient, 'get').mockResolvedValue({
+        data: {
+          session_id: expectedUnblockSessionId,
+        },
+      } as AxiosResponse<{
+        session_id: string;
+      }>);
 
       const expectedPath = '/auth/login/session';
 
@@ -329,8 +303,8 @@ describe('AuthService', () => {
       const response = await service.emailSession(emailSessionParams);
 
       // Assert
-      expect(resultedConfig).toStrictEqual(expectedConfig);
-      expect(resultedPath).toBe(expectedPath);
+      expect(axiosClient.get).toHaveBeenCalledTimes(1);
+      expect(axiosClient.get).toHaveBeenLastCalledWith(expectedPath, expectedConfig);
       expect(response).toStrictEqual({
         sessionId: expectedUnblockSessionId,
       });

@@ -57,26 +57,18 @@ describe('UserService', () => {
         userUuid: faker.datatype.uuid(),
       };
 
-      let resultedPath, resultedBody, resultedConfig;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'post').mockImplementationOnce((path, body, config) => {
-        resultedBody = body;
-        resultedConfig = config;
-        resultedPath = path;
-
-        const axiosResponse = {
-          data: {
-            message: expectedResponse.message,
-            status: expectedResponse.status,
-            user_uuid: expectedResponse.userUuid,
-          },
-        } as AxiosResponse<{
-          message: string;
-          user_uuid: string;
-          status: UserStatus;
-        }>;
-        return Promise.resolve(axiosResponse);
-      });
+      jest.spyOn(axiosClient, 'post').mockResolvedValue({
+        data: {
+          message: expectedResponse.message,
+          status: expectedResponse.status,
+          user_uuid: expectedResponse.userUuid,
+        },
+      } as AxiosResponse<{
+        message: string;
+        user_uuid: string;
+        status: UserStatus;
+      }>);
 
       const expectedPath = `/user`;
       const expectedBody: {
@@ -107,9 +99,8 @@ describe('UserService', () => {
 
       // Assert
       expect(response).toStrictEqual(expectedResponse);
-      expect(resultedBody).toStrictEqual(expectedBody);
-      expect(resultedPath).toStrictEqual(expectedPath);
-      expect(resultedConfig).toStrictEqual(expectedConfig);
+      expect(axiosClient.post).toHaveBeenCalledTimes(1);
+      expect(axiosClient.post).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
     });
 
     it('Should throw expected error when an Axios Error Happens', async () => {
@@ -193,21 +184,14 @@ describe('UserService', () => {
         status: getRandomFromEnum(UserStatus),
       };
 
-      let resultedPath, resultedConfig;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockImplementationOnce((path, config) => {
-        resultedConfig = config;
-        resultedPath = path;
-
-        const axiosResponse = {
-          data: {
-            status: expectedResponse.status,
-          },
-        } as AxiosResponse<{
-          status: UserStatus;
-        }>;
-        return Promise.resolve(axiosResponse);
-      });
+      jest.spyOn(axiosClient, 'get').mockResolvedValue({
+        data: {
+          status: expectedResponse.status,
+        },
+      } as AxiosResponse<{
+        status: UserStatus;
+      }>);
 
       const expectedPath = `/user/${params.userUuid}/status`;
       const expectedConfig = {
@@ -224,8 +208,8 @@ describe('UserService', () => {
 
       // Assert
       expect(response).toStrictEqual(expectedResponse);
-      expect(resultedPath).toStrictEqual(expectedPath);
-      expect(resultedConfig).toStrictEqual(expectedConfig);
+      expect(axiosClient.get).toHaveBeenCalledTimes(1);
+      expect(axiosClient.get).toHaveBeenLastCalledWith(expectedPath, expectedConfig);
     });
 
     it('Should throw expected error when an Axios Error Happens', async () => {
@@ -328,55 +312,48 @@ describe('UserService', () => {
         },
       };
 
-      let resultedPath, resultedConfig;
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockImplementationOnce((path, config) => {
-        resultedConfig = config;
-        resultedPath = path;
-
-        type AuxType = {
-          message: string;
-          processes: {
-            onramp: {
-              uuid: string;
-              status: ProcessStatus;
-              amount: number;
-              created_at: string;
-              updated_at: string;
-            }[];
-            offramp: {
-              uuid: string;
-              status: ProcessStatus;
-              amount: number;
-              created_at: string;
-              updated_at: string;
-            }[];
-          };
+      type AuxType = {
+        message: string;
+        processes: {
+          onramp: {
+            uuid: string;
+            status: ProcessStatus;
+            amount: number;
+            created_at: string;
+            updated_at: string;
+          }[];
+          offramp: {
+            uuid: string;
+            status: ProcessStatus;
+            amount: number;
+            created_at: string;
+            updated_at: string;
+          }[];
         };
+      };
 
-        const axiosResponse = {
-          data: {
-            message: expectedResponse.message,
-            processes: {
-              offramp: expectedResponse.processes.offramp.map((item) => ({
-                amount: item.amount,
-                created_at: item.createdAt,
-                status: item.status,
-                updated_at: item.updatedAt,
-                uuid: item.uuid,
-              })),
-              onramp: expectedResponse.processes.onramp.map((item) => ({
-                amount: item.amount,
-                created_at: item.createdAt,
-                status: item.status,
-                updated_at: item.updatedAt,
-                uuid: item.uuid,
-              })),
-            },
+      jest.spyOn(axiosClient, 'get').mockResolvedValue({
+        data: {
+          message: expectedResponse.message,
+          processes: {
+            offramp: expectedResponse.processes.offramp.map((item) => ({
+              amount: item.amount,
+              created_at: item.createdAt,
+              status: item.status,
+              updated_at: item.updatedAt,
+              uuid: item.uuid,
+            })),
+            onramp: expectedResponse.processes.onramp.map((item) => ({
+              amount: item.amount,
+              created_at: item.createdAt,
+              status: item.status,
+              updated_at: item.updatedAt,
+              uuid: item.uuid,
+            })),
           },
-        } as AxiosResponse<AuxType>;
-        return Promise.resolve(axiosResponse);
-      });
+        },
+      } as AxiosResponse<AuxType>);
 
       const expectedPath = `user/${params.userUuid}/process`;
       const expectedConfig = {
@@ -393,8 +370,8 @@ describe('UserService', () => {
 
       // Assert
       expect(response).toStrictEqual(expectedResponse);
-      expect(resultedPath).toStrictEqual(expectedPath);
-      expect(resultedConfig).toStrictEqual(expectedConfig);
+      expect(axiosClient.get).toHaveBeenCalledTimes(1);
+      expect(axiosClient.get).toHaveBeenLastCalledWith(expectedPath, expectedConfig);
     });
 
     it('Should throw expected error when an Axios Error Happens', async () => {

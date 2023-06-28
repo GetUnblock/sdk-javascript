@@ -134,21 +134,11 @@ describe('RemoteBankAccountService', () => {
         },
       };
 
-      let resultedPath, resultedBody, resultedConfig;
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'post').mockImplementationOnce((path, body, config) => {
-        resultedBody = body;
-        resultedConfig = config;
-        resultedPath = path;
-
-        const axiosResponse = {
-          status: 200,
-          data: '',
-        } as AxiosResponse<any>;
-
-        return Promise.resolve(axiosResponse);
-      });
+      jest.spyOn(axiosClient, 'post').mockResolvedValue({
+        status: 200,
+        data: '',
+      } as AxiosResponse<any>);
 
       const service = new RemoteBankAccountService(props);
 
@@ -157,9 +147,7 @@ describe('RemoteBankAccountService', () => {
 
       // Assert
       expect(axiosClient.post).toBeCalledTimes(1);
-      expect(resultedPath).toBe(expectedPath);
-      expect(resultedBody).toStrictEqual(expectedBody);
-      expect(resultedConfig).toStrictEqual(expectedConfig);
+      expect(axiosClient.post).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
     });
 
     it('should return created bank account data for GBP currency', async () => {
@@ -352,20 +340,11 @@ describe('RemoteBankAccountService', () => {
         },
       };
 
-      let resultedPath, resultedConfig;
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockImplementationOnce((path, config) => {
-        resultedConfig = config;
-        resultedPath = path;
-
-        const axiosResponse = {
-          status: 200,
-          data: [],
-        } as AxiosResponse<any>;
-
-        return Promise.resolve(axiosResponse);
-      });
+      jest.spyOn(axiosClient, 'get').mockResolvedValue({
+        status: 200,
+        data: [],
+      } as AxiosResponse<any>);
 
       const service = new RemoteBankAccountService(props);
 
@@ -374,8 +353,7 @@ describe('RemoteBankAccountService', () => {
 
       // Assert
       expect(axiosClient.get).toBeCalledTimes(1);
-      expect(resultedPath).toBe(expectedPath);
-      expect(resultedConfig).toStrictEqual(expectedConfig);
+      expect(axiosClient.get).toHaveBeenLastCalledWith(expectedPath, expectedConfig);
     });
 
     it('should return an array of remote bank accounts', async () => {
@@ -524,20 +502,10 @@ describe('RemoteBankAccountService', () => {
         account_uuid: uuid,
       };
 
-      let resultedPath, resultedConfig, resultedBody;
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'patch').mockImplementationOnce((path, body, config) => {
-        resultedConfig = config;
-        resultedPath = path;
-        resultedBody = body;
-
-        const axiosResponse = {
-          status: 200,
-        } as AxiosResponse<any>;
-
-        return Promise.resolve(axiosResponse);
-      });
+      jest.spyOn(axiosClient, 'patch').mockResolvedValue({
+        status: 200,
+      } as AxiosResponse<any>);
 
       const service = new RemoteBankAccountService(props);
 
@@ -549,9 +517,11 @@ describe('RemoteBankAccountService', () => {
 
       // Assert
       expect(axiosClient.patch).toBeCalledTimes(1);
-      expect(resultedPath).toBe(expectedPath);
-      expect(resultedConfig).toStrictEqual(expectedConfig);
-      expect(resultedBody).toStrictEqual(expectedBody);
+      expect(axiosClient.patch).toHaveBeenLastCalledWith(
+        expectedPath,
+        expectedBody,
+        expectedConfig,
+      );
     });
 
     // Sad
@@ -615,20 +585,11 @@ describe('RemoteBankAccountService', () => {
         },
       };
 
-      let resultedPath, resultedConfig;
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockImplementationOnce((path, config) => {
-        resultedConfig = config;
-        resultedPath = path;
-
-        const axiosResponse = {
-          status: 200,
-          data: '',
-        } as AxiosResponse<any>;
-
-        return Promise.resolve(axiosResponse);
-      });
+      jest.spyOn(axiosClient, 'get').mockResolvedValue({
+        status: 200,
+        data: '',
+      } as AxiosResponse<any>);
 
       const service = new RemoteBankAccountService(props);
 
@@ -637,8 +598,7 @@ describe('RemoteBankAccountService', () => {
 
       // Assert
       expect(axiosClient.get).toBeCalledTimes(1);
-      expect(resultedPath).toBe(expectedPath);
-      expect(resultedConfig).toStrictEqual(expectedConfig);
+      expect(axiosClient.get).toHaveBeenCalledWith(expectedPath, expectedConfig);
     });
 
     it('should return a remote bank account', async () => {
