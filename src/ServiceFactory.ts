@@ -1,5 +1,6 @@
 import { AuthService, IAuthService } from './auth/AuthService';
 import { SdkSettings } from './definitions';
+import { ExchangeRatesService, IExchangeRatesService } from './exchange-rates/ExchangeRatesService';
 import { IKycService, KycService } from './kyc/KycService';
 
 import {
@@ -12,10 +13,15 @@ export interface IServiceFactory {
   createRemoteBankAccountService(): IRemoteBankAccount;
   createKycService(): IKycService;
   createUserService(): IUserService;
+  createExchangeRatesService(): IExchangeRatesService;
 }
 
 export class ServiceFactory implements IServiceFactory {
   constructor(private props: SdkSettings) {}
+
+  createExchangeRatesService(): IExchangeRatesService {
+    return new ExchangeRatesService(this.props);
+  }
 
   createRemoteBankAccountService(): IRemoteBankAccount {
     return new RemoteBankAccountService(this.props);
