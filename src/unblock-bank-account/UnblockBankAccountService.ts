@@ -13,7 +13,7 @@ import {
   UnblockUserBankAccountFull,
 } from './definitions';
 
-export interface IUnblockBankAccount {
+export interface IUnblockBankAccountService {
   createUnblockUserBankAccount(
     dto: CreateUnblockUserBankAccountRequest,
   ): Promise<CreateUnblockUserBankAccountResponse>;
@@ -29,7 +29,7 @@ export interface IUnblockBankAccount {
   ): Promise<GetUnblockBankAccountByIdResponse>;
 }
 
-export class UnblockBankAccountService implements IUnblockBankAccount {
+export class UnblockBankAccountService implements IUnblockBankAccountService {
   private readonly axiosClient: AxiosInstance;
   constructor(private props: SdkSettings) {
     const { prod, prodUrl, sandBoxUrl, timeoutMs } = props;

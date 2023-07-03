@@ -2,28 +2,45 @@ import { AuthService, IAuthService } from './auth/AuthService';
 import { SdkSettings } from './definitions';
 import { ExchangeRatesService, IExchangeRatesService } from './exchange-rates/ExchangeRatesService';
 import { IKycService, KycService } from './kyc/KycService';
-
 import {
-  IRemoteBankAccount,
+  IRemoteBankAccountService,
   RemoteBankAccountService,
 } from './remote-bank-account/RemoteBankAccountService';
+import {
+  ITransactionFeeService,
+  TransactionFeeService,
+} from './transaction-fee/TransactionFeeService';
+import {
+  IUnblockBankAccountService,
+  UnblockBankAccountService,
+} from './unblock-bank-account/UnblockBankAccountService';
 import { IUserService, UserService } from './user/UserService';
+
 export interface IServiceFactory {
   createAuthService(): IAuthService;
-  createRemoteBankAccountService(): IRemoteBankAccount;
+  createRemoteBankAccountService(): IRemoteBankAccountService;
   createKycService(): IKycService;
   createUserService(): IUserService;
   createExchangeRatesService(): IExchangeRatesService;
+  createUnblockBankAccountService(): IUnblockBankAccountService;
+  createTransactionFeeService(): ITransactionFeeService;
 }
 
 export class ServiceFactory implements IServiceFactory {
   constructor(private props: SdkSettings) {}
+  createTransactionFeeService(): ITransactionFeeService {
+    return new TransactionFeeService(this.props);
+  }
+
+  createUnblockBankAccountService(): IUnblockBankAccountService {
+    return new UnblockBankAccountService(this.props);
+  }
 
   createExchangeRatesService(): IExchangeRatesService {
     return new ExchangeRatesService(this.props);
   }
 
-  createRemoteBankAccountService(): IRemoteBankAccount {
+  createRemoteBankAccountService(): IRemoteBankAccountService {
     return new RemoteBankAccountService(this.props);
   }
 
