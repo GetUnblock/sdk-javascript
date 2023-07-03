@@ -3,15 +3,19 @@ import { IAuthService } from './auth/AuthService';
 import { SdkSettings } from './definitions';
 import { IExchangeRatesService } from './exchange-rates/ExchangeRatesService';
 import { IKycService } from './kyc/KycService';
-import { IRemoteBankAccount } from './remote-bank-account/RemoteBankAccountService';
+import { IRemoteBankAccountService } from './remote-bank-account/RemoteBankAccountService';
+import { ITransactionFeeService } from './transaction-fee/TransactionFeeService';
+import { IUnblockBankAccountService } from './unblock-bank-account/UnblockBankAccountService';
 import { IUserService } from './user/UserService';
 
 export class SDK {
   private authService: IAuthService;
-  private remoteBankAccountService: IRemoteBankAccount;
+  private remoteBankAccountService: IRemoteBankAccountService;
   private kycService: IKycService;
   private userService: IUserService;
   private exchangeRatesService: IExchangeRatesService;
+  private unblockBankAccountService: IUnblockBankAccountService;
+  private transactionFeeService: ITransactionFeeService;
 
   constructor(private ServiceFactory: IServiceFactory, private props: SdkSettings) {
     // this.healthCheck();
@@ -20,6 +24,8 @@ export class SDK {
     this.kycService = this.ServiceFactory.createKycService();
     this.userService = this.ServiceFactory.createUserService();
     this.exchangeRatesService = this.ServiceFactory.createExchangeRatesService();
+    this.unblockBankAccountService = this.ServiceFactory.createUnblockBankAccountService();
+    this.transactionFeeService = this.ServiceFactory.createTransactionFeeService();
   }
 
   private async healthCheck(): Promise<boolean> {
@@ -31,7 +37,7 @@ export class SDK {
     return this.authService;
   }
 
-  get remoteBankAccount(): IRemoteBankAccount {
+  get remoteBankAccount(): IRemoteBankAccountService {
     return this.remoteBankAccountService;
   }
 
@@ -45,5 +51,13 @@ export class SDK {
 
   get exchangeRates(): IExchangeRatesService {
     return this.exchangeRatesService;
+  }
+
+  get unblockBankAccount(): IUnblockBankAccountService {
+    return this.unblockBankAccountService;
+  }
+
+  get transactionFee(): ITransactionFeeService {
+    return this.transactionFeeService;
   }
 }

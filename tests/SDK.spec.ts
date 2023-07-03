@@ -5,6 +5,9 @@ import { AuthService } from '../src/auth/AuthService';
 import { SdkSettings } from '../src/definitions';
 import { ExchangeRatesService } from '../src/exchange-rates/ExchangeRatesService';
 import { KycService } from '../src/kyc/KycService';
+import { RemoteBankAccountService } from '../src/remote-bank-account/RemoteBankAccountService';
+import { TransactionFeeService } from '../src/transaction-fee/TransactionFeeService';
+import { UnblockBankAccountService } from '../src/unblock-bank-account/UnblockBankAccountService';
 import { UserService } from '../src/user/UserService';
 
 describe('SDK', () => {
@@ -64,6 +67,42 @@ describe('SDK', () => {
 
       // Assert
       expect(sdk.exchangeRates).toBeInstanceOf(ExchangeRatesService);
+    });
+  });
+
+  describe('remoteBankAccount', () => {
+    it('Should return a UserService type', () => {
+      // Arrange
+      const serviceFactory = new ServiceFactory(props);
+
+      const sdk = new SDK(serviceFactory, props);
+
+      // Assert
+      expect(sdk.remoteBankAccount).toBeInstanceOf(RemoteBankAccountService);
+    });
+  });
+
+  describe('unblockBankAccount', () => {
+    it('Should return a UserService type', () => {
+      // Arrange
+      const serviceFactory = new ServiceFactory(props);
+
+      const sdk = new SDK(serviceFactory, props);
+
+      // Assert
+      expect(sdk.unblockBankAccount).toBeInstanceOf(UnblockBankAccountService);
+    });
+  });
+
+  describe('transactionFee', () => {
+    it('Should return a UserService type', () => {
+      // Arrange
+      const serviceFactory = new ServiceFactory(props);
+
+      const sdk = new SDK(serviceFactory, props);
+
+      // Assert
+      expect(sdk.transactionFee).toBeInstanceOf(TransactionFeeService);
     });
   });
 });

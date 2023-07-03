@@ -11,7 +11,7 @@ import {
   UserSessionData,
 } from './definitions';
 
-export interface IRemoteBankAccount {
+export interface IRemoteBankAccountService {
   createRemoteUserBankAccount(
     dto: RemoteUserBankAccountRequest,
   ): Promise<RemoteUserBankAccountResponse>;
@@ -25,7 +25,7 @@ export interface IRemoteBankAccount {
   ): Promise<RemoteUserBankAccountResponse>;
 }
 
-export class RemoteBankAccountService implements IRemoteBankAccount {
+export class RemoteBankAccountService implements IRemoteBankAccountService {
   private readonly axiosClient: AxiosInstance;
   constructor(private props: SdkSettings) {
     const { prod, prodUrl, sandBoxUrl, timeoutMs } = props;

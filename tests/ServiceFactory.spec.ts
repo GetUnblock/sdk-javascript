@@ -4,6 +4,9 @@ import { AuthService } from '../src/auth/AuthService';
 import { SdkSettings } from '../src/definitions';
 import { ExchangeRatesService } from '../src/exchange-rates/ExchangeRatesService';
 import { KycService } from '../src/kyc/KycService';
+import { RemoteBankAccountService } from '../src/remote-bank-account/RemoteBankAccountService';
+import { TransactionFeeService } from '../src/transaction-fee/TransactionFeeService';
+import { UnblockBankAccountService } from '../src/unblock-bank-account/UnblockBankAccountService';
 
 describe('ServiceFactory', () => {
   let props: SdkSettings;
@@ -59,5 +62,38 @@ describe('ServiceFactory', () => {
 
     // Assert
     expect(service).toBeInstanceOf(ExchangeRatesService);
+  });
+
+  it('Should create an RemoteBankAccountService instance', () => {
+    // Arrange
+    const factory = new ServiceFactory(props);
+
+    // Act
+    const service = factory.createRemoteBankAccountService();
+
+    // Assert
+    expect(service).toBeInstanceOf(RemoteBankAccountService);
+  });
+
+  it('Should create an UnblockBankAccountService instance', () => {
+    // Arrange
+    const factory = new ServiceFactory(props);
+
+    // Act
+    const service = factory.createUnblockBankAccountService();
+
+    // Assert
+    expect(service).toBeInstanceOf(UnblockBankAccountService);
+  });
+
+  it('Should create an TransactionFeeService instance', () => {
+    // Arrange
+    const factory = new ServiceFactory(props);
+
+    // Act
+    const service = factory.createTransactionFeeService();
+
+    // Assert
+    expect(service).toBeInstanceOf(TransactionFeeService);
   });
 });
