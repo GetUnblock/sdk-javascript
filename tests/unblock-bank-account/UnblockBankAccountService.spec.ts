@@ -12,7 +12,7 @@ import {
   UserSessionData,
 } from '../../src/unblock-bank-account/definitions';
 
-describe('RemoteBankAccountService', () => {
+describe('UnblockBankAccountService', () => {
   jest.mock('axios');
   const mockedAxios = axios as jest.Mocked<typeof axios>;
   let axiosClient: AxiosInstance;
