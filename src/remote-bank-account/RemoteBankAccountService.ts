@@ -1,5 +1,5 @@
-import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
-import { SdkSettings } from 'src/definitions';
+import { AxiosError, AxiosResponse } from 'axios';
+import { BaseService } from '../BaseService';
 import {
   NewRemoteUserBankAccount,
   RemoteUserBankAccountRequest,
@@ -25,16 +25,7 @@ export interface IRemoteBankAccountService {
   ): Promise<RemoteUserBankAccountResponse>;
 }
 
-export class RemoteBankAccountService implements IRemoteBankAccountService {
-  private readonly axiosClient: AxiosInstance;
-  constructor(private props: SdkSettings) {
-    const { prod, prodUrl, sandBoxUrl, timeoutMs } = props;
-    this.axiosClient = axios.create({
-      baseURL: prod ? prodUrl : sandBoxUrl,
-      timeout: timeoutMs,
-    });
-  }
-
+export class RemoteBankAccountService extends BaseService implements IRemoteBankAccountService {
   /**
    * Creates a remote user bank account.
    *

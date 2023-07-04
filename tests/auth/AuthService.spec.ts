@@ -3,6 +3,7 @@ import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { AuthService } from '../../src/auth/AuthService';
 import { AuthenticationMethod, LoginRequest, SessionRequest } from '../../src/auth/definitions';
 import { SdkSettings } from '../../src/definitions';
+import { propsMock } from '../mocks/props.mock';
 
 describe('AuthService', () => {
   jest.mock('axios');
@@ -15,13 +16,7 @@ describe('AuthService', () => {
   });
 
   beforeEach(() => {
-    props = {
-      prodUrl: 'https://getunblock.com',
-      sandBoxUrl: 'https://sandbox.getunblock.com',
-      apiKey: `API-Key ${faker.datatype.string(64)}`,
-      prod: faker.datatype.boolean(),
-      timeoutMs: 10000,
-    };
+    props = propsMock;
   });
 
   afterEach(() => {

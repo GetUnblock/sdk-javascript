@@ -1,6 +1,6 @@
-import { Currency } from 'src/enums/Currency';
-import { PaymentMethods } from 'src/enums/PaymentMethods';
-import { ProcessDirection } from 'src/enums/ProcessDirection';
+import { Currency } from '../enums/Currency';
+import { PaymentMethods } from '../enums/PaymentMethods';
+import { ProcessDirection } from '../enums/ProcessDirection';
 
 /**
  * Request for Get Transaction Fee Estimation

@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosInstance } from 'axios';
 import { SdkSettings } from '../../src/definitions';
 import { UnblockBankAccountService } from '../../src/unblock-bank-account/UnblockBankAccountService';
 import {
@@ -11,6 +11,8 @@ import {
   UnblockUserBankAccountFull,
   UserSessionData,
 } from '../../src/unblock-bank-account/definitions';
+import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
+import { propsMock } from '../mocks/props.mock';
 
 describe('UnblockBankAccountService', () => {
   jest.mock('axios');
@@ -38,13 +40,9 @@ describe('UnblockBankAccountService', () => {
   });
 
   beforeEach(() => {
-    props = {
-      prodUrl: 'https://getunblock.com',
-      sandBoxUrl: 'https://sandbox.getunblock.com',
-      apiKey: `API-Key ${faker.datatype.string(64)}`,
-      prod: faker.datatype.boolean(),
-      timeoutMs: 10000,
-    };
+    props = propsMock;
+    axiosError = axiosErrorMock;
+    randomError = randomErrorMock;
 
     userUuid = faker.datatype.uuid();
     unblockSessionID = faker.datatype.uuid();
@@ -59,17 +57,6 @@ describe('UnblockBankAccountService', () => {
     userSessionData = {
       unblockSessionID: unblockSessionID,
       userUuid: userUuid,
-    };
-
-    axiosError = new AxiosError(undefined, undefined, undefined, undefined, {
-      status: 500,
-      data: {
-        [faker.random.word()]: faker.datatype.string,
-      },
-    } as AxiosResponse);
-
-    randomError = {
-      [faker.random.word()]: faker.datatype.string,
     };
   });
 
