@@ -4,6 +4,7 @@ import { AuthService } from '../src/auth/AuthService';
 import { SdkSettings } from '../src/definitions';
 import { ExchangeRatesService } from '../src/exchange-rates/ExchangeRatesService';
 import { KycService } from '../src/kyc/KycService';
+import { ProcessService } from '../src/process/ProcessService';
 import { RemoteBankAccountService } from '../src/remote-bank-account/RemoteBankAccountService';
 import { TransactionFeeService } from '../src/transaction-fee/TransactionFeeService';
 import { UnblockBankAccountService } from '../src/unblock-bank-account/UnblockBankAccountService';
@@ -95,5 +96,16 @@ describe('ServiceFactory', () => {
 
     // Assert
     expect(service).toBeInstanceOf(TransactionFeeService);
+  });
+
+  it('Should create an ProcessService instance', () => {
+    // Arrange
+    const factory = new ServiceFactory(props);
+
+    // Act
+    const service = factory.createProcessService();
+
+    // Assert
+    expect(service).toBeInstanceOf(ProcessService);
   });
 });

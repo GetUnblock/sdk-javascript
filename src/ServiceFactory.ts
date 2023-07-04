@@ -2,6 +2,7 @@ import { AuthService, IAuthService } from './auth/AuthService';
 import { SdkSettings } from './definitions';
 import { ExchangeRatesService, IExchangeRatesService } from './exchange-rates/ExchangeRatesService';
 import { IKycService, KycService } from './kyc/KycService';
+import { IProcessService, ProcessService } from './process/ProcessService';
 import {
   IRemoteBankAccountService,
   RemoteBankAccountService,
@@ -24,10 +25,15 @@ export interface IServiceFactory {
   createExchangeRatesService(): IExchangeRatesService;
   createUnblockBankAccountService(): IUnblockBankAccountService;
   createTransactionFeeService(): ITransactionFeeService;
+  createProcessService(): IProcessService;
 }
 
 export class ServiceFactory implements IServiceFactory {
   constructor(private props: SdkSettings) {}
+  createProcessService(): IProcessService {
+    return new ProcessService(this.props);
+  }
+
   createTransactionFeeService(): ITransactionFeeService {
     return new TransactionFeeService(this.props);
   }
