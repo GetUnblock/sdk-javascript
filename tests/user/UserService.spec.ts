@@ -14,6 +14,7 @@ import {
   RampTransactionProcess,
   UserStatus,
 } from '../../src/user/definitions';
+import { propsMock } from '../mocks/props.mock';
 import { getRandomFromEnum } from '../utils';
 
 describe('UserService', () => {
@@ -27,13 +28,7 @@ describe('UserService', () => {
   });
 
   beforeEach(() => {
-    props = {
-      prodUrl: 'https://getunblock.com',
-      sandBoxUrl: 'https://sandbox.getunblock.com',
-      apiKey: `API-Key ${faker.datatype.string(64)}`,
-      prod: faker.datatype.boolean(),
-      timeoutMs: 10000,
-    };
+    props = propsMock;
   });
 
   afterEach(() => {

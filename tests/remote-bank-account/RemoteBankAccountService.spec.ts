@@ -10,6 +10,7 @@ import {
   UnblockRemoteUserBankAccount,
   UserSessionData,
 } from '../../src/remote-bank-account/definitions';
+import { propsMock } from '../mocks/props.mock';
 
 describe('RemoteBankAccountService', () => {
   jest.mock('axios');
@@ -22,13 +23,7 @@ describe('RemoteBankAccountService', () => {
   });
 
   beforeEach(() => {
-    props = {
-      prodUrl: 'https://getunblock.com',
-      sandBoxUrl: 'https://sandbox.getunblock.com',
-      apiKey: `API-Key ${faker.datatype.string(64)}`,
-      prod: faker.datatype.boolean(),
-      timeoutMs: 10000,
-    };
+    props = propsMock;
   });
 
   afterEach(() => {

@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosInstance } from 'axios';
 import { SdkSettings } from '../../src/definitions';
 import { Currency } from '../../src/enums/Currency';
 import { PaymentMethods } from '../../src/enums/PaymentMethods';
@@ -11,6 +11,8 @@ import {
   TransactionFeeEstRequest,
   TransactionFeeEstResponse,
 } from '../../src/transaction-fee/definitions';
+import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
+import { propsMock } from '../mocks/props.mock';
 
 describe('TrnsactionFeeService', () => {
   jest.mock('axios');
@@ -32,30 +34,15 @@ describe('TrnsactionFeeService', () => {
   });
 
   beforeEach(() => {
-    props = {
-      prodUrl: 'https://getunblock.com',
-      sandBoxUrl: 'https://sandbox.getunblock.com',
-      apiKey: `API-Key ${faker.datatype.string(64)}`,
-      prod: faker.datatype.boolean(),
-      timeoutMs: 10000,
-    };
+    props = propsMock;
+    axiosError = axiosErrorMock;
+    randomError = randomErrorMock;
 
     paymentMethod = faker.helpers.arrayElement(Object.values(PaymentMethods));
     direction = faker.helpers.arrayElement(Object.values(ProcessDirection));
     inputCurrency = faker.helpers.arrayElement(Object.values(Currency));
     outputCurrency = faker.helpers.arrayElement(Object.values(Currency));
     amount = faker.datatype.number({ min: 0.01, max: 1000000, precision: 0.01 });
-
-    axiosError = new AxiosError(undefined, undefined, undefined, undefined, {
-      status: 500,
-      data: {
-        [faker.random.word()]: faker.datatype.string,
-      },
-    } as AxiosResponse);
-
-    randomError = {
-      [faker.random.word()]: faker.datatype.string,
-    };
   });
 
   afterEach(() => {
