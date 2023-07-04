@@ -1,4 +1,4 @@
-import { SdkSettings } from '../definitions';
+import { BaseService } from '../BaseService';
 import {
   AuthenticationMethod,
   EmailLoginRequest,
@@ -9,22 +9,14 @@ import {
   SiweLoginRequest,
 } from './definitions';
 
-import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 
 export interface IAuthService {
   login(data: LoginRequest): Promise<LoginResponse>;
   emailSession(data: SessionRequest): Promise<SessionResponse>;
 }
 
-export class AuthService implements IAuthService {
-  private readonly axiosClient: AxiosInstance;
-  constructor(private props: SdkSettings) {
-    this.axiosClient = axios.create({
-      baseURL: this.props.prod ? this.props.prodUrl : this.props.sandBoxUrl,
-      timeout: this.props.timeoutMs,
-    });
-  }
-
+export class AuthService extends BaseService implements IAuthService {
   login(credentials: LoginRequest): Promise<LoginResponse> {
     switch (credentials.authenticationMethod) {
       case AuthenticationMethod.SIWE:

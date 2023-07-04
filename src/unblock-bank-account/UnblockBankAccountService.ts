@@ -1,5 +1,5 @@
-import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
-import { SdkSettings } from 'src/definitions';
+import { AxiosError, AxiosResponse } from 'axios';
+import { BaseService } from '../BaseService';
 import {
   CreateUnblockUserBankAccountRequest,
   CreateUnblockUserBankAccountResponse,
@@ -29,16 +29,7 @@ export interface IUnblockBankAccountService {
   ): Promise<GetUnblockBankAccountByIdResponse>;
 }
 
-export class UnblockBankAccountService implements IUnblockBankAccountService {
-  private readonly axiosClient: AxiosInstance;
-  constructor(private props: SdkSettings) {
-    const { prod, prodUrl, sandBoxUrl, timeoutMs } = props;
-    this.axiosClient = axios.create({
-      baseURL: prod ? prodUrl : sandBoxUrl,
-      timeout: timeoutMs,
-    });
-  }
-
+export class UnblockBankAccountService extends BaseService implements IUnblockBankAccountService {
   /**
    * Creates an UnblockUser bank account with provided details.
    *

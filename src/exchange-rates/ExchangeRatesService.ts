@@ -1,20 +1,12 @@
-import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
-import { SdkSettings } from 'src/definitions';
+import { AxiosError, AxiosResponse } from 'axios';
+import { BaseService } from '../BaseService';
 import { ExchangeRatesServiceRequest, ExchangeRatesServiceResponse } from './definitions';
 
 export interface IExchangeRatesService {
   getExchangeRate(params: ExchangeRatesServiceRequest): Promise<ExchangeRatesServiceResponse>;
 }
 
-export class ExchangeRatesService implements IExchangeRatesService {
-  private readonly axiosClient: AxiosInstance;
-  constructor(private props: SdkSettings) {
-    this.axiosClient = axios.create({
-      baseURL: this.props.prod ? this.props.prodUrl : this.props.sandBoxUrl,
-      timeout: this.props.timeoutMs,
-    });
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+export class ExchangeRatesService extends BaseService implements IExchangeRatesService {
   async getExchangeRate(
     params: ExchangeRatesServiceRequest,
   ): Promise<ExchangeRatesServiceResponse> {
