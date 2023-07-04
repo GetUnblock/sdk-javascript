@@ -3,6 +3,7 @@ import { IAuthService } from './auth/AuthService';
 import { SdkSettings } from './definitions';
 import { IExchangeRatesService } from './exchange-rates/ExchangeRatesService';
 import { IKycService } from './kyc/KycService';
+import { IProcessService } from './process/ProcessService';
 import { IRemoteBankAccountService } from './remote-bank-account/RemoteBankAccountService';
 import { ITransactionFeeService } from './transaction-fee/TransactionFeeService';
 import { IUnblockBankAccountService } from './unblock-bank-account/UnblockBankAccountService';
@@ -16,6 +17,7 @@ export class SDK {
   private exchangeRatesService: IExchangeRatesService;
   private unblockBankAccountService: IUnblockBankAccountService;
   private transactionFeeService: ITransactionFeeService;
+  private processService: IProcessService;
 
   constructor(private ServiceFactory: IServiceFactory, private props: SdkSettings) {
     // this.healthCheck();
@@ -26,6 +28,7 @@ export class SDK {
     this.exchangeRatesService = this.ServiceFactory.createExchangeRatesService();
     this.unblockBankAccountService = this.ServiceFactory.createUnblockBankAccountService();
     this.transactionFeeService = this.ServiceFactory.createTransactionFeeService();
+    this.processService = this.ServiceFactory.createProcessService();
   }
 
   private async healthCheck(): Promise<boolean> {
@@ -59,5 +62,9 @@ export class SDK {
 
   get transactionFee(): ITransactionFeeService {
     return this.transactionFeeService;
+  }
+
+  get process(): IProcessService {
+    return this.processService;
   }
 }

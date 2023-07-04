@@ -5,6 +5,7 @@ import { AuthService } from '../src/auth/AuthService';
 import { SdkSettings } from '../src/definitions';
 import { ExchangeRatesService } from '../src/exchange-rates/ExchangeRatesService';
 import { KycService } from '../src/kyc/KycService';
+import { ProcessService } from '../src/process/ProcessService';
 import { RemoteBankAccountService } from '../src/remote-bank-account/RemoteBankAccountService';
 import { TransactionFeeService } from '../src/transaction-fee/TransactionFeeService';
 import { UnblockBankAccountService } from '../src/unblock-bank-account/UnblockBankAccountService';
@@ -103,6 +104,18 @@ describe('SDK', () => {
 
       // Assert
       expect(sdk.transactionFee).toBeInstanceOf(TransactionFeeService);
+    });
+  });
+
+  describe('process', () => {
+    it('Should return a ProcessService type', () => {
+      // Arrange
+      const serviceFactory = new ServiceFactory(props);
+
+      const sdk = new SDK(serviceFactory, props);
+
+      // Assert
+      expect(sdk.process).toBeInstanceOf(ProcessService);
     });
   });
 });

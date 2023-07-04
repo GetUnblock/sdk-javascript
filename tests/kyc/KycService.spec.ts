@@ -18,6 +18,7 @@ import {
   UploadKycDocumentRequest,
   UploadKycDocumentResponse,
 } from '../../src/kyc/definitions';
+import { propsMock } from '../mocks/props.mock';
 import {
   getRandomDocumentSubType,
   getRandomDocumentType,
@@ -36,13 +37,7 @@ describe('KycService', () => {
   });
 
   beforeEach(() => {
-    props = {
-      prodUrl: 'https://getunblock.com',
-      sandBoxUrl: 'https://sandbox.getunblock.com',
-      apiKey: `API-Key ${faker.datatype.string(64)}`,
-      prod: faker.datatype.boolean(),
-      timeoutMs: 10000,
-    };
+    props = propsMock;
   });
 
   afterEach(() => {

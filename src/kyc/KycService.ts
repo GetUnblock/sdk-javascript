@@ -1,7 +1,7 @@
-import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { DateTime } from 'luxon';
-import Country from 'src/enums/Country';
-import { SdkSettings } from '../definitions';
+import { BaseService } from '../BaseService';
+import Country from '../enums/Country';
 import {
   CreateKYCApplicantRequest,
   CreateKYCApplicantResponse,
@@ -45,14 +45,7 @@ export interface IKycService {
   ): Promise<GetRequiredKycInformationResponse[]>;
 }
 
-export class KycService implements IKycService {
-  private readonly axiosClient: AxiosInstance;
-  constructor(private props: SdkSettings) {
-    this.axiosClient = axios.create({
-      baseURL: this.props.prod ? this.props.prodUrl : this.props.sandBoxUrl,
-      timeout: this.props.timeoutMs,
-    });
-  }
+export class KycService extends BaseService implements IKycService {
   async createKYCApplicant(
     createKYCApplicantParams: CreateKYCApplicantRequest,
   ): Promise<CreateKYCApplicantResponse> {
