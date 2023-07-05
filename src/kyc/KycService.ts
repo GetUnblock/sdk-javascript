@@ -70,6 +70,7 @@ export class KycService extends BaseService implements IKycService {
         'content-type': 'application/json',
         accept: 'application/json',
         Authorization: apiKey,
+        'unblock-session-id': createKYCApplicantParams.unblockSessionId,
       },
     };
 
@@ -95,6 +96,7 @@ export class KycService extends BaseService implements IKycService {
       headers: {
         accept: 'application/json',
         Authorization: apiKey,
+        'unblock-session-id': getAccessTokenForUserApplicantParams.unblockSessionId,
       },
     };
     try {
@@ -111,7 +113,6 @@ export class KycService extends BaseService implements IKycService {
   }
 
   async uploadKycDocument(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     uploadKycDocumentParams: UploadKycDocumentRequest,
   ): Promise<UploadKycDocumentResponse> {
     const { apiKey } = this.props;
@@ -130,6 +131,7 @@ export class KycService extends BaseService implements IKycService {
         'content-type': 'application/json',
         accept: 'application/json',
         Authorization: apiKey,
+        'unblock-session-id': uploadKycDocumentParams.unblockSessionId,
       },
     };
 
@@ -159,6 +161,7 @@ export class KycService extends BaseService implements IKycService {
       headers: {
         accept: 'application/json',
         Authorization: apiKey,
+        'unblock-session-id': getUploadedKycDocumentsForUserParams.unblockSessionId,
       },
     };
     try {
@@ -208,6 +211,7 @@ export class KycService extends BaseService implements IKycService {
         'content-type': 'application/json',
         accept: 'application/json',
         Authorization: apiKey,
+        'unblock-session-id': startKycVerificationParams.unblockSessionId,
       },
     };
 
@@ -223,7 +227,6 @@ export class KycService extends BaseService implements IKycService {
   }
 
   async getRequiredKycInformation(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getRequiredKycInformationParams: GetRequiredKycInformationRequest,
   ): Promise<GetRequiredKycInformationResponse[]> {
     const { apiKey } = this.props;
@@ -234,6 +237,7 @@ export class KycService extends BaseService implements IKycService {
       headers: {
         accept: 'application/json',
         Authorization: apiKey,
+        'unblock-session-id': getRequiredKycInformationParams.unblockSessionId,
       },
     };
     try {

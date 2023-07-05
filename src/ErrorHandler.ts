@@ -4,7 +4,7 @@ export class ErrorHandler {
   static handle(error: unknown): never {
     if (error instanceof AxiosError) {
       const axiosError = error as AxiosError;
-      console.error(axiosError.response?.data);
+      console.error(`${axiosError.response?.status}: ${JSON.stringify(axiosError.response?.data)}`);
       throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
     } else {
       console.error(error);
