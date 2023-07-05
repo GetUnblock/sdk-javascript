@@ -40,9 +40,9 @@ describe('UnblockBankAccountService', () => {
   });
 
   beforeEach(() => {
-    props = propsMock;
-    axiosError = axiosErrorMock;
-    randomError = randomErrorMock;
+    props = propsMock();
+    axiosError = axiosErrorMock();
+    randomError = randomErrorMock();
 
     userUuid = faker.datatype.uuid();
     unblockSessionID = faker.datatype.uuid();

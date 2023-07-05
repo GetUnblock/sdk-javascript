@@ -33,9 +33,9 @@ describe('TrnsactionFeeService', () => {
   });
 
   beforeEach(() => {
-    props = propsMock;
-    axiosError = axiosErrorMock;
-    randomError = randomErrorMock;
+    props = propsMock();
+    axiosError = axiosErrorMock();
+    randomError = randomErrorMock();
 
     paymentMethod = faker.helpers.arrayElement(Object.values(PaymentMethods));
     direction = faker.helpers.arrayElement(Object.values(ProcessDirection));

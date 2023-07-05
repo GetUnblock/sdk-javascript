@@ -43,11 +43,13 @@ describe('KycService', () => {
   });
 
   beforeEach(() => {
-    props = propsMock;
-    axiosError = axiosErrorMock;
-    randomError = randomErrorMock;
+    props = propsMock();
+    axiosError = axiosErrorMock();
+    randomError = randomErrorMock();
     userUuid = faker.datatype.uuid();
     unblockSessionId = faker.datatype.uuid();
+
+    console.log(props);
   });
 
   afterEach(() => {
