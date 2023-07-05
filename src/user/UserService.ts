@@ -75,6 +75,7 @@ export class UserService implements IUserService {
       headers: {
         accept: 'application/json',
         Authorization: apiKey,
+        'unblock-session-id': params.unblockSessionId,
       },
     };
     try {
@@ -101,6 +102,7 @@ export class UserService implements IUserService {
       headers: {
         accept: 'application/json',
         Authorization: apiKey,
+        'unblock-session-id': params.unblockSessionId,
       },
     };
 

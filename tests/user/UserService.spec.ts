@@ -25,6 +25,8 @@ describe('UserService', () => {
   let props: SdkSettings;
   let axiosError: AxiosError;
   let randomError: unknown;
+  let userUuid: string;
+  let unblockSessionId: string;
 
   beforeAll(() => {
     axiosClient = mockedAxios.create();
@@ -34,6 +36,8 @@ describe('UserService', () => {
     props = propsMock;
     axiosError = axiosErrorMock;
     randomError = randomErrorMock;
+    userUuid = faker.datatype.uuid();
+    unblockSessionId = faker.datatype.uuid();
   });
 
   afterEach(() => {
@@ -167,7 +171,8 @@ describe('UserService', () => {
     it('Should call axios GET with expected headers and params and return an expected response', async () => {
       // Arrange
       const params: GetUserStatusRequest = {
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
       const expectedResponse: GetUserStatusResponse = {
@@ -188,6 +193,7 @@ describe('UserService', () => {
         headers: {
           accept: 'application/json',
           Authorization: props.apiKey,
+          'unblock-session-id': unblockSessionId,
         },
       };
 
@@ -205,7 +211,8 @@ describe('UserService', () => {
     it('Should throw expected error when an Axios Error Happens', async () => {
       // Arrange
       const params: GetUserStatusRequest = {
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -230,7 +237,8 @@ describe('UserService', () => {
     it('Should throw expected error when an Unexpected Error Happens', async () => {
       // Arrange
       const params: GetUserStatusRequest = {
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -258,7 +266,8 @@ describe('UserService', () => {
     it('Should call axios GET with expected headers and params and return an expected response', async () => {
       // Arrange
       const params: GetUserRampTransactionsRequest = {
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
       const offrampProcesses: RampTransactionProcess[] = [];
@@ -340,6 +349,7 @@ describe('UserService', () => {
         headers: {
           accept: 'application/json',
           Authorization: props.apiKey,
+          'unblock-session-id': unblockSessionId,
         },
       };
 
@@ -357,7 +367,8 @@ describe('UserService', () => {
     it('Should throw expected error when an Axios Error Happens', async () => {
       // Arrange
       const params: GetUserRampTransactionsRequest = {
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -382,7 +393,8 @@ describe('UserService', () => {
     it('Should throw expected error when an Unexpected Error Happens', async () => {
       // Arrange
       const params: GetUserRampTransactionsRequest = {
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);

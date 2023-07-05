@@ -25,17 +25,18 @@ export type CreateUserResponse = {
   status: UserStatus;
 };
 
-export type GetUserStatusRequest = {
+export type UserSessionData = {
+  unblockSessionId: string;
   userUuid: string;
 };
+
+export type GetUserStatusRequest = UserSessionData;
 
 export type GetUserStatusResponse = {
   status: UserStatus;
 };
 
-export type GetUserRampTransactionsRequest = {
-  userUuid: string;
-};
+export type GetUserRampTransactionsRequest = UserSessionData;
 
 export enum ProcessDirection {
   ONRAMP = 'ONRAMP',
