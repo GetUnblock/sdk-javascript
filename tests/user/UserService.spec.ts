@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { SdkSettings } from '../../src/definitions';
 import Country from '../../src/enums/Country';
+import { ProcessStatus } from '../../src/enums/ProcessStatus';
 import { UserService } from '../../src/user/UserService';
 import {
   CreateUserRequest,
@@ -10,7 +11,6 @@ import {
   GetUserRampTransactionsResponse,
   GetUserStatusRequest,
   GetUserStatusResponse,
-  ProcessStatus,
   RampTransactionProcess,
   UserStatus,
 } from '../../src/user/definitions';

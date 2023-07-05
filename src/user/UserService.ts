@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { SdkSettings } from '../definitions';
+import { ProcessStatus } from '../enums/ProcessStatus';
 import {
   CreateUserRequest,
   CreateUserResponse,
@@ -7,7 +8,6 @@ import {
   GetUserRampTransactionsResponse,
   GetUserStatusRequest,
   GetUserStatusResponse,
-  ProcessStatus,
   UserStatus,
 } from './definitions';
 
