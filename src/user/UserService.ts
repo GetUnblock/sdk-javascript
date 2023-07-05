@@ -1,4 +1,5 @@
-import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import { ErrorHandler } from '../ErrorHandler';
 import { SdkSettings } from '../definitions';
 import { ProcessStatus } from '../enums/ProcessStatus';
 import {
@@ -61,12 +62,7 @@ export class UserService implements IUserService {
         userUuid: response.data.user_uuid,
       };
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError;
-        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
-      } else {
-        throw new Error(`Unexpected error': ${error}`);
-      }
+      ErrorHandler.handle(error);
     }
   }
 
@@ -90,12 +86,7 @@ export class UserService implements IUserService {
         status: response.data.status,
       };
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError;
-        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
-      } else {
-        throw new Error(`Unexpected error': ${error}`);
-      }
+      ErrorHandler.handle(error);
     }
   }
 
@@ -154,12 +145,7 @@ export class UserService implements IUserService {
         },
       };
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError;
-        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
-      } else {
-        throw new Error(`Unexpected error': ${error}`);
-      }
+      ErrorHandler.handle(error);
     }
   }
 }

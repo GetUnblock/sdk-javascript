@@ -1,5 +1,6 @@
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import { BaseService } from '../BaseService';
+import { ErrorHandler } from '../ErrorHandler';
 import { ExchangeRatesServiceRequest, ExchangeRatesServiceResponse } from './definitions';
 
 export interface IExchangeRatesService {
@@ -33,12 +34,7 @@ export class ExchangeRatesService extends BaseService implements IExchangeRatesS
         exchangeRate: response.data.exchange_rate,
       };
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError;
-        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
-      } else {
-        throw new Error(`Unexpected error': ${error}`);
-      }
+      ErrorHandler.handle(error);
     }
   }
 }
