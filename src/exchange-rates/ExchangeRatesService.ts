@@ -11,14 +11,11 @@ export class ExchangeRatesService extends BaseService implements IExchangeRatesS
   async getExchangeRate(
     params: ExchangeRatesServiceRequest,
   ): Promise<ExchangeRatesServiceResponse> {
-    const { apiKey } = this.props;
-
     const path = `/exchange-rates`;
 
     const config = {
       headers: {
         accept: 'application/json',
-        Authorization: apiKey,
       },
       params: {
         base_currency: params.baseCurrency,

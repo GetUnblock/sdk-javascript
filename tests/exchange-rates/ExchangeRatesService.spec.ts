@@ -61,7 +61,6 @@ describe('ExchangeRatesService', () => {
       const expectedConfig = {
         headers: {
           accept: 'application/json',
-          Authorization: props.apiKey,
         },
         params: {
           base_currency: params.baseCurrency,
