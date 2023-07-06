@@ -1,5 +1,6 @@
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import { BaseService } from '../BaseService';
+import { ErrorHandler } from '../ErrorHandler';
 import {
   NewRemoteUserBankAccount,
   RemoteUserBankAccountRequest,
@@ -85,12 +86,7 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
 
       return newRemoteBankAccount;
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError;
-        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
-      } else {
-        throw new Error(`Unexpected error': ${error}`);
-      }
+      ErrorHandler.handle(error);
     }
   }
 
@@ -122,12 +118,7 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
         this.mapToRemoteUserBankAccountResponse(response.data);
       return remoteUserBankAccounts;
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError;
-        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
-      } else {
-        throw new Error(`Unexpected error': ${error}`);
-      }
+      ErrorHandler.handle(error);
     }
   }
 
@@ -162,12 +153,7 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
       await this.axiosClient.patch(path, body, config);
       return;
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError;
-        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
-      } else {
-        throw new Error(`Unexpected error': ${error}`);
-      }
+      ErrorHandler.handle(error);
     }
   }
 
@@ -201,12 +187,7 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
         this.mapToRemoteUserBankAccountResponse([response.data])[0];
       return remoteUserBankAccounts;
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError;
-        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
-      } else {
-        throw new Error(`Unexpected error': ${error}`);
-      }
+      ErrorHandler.handle(error);
     }
   }
 
