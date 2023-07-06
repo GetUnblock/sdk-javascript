@@ -7,13 +7,13 @@ export const axiosErrorMock: AxiosError = new AxiosError(
   undefined,
   undefined,
   {
-    status: 500,
+    status: faker.internet.httpStatusCode({ types: ['serverError', 'clientError'] }),
     data: {
-      [faker.random.word()]: faker.datatype.string,
+      [faker.random.word()]: faker.datatype.string(),
     },
   } as AxiosResponse,
 );
 
 export const randomErrorMock: unknown = {
-  [faker.random.word()]: faker.datatype.string,
+  [faker.random.word()]: faker.datatype.string(),
 };

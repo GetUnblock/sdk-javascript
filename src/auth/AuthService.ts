@@ -1,4 +1,5 @@
 import { BaseService } from '../BaseService';
+import { ErrorHandler } from '../ErrorHandler';
 import {
   AuthenticationMethod,
   EmailLoginRequest,
@@ -9,7 +10,7 @@ import {
   SiweLoginRequest,
 } from './definitions';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 
 export interface IAuthService {
   login(data: LoginRequest): Promise<LoginResponse>;
@@ -53,12 +54,7 @@ export class AuthService extends BaseService implements IAuthService {
         sessionId: response.data.session_id,
       };
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError;
-        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
-      } else {
-        throw new Error(`Unexpected error': ${error}`);
-      }
+      ErrorHandler.handle(error);
     }
   }
 
@@ -92,12 +88,7 @@ export class AuthService extends BaseService implements IAuthService {
         unblockSessionId: response.data.unblock_session_id,
       };
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError;
-        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
-      } else {
-        throw new Error(`Unexpected error': ${error}`);
-      }
+      ErrorHandler.handle(error);
     }
   }
 
@@ -130,12 +121,7 @@ export class AuthService extends BaseService implements IAuthService {
         userUuid: response.data.user_uuid,
       };
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError;
-        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
-      } else {
-        throw new Error(`Unexpected error': ${error}`);
-      }
+      ErrorHandler.handle(error);
     }
   }
 }

@@ -1,6 +1,5 @@
 import { IServiceFactory } from './ServiceFactory';
 import { IAuthService } from './auth/AuthService';
-import { SdkSettings } from './definitions';
 import { IExchangeRatesService } from './exchange-rates/ExchangeRatesService';
 import { IKycService } from './kyc/KycService';
 import { IProcessService } from './process/ProcessService';
@@ -19,7 +18,7 @@ export class SDK {
   private transactionFeeService: ITransactionFeeService;
   private processService: IProcessService;
 
-  constructor(private ServiceFactory: IServiceFactory, private props: SdkSettings) {
+  constructor(private ServiceFactory: IServiceFactory) {
     // this.healthCheck();
     this.authService = this.ServiceFactory.createAuthService();
     this.remoteBankAccountService = this.ServiceFactory.createRemoteBankAccountService();

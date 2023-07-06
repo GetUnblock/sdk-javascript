@@ -1,6 +1,7 @@
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import { DateTime } from 'luxon';
 import { BaseService } from '../BaseService';
+import { ErrorHandler } from '../ErrorHandler';
 import Country from '../enums/Country';
 import {
   CreateKYCApplicantRequest,
@@ -69,6 +70,7 @@ export class KycService extends BaseService implements IKycService {
         'content-type': 'application/json',
         accept: 'application/json',
         Authorization: apiKey,
+        'unblock-session-id': createKYCApplicantParams.unblockSessionId,
       },
     };
 
@@ -79,12 +81,7 @@ export class KycService extends BaseService implements IKycService {
         created: true,
       };
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError;
-        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
-      } else {
-        throw new Error(`Unexpected error': ${error}`);
-      }
+      ErrorHandler.handle(error);
     }
   }
 
@@ -99,6 +96,7 @@ export class KycService extends BaseService implements IKycService {
       headers: {
         accept: 'application/json',
         Authorization: apiKey,
+        'unblock-session-id': getAccessTokenForUserApplicantParams.unblockSessionId,
       },
     };
     try {
@@ -110,17 +108,11 @@ export class KycService extends BaseService implements IKycService {
         token: response.data.token,
       };
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError;
-        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
-      } else {
-        throw new Error(`Unexpected error': ${error}`);
-      }
+      ErrorHandler.handle(error);
     }
   }
 
   async uploadKycDocument(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     uploadKycDocumentParams: UploadKycDocumentRequest,
   ): Promise<UploadKycDocumentResponse> {
     const { apiKey } = this.props;
@@ -139,6 +131,7 @@ export class KycService extends BaseService implements IKycService {
         'content-type': 'application/json',
         accept: 'application/json',
         Authorization: apiKey,
+        'unblock-session-id': uploadKycDocumentParams.unblockSessionId,
       },
     };
 
@@ -153,12 +146,7 @@ export class KycService extends BaseService implements IKycService {
         uploadUuid: response.data.upload_uuid,
       };
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError;
-        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
-      } else {
-        throw new Error(`Unexpected error': ${error}`);
-      }
+      ErrorHandler.handle(error);
     }
   }
 
@@ -173,6 +161,7 @@ export class KycService extends BaseService implements IKycService {
       headers: {
         accept: 'application/json',
         Authorization: apiKey,
+        'unblock-session-id': getUploadedKycDocumentsForUserParams.unblockSessionId,
       },
     };
     try {
@@ -206,12 +195,7 @@ export class KycService extends BaseService implements IKycService {
         verificationErrors: item.verification_errors,
       }));
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError;
-        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
-      } else {
-        throw new Error(`Unexpected error': ${error}`);
-      }
+      ErrorHandler.handle(error);
     }
   }
 
@@ -227,6 +211,7 @@ export class KycService extends BaseService implements IKycService {
         'content-type': 'application/json',
         accept: 'application/json',
         Authorization: apiKey,
+        'unblock-session-id': startKycVerificationParams.unblockSessionId,
       },
     };
 
@@ -237,17 +222,11 @@ export class KycService extends BaseService implements IKycService {
         started: true,
       };
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError;
-        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
-      } else {
-        throw new Error(`Unexpected error': ${error}`);
-      }
+      ErrorHandler.handle(error);
     }
   }
 
   async getRequiredKycInformation(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getRequiredKycInformationParams: GetRequiredKycInformationRequest,
   ): Promise<GetRequiredKycInformationResponse[]> {
     const { apiKey } = this.props;
@@ -258,6 +237,7 @@ export class KycService extends BaseService implements IKycService {
       headers: {
         accept: 'application/json',
         Authorization: apiKey,
+        'unblock-session-id': getRequiredKycInformationParams.unblockSessionId,
       },
     };
     try {
@@ -273,12 +253,7 @@ export class KycService extends BaseService implements IKycService {
         documentType: item.one_of_document_type,
       }));
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError;
-        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
-      } else {
-        throw new Error(`Unexpected error': ${error}`);
-      }
+      ErrorHandler.handle(error);
     }
   }
 }

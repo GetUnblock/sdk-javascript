@@ -1,6 +1,7 @@
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 
 import { BaseService } from '../BaseService';
+import { ErrorHandler } from '../ErrorHandler';
 import { ProcessStatus } from '../enums/ProcessStatus';
 import {
   GetOfframpProcessStatusRequest,
@@ -39,12 +40,7 @@ export class ProcessService extends BaseService implements IProcessService {
       );
       return response.data;
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError;
-        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
-      } else {
-        throw new Error(`Unexpected error': ${error}`);
-      }
+      ErrorHandler.handle(error);
     }
   }
 
@@ -67,12 +63,7 @@ export class ProcessService extends BaseService implements IProcessService {
       );
       return response.data;
     } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError;
-        throw new Error(`Api error': ${axiosError.response?.status} ${axiosError.response?.data}`);
-      } else {
-        throw new Error(`Unexpected error': ${error}`);
-      }
+      ErrorHandler.handle(error);
     }
   }
 }

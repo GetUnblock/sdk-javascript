@@ -18,6 +18,7 @@ import {
   UploadKycDocumentRequest,
   UploadKycDocumentResponse,
 } from '../../src/kyc/definitions';
+import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
 import { propsMock } from '../mocks/props.mock';
 import {
   getRandomDocumentSubType,
@@ -31,6 +32,11 @@ describe('KycService', () => {
   const mockedAxios = axios as jest.Mocked<typeof axios>;
   let axiosClient: AxiosInstance;
   let props: SdkSettings;
+  let axiosError: AxiosError;
+  let randomError: unknown;
+
+  let userUuid: string;
+  let unblockSessionId: string;
 
   beforeAll(() => {
     axiosClient = mockedAxios.create();
@@ -38,6 +44,10 @@ describe('KycService', () => {
 
   beforeEach(() => {
     props = propsMock;
+    axiosError = axiosErrorMock;
+    randomError = randomErrorMock;
+    userUuid = faker.datatype.uuid();
+    unblockSessionId = faker.datatype.uuid();
   });
 
   afterEach(() => {
@@ -56,7 +66,8 @@ describe('KycService', () => {
         postcode: faker.address.zipCode(),
         sourceOfFunds: getRandomSourceOfFundsType() as SourceOfFundsType,
         sourceOfFundsDescription: faker.lorem.sentence(),
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -81,6 +92,7 @@ describe('KycService', () => {
           'content-type': 'application/json',
           accept: 'application/json',
           Authorization: props.apiKey,
+          'unblock-session-id': unblockSessionId,
         },
       };
       const service = new KycService(props);
@@ -105,15 +117,10 @@ describe('KycService', () => {
         postcode: faker.address.zipCode(),
         sourceOfFunds: getRandomSourceOfFundsType() as SourceOfFundsType,
         sourceOfFundsDescription: faker.lorem.sentence(),
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
-      const axiosError = new AxiosError(undefined, undefined, undefined, undefined, {
-        status: 500,
-        data: {
-          [faker.random.word()]: faker.datatype.string,
-        },
-      } as AxiosResponse);
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(axiosError);
 
@@ -143,11 +150,8 @@ describe('KycService', () => {
         postcode: faker.address.zipCode(),
         sourceOfFunds: getRandomSourceOfFundsType(),
         sourceOfFundsDescription: faker.lorem.sentence(),
-        userUuid: faker.datatype.uuid(),
-      };
-
-      const randomError = {
-        [faker.random.word()]: faker.datatype.string,
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -176,7 +180,8 @@ describe('KycService', () => {
     it('Should call axios GET with expected headers and params', async () => {
       // Arrange
       const getAccessTokenForUserApplicantParams: GetAccessTokenForUserApplicantRequest = {
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
       const expectedResponse: GetAccessTokenForUserApplicantResponse = {
@@ -197,6 +202,7 @@ describe('KycService', () => {
         headers: {
           accept: 'application/json',
           Authorization: props.apiKey,
+          'unblock-session-id': unblockSessionId,
         },
       };
       const service = new KycService(props);
@@ -216,15 +222,10 @@ describe('KycService', () => {
     it('Should throw expected error when an Axios Error Happens', async () => {
       // Arrange
       const getAccessTokenForUserApplicantParams: GetAccessTokenForUserApplicantRequest = {
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
-      const axiosError = new AxiosError(undefined, undefined, undefined, undefined, {
-        status: 500,
-        data: {
-          [faker.random.word()]: faker.datatype.string,
-        },
-      } as AxiosResponse);
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
 
@@ -247,12 +248,10 @@ describe('KycService', () => {
     it('Should throw expected error when an Unexpected Error Happens', async () => {
       // Arrange
       const getAccessTokenForUserApplicantParams: GetAccessTokenForUserApplicantRequest = {
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
-      const randomError = {
-        [faker.random.word()]: faker.datatype.string,
-      };
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
@@ -284,7 +283,8 @@ describe('KycService', () => {
         documentType: getRandomDocumentType(),
         filename: faker.system.commonFileName('jpg'),
         documentSubType: getRandomDocumentSubType(),
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
       const expectedResponse: UploadKycDocumentResponse = { uploadUuid: faker.datatype.uuid() };
@@ -306,6 +306,7 @@ describe('KycService', () => {
           'content-type': 'application/json',
           accept: 'application/json',
           Authorization: props.apiKey,
+          'unblock-session-id': unblockSessionId,
         },
       };
       const service = new KycService(props);
@@ -328,15 +329,10 @@ describe('KycService', () => {
         documentType: getRandomDocumentType(),
         filename: faker.system.commonFileName('jpg'),
         documentSubType: getRandomDocumentSubType(),
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
-      const axiosError = new AxiosError(undefined, undefined, undefined, undefined, {
-        status: 500,
-        data: {
-          [faker.random.word()]: faker.datatype.string,
-        },
-      } as AxiosResponse);
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(axiosError);
 
@@ -364,11 +360,8 @@ describe('KycService', () => {
         documentType: getRandomDocumentType(),
         filename: faker.system.commonFileName('jpg'),
         documentSubType: getRandomDocumentSubType(),
-        userUuid: faker.datatype.uuid(),
-      };
-
-      const randomError = {
-        [faker.random.word()]: faker.datatype.string,
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -397,7 +390,8 @@ describe('KycService', () => {
     it('Should call axios GET with expected headers and params', async () => {
       // Arrange
       const getUploadedKycDocumentsForUserParams: GetUploadedKycDocumentsForUserRequest = {
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
       const expectedResponse: GetUploadedKycDocumentsForUserResponse[] = [];
@@ -454,6 +448,7 @@ describe('KycService', () => {
         headers: {
           accept: 'application/json',
           Authorization: props.apiKey,
+          'unblock-session-id': unblockSessionId,
         },
       };
       const service = new KycService(props);
@@ -473,15 +468,10 @@ describe('KycService', () => {
     it('Should throw expected error when an Axios Error Happens', async () => {
       // Arrange
       const getUploadedKycDocumentsForUserParams: GetUploadedKycDocumentsForUserRequest = {
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
-      const axiosError = new AxiosError(undefined, undefined, undefined, undefined, {
-        status: 500,
-        data: {
-          [faker.random.word()]: faker.datatype.string,
-        },
-      } as AxiosResponse);
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
 
@@ -504,12 +494,10 @@ describe('KycService', () => {
     it('Should throw expected error when an Unexpected Error Happens', async () => {
       // Arrange
       const getUploadedKycDocumentsForUserParams: GetUploadedKycDocumentsForUserRequest = {
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
-      const randomError = {
-        [faker.random.word()]: faker.datatype.string,
-      };
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
@@ -536,7 +524,8 @@ describe('KycService', () => {
     it('Should call axios POST with expected headers and body', async () => {
       // Arrange
       const startKycVerificationParams: StartKycVerificationRequest = {
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -551,6 +540,7 @@ describe('KycService', () => {
           'content-type': 'application/json',
           accept: 'application/json',
           Authorization: props.apiKey,
+          'unblock-session-id': unblockSessionId,
         },
       };
       const service = new KycService(props);
@@ -568,15 +558,10 @@ describe('KycService', () => {
     it('Should throw expected error when an Axios Error Happens', async () => {
       // Arrange
       const startKycVerificationParams: StartKycVerificationRequest = {
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
-      const axiosError = new AxiosError(undefined, undefined, undefined, undefined, {
-        status: 500,
-        data: {
-          [faker.random.word()]: faker.datatype.string,
-        },
-      } as AxiosResponse);
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(axiosError);
 
@@ -599,11 +584,8 @@ describe('KycService', () => {
     it('Should throw expected error when an Unexpected Error Happens', async () => {
       // Arrange
       const startKycVerificationParams: StartKycVerificationRequest = {
-        userUuid: faker.datatype.uuid(),
-      };
-
-      const randomError = {
-        [faker.random.word()]: faker.datatype.string,
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -632,7 +614,8 @@ describe('KycService', () => {
     it('Should call axios GET with expected headers and params', async () => {
       // Arrange
       const getRequiredKycInformationParams: GetRequiredKycInformationRequest = {
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
       const expectedResponse: GetRequiredKycInformationResponse[] = [];
@@ -661,6 +644,7 @@ describe('KycService', () => {
         headers: {
           accept: 'application/json',
           Authorization: props.apiKey,
+          'unblock-session-id': unblockSessionId,
         },
       };
       const service = new KycService(props);
@@ -678,15 +662,9 @@ describe('KycService', () => {
     it('Should throw expected error when an Axios Error Happens', async () => {
       // Arrange
       const getRequiredKycInformationParams: GetRequiredKycInformationRequest = {
-        userUuid: faker.datatype.uuid(),
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
-
-      const axiosError = new AxiosError(undefined, undefined, undefined, undefined, {
-        status: 500,
-        data: {
-          [faker.random.word()]: faker.datatype.string,
-        },
-      } as AxiosResponse);
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
@@ -710,11 +688,8 @@ describe('KycService', () => {
     it('Should throw expected error when an Unexpected Error Happens', async () => {
       // Arrange
       const getRequiredKycInformationParams: GetRequiredKycInformationRequest = {
-        userUuid: faker.datatype.uuid(),
-      };
-
-      const randomError = {
-        [faker.random.word()]: faker.datatype.string,
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
