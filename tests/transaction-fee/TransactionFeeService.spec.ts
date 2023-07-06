@@ -25,7 +25,6 @@ describe('TrnsactionFeeService', () => {
   let inputCurrency: Currency;
   let outputCurrency: Currency;
   let amount: number;
-
   let axiosError: AxiosError;
   let randomError: unknown;
 

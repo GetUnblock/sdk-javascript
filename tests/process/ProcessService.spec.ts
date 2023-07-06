@@ -11,7 +11,6 @@ describe('TrnsactionFeeService', () => {
   const mockedAxios = axios as jest.Mocked<typeof axios>;
   let axiosClient: AxiosInstance;
   let props: SdkSettings;
-
   let axiosError: AxiosError;
   let randomError: unknown;
 

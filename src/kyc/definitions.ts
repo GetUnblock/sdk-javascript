@@ -1,8 +1,13 @@
 import Country from '../enums/Country';
 
 export type SourceOfFundsType = 'SALARY' | 'BUSINESS_INCOME' | 'PENSION' | 'OTHER';
-export type CreateKYCApplicantRequest = {
+
+export type UserSessionData = {
+  unblockSessionId: string;
   userUuid: string;
+};
+
+export type CreateKYCApplicantRequest = UserSessionData & {
   address: string;
   postcode: string;
   city: string;
@@ -16,9 +21,7 @@ export type CreateKYCApplicantResponse = {
   created: true;
 };
 
-export type GetAccessTokenForUserApplicantRequest = {
-  userUuid: string;
-};
+export type GetAccessTokenForUserApplicantRequest = UserSessionData;
 
 export type GetAccessTokenForUserApplicantResponse = {
   token: string;
@@ -26,8 +29,7 @@ export type GetAccessTokenForUserApplicantResponse = {
 
 export type DocumentType = 'SELFIE' | 'PASSPORT' | 'DRIVERS' | 'ID_CARD' | 'RESIDENCE_PERMIT';
 export type DocumentSubType = 'FRONT_SIDE' | 'BACK_SIDE';
-export type UploadKycDocumentRequest = {
-  userUuid: string;
+export type UploadKycDocumentRequest = UserSessionData & {
   content: string;
   filename: string;
   documentType: DocumentType;
@@ -39,9 +41,7 @@ export type UploadKycDocumentResponse = {
   uploadUuid: string;
 };
 
-export type GetUploadedKycDocumentsForUserRequest = {
-  userUuid: string;
-};
+export type GetUploadedKycDocumentsForUserRequest = UserSessionData;
 
 export type GetUploadedKycDocumentsForUserResponse = {
   uuid: string;
@@ -57,17 +57,13 @@ export type GetUploadedKycDocumentsForUserResponse = {
   checkUuid: string;
 };
 
-export type StartKycVerificationRequest = {
-  userUuid: string;
-};
+export type StartKycVerificationRequest = UserSessionData;
 
 export type StartKycVerificationResponse = {
   started: true;
 };
 
-export type GetRequiredKycInformationRequest = {
-  userUuid: string;
-};
+export type GetRequiredKycInformationRequest = UserSessionData;
 
 export type GetRequiredKycInformationResponse = {
   documentClass: string;

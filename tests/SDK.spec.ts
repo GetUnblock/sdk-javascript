@@ -28,7 +28,7 @@ describe('SDK', () => {
       // Arrange
       const serviceFactory = new ServiceFactory(props);
 
-      const sdk = new SDK(serviceFactory, props);
+      const sdk = new SDK(serviceFactory);
 
       // Assert
       expect(sdk.auth).toBeInstanceOf(AuthService);
@@ -40,7 +40,7 @@ describe('SDK', () => {
       // Arrange
       const serviceFactory = new ServiceFactory(props);
 
-      const sdk = new SDK(serviceFactory, props);
+      const sdk = new SDK(serviceFactory);
 
       // Assert
       expect(sdk.kyc).toBeInstanceOf(KycService);
@@ -52,7 +52,7 @@ describe('SDK', () => {
       // Arrange
       const serviceFactory = new ServiceFactory(props);
 
-      const sdk = new SDK(serviceFactory, props);
+      const sdk = new SDK(serviceFactory);
 
       // Assert
       expect(sdk.user).toBeInstanceOf(UserService);
@@ -64,7 +64,7 @@ describe('SDK', () => {
       // Arrange
       const serviceFactory = new ServiceFactory(props);
 
-      const sdk = new SDK(serviceFactory, props);
+      const sdk = new SDK(serviceFactory);
 
       // Assert
       expect(sdk.exchangeRates).toBeInstanceOf(ExchangeRatesService);
@@ -76,7 +76,7 @@ describe('SDK', () => {
       // Arrange
       const serviceFactory = new ServiceFactory(props);
 
-      const sdk = new SDK(serviceFactory, props);
+      const sdk = new SDK(serviceFactory);
 
       // Assert
       expect(sdk.remoteBankAccount).toBeInstanceOf(RemoteBankAccountService);
@@ -88,7 +88,7 @@ describe('SDK', () => {
       // Arrange
       const serviceFactory = new ServiceFactory(props);
 
-      const sdk = new SDK(serviceFactory, props);
+      const sdk = new SDK(serviceFactory);
 
       // Assert
       expect(sdk.unblockBankAccount).toBeInstanceOf(UnblockBankAccountService);
@@ -100,7 +100,7 @@ describe('SDK', () => {
       // Arrange
       const serviceFactory = new ServiceFactory(props);
 
-      const sdk = new SDK(serviceFactory, props);
+      const sdk = new SDK(serviceFactory);
 
       // Assert
       expect(sdk.transactionFee).toBeInstanceOf(TransactionFeeService);
@@ -112,7 +112,7 @@ describe('SDK', () => {
       // Arrange
       const serviceFactory = new ServiceFactory(props);
 
-      const sdk = new SDK(serviceFactory, props);
+      const sdk = new SDK(serviceFactory);
 
       // Assert
       expect(sdk.process).toBeInstanceOf(ProcessService);

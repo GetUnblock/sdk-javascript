@@ -3,6 +3,7 @@ import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { AuthService } from '../../src/auth/AuthService';
 import { AuthenticationMethod, LoginRequest, SessionRequest } from '../../src/auth/definitions';
 import { SdkSettings } from '../../src/definitions';
+import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
 import { propsMock } from '../mocks/props.mock';
 
 describe('AuthService', () => {
@@ -10,6 +11,8 @@ describe('AuthService', () => {
   const mockedAxios = axios as jest.Mocked<typeof axios>;
   let axiosClient: AxiosInstance;
   let props: SdkSettings;
+  let axiosError: AxiosError;
+  let randomError: unknown;
 
   beforeAll(() => {
     axiosClient = mockedAxios.create();
@@ -17,6 +20,8 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     props = propsMock;
+    axiosError = axiosErrorMock;
+    randomError = randomErrorMock;
   });
 
   afterEach(() => {
@@ -133,13 +138,6 @@ describe('AuthService', () => {
         signature: faker.datatype.hexadecimal({ length: 128 }),
       };
 
-      const axiosError = new AxiosError(undefined, undefined, undefined, undefined, {
-        status: 500,
-        data: {
-          [faker.random.word()]: faker.datatype.string,
-        },
-      } as AxiosResponse);
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(axiosError);
 
@@ -166,10 +164,6 @@ describe('AuthService', () => {
         authenticationMethod: AuthenticationMethod.SIWE,
         message: faker.lorem.sentence(),
         signature: faker.datatype.hexadecimal({ length: 128 }),
-      };
-
-      const randomError = {
-        [faker.random.word()]: faker.datatype.string,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -200,13 +194,6 @@ describe('AuthService', () => {
         userUuid: faker.datatype.uuid(),
       };
 
-      const axiosError = new AxiosError(undefined, undefined, undefined, undefined, {
-        status: 500,
-        data: {
-          [faker.random.word()]: faker.datatype.string,
-        },
-      } as AxiosResponse);
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(axiosError);
 
@@ -232,10 +219,6 @@ describe('AuthService', () => {
       const credentials: LoginRequest = {
         authenticationMethod: AuthenticationMethod.EMAIL,
         userUuid: faker.datatype.uuid(),
-      };
-
-      const randomError = {
-        [faker.random.word()]: faker.datatype.string,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -314,13 +297,6 @@ describe('AuthService', () => {
         userUuid: faker.datatype.uuid(),
       };
 
-      const axiosError = new AxiosError(undefined, undefined, undefined, undefined, {
-        status: 500,
-        data: {
-          [faker.random.word()]: faker.datatype.string,
-        },
-      } as AxiosResponse);
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
 
@@ -346,10 +322,6 @@ describe('AuthService', () => {
       const emailSessionParams: SessionRequest = {
         code: faker.datatype.hexadecimal({ length: 256 }),
         userUuid: faker.datatype.uuid(),
-      };
-
-      const randomError = {
-        [faker.random.word()]: faker.datatype.string,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);

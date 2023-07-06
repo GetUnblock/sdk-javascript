@@ -1,10 +1,12 @@
-export type SdkSettingsParams = {
+export type SdkProps = {
   apiKey: string;
   prod: boolean;
 };
 
-export type SdkSettings = {
+export type GlobalSettings = {
   sandBoxUrl: 'https://sandbox.getunblock.com';
   prodUrl: 'https://getunblock.com';
   timeoutMs: 10000;
-} & SdkSettingsParams;
+};
+
+export type SdkSettings = SdkProps & GlobalSettings;
