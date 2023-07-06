@@ -619,22 +619,32 @@ describe('KycService', () => {
 
       const expectedResponse: GetRequiredKycInformationResponse[] = [];
       for (let i = 0; i < faker.datatype.number(5); i++) {
+        const documentsTypes: DocumentType[] = [];
+
+        for (let j = 0; j < faker.datatype.number(5); j++) {
+          documentsTypes.push(getRandomDocumentType());
+        }
+
         expectedResponse.push({
           documentClass: faker.word.noun(),
-          documentType: getRandomDocumentType(),
+          documentTypes: documentsTypes,
         });
       }
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       type AuxResponse = {
-        document_class: string;
-        one_of_document_type: DocumentType;
-      }[];
+        required_documents: {
+          document_class: string;
+          one_of_document_type: DocumentType[];
+        }[];
+      };
       jest.spyOn(axiosClient, 'get').mockResolvedValue({
-        data: expectedResponse.map((item) => ({
-          document_class: item.documentClass,
-          one_of_document_type: item.documentType,
-        })) as AuxResponse,
+        data: {
+          required_documents: expectedResponse.map((item) => ({
+            document_class: item.documentClass,
+            one_of_document_type: item.documentTypes,
+          })),
+        } as AuxResponse,
       } as AxiosResponse<AuxResponse>);
 
       const expectedPath = `/user/${getRequiredKycInformationParams.userUuid}/kyc/verification`;
