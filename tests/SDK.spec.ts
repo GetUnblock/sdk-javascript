@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import { SDK } from '../src/SDK';
 import { ServiceFactory } from '../src/ServiceFactory';
 import { AuthService } from '../src/auth/AuthService';
+import { CompanyService } from '../src/company/CompanyService';
 import { SdkSettings } from '../src/definitions';
 import { ExchangeRatesService } from '../src/exchange-rates/ExchangeRatesService';
 import { KycService } from '../src/kyc/KycService';
@@ -116,6 +117,18 @@ describe('SDK', () => {
 
       // Assert
       expect(sdk.process).toBeInstanceOf(ProcessService);
+    });
+  });
+
+  describe('company', () => {
+    it('Should return a CompanyService type', () => {
+      // Arrange
+      const serviceFactory = new ServiceFactory(props);
+
+      const sdk = new SDK(serviceFactory);
+
+      // Assert
+      expect(sdk.company).toBeInstanceOf(CompanyService);
     });
   });
 });
