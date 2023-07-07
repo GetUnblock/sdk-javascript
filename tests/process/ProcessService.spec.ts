@@ -22,9 +22,9 @@ describe('TrnsactionFeeService', () => {
   });
 
   beforeEach(() => {
-    props = propsMock;
-    axiosError = axiosErrorMock;
-    randomError = randomErrorMock;
+    props = propsMock();
+    axiosError = axiosErrorMock();
+    randomError = randomErrorMock();
     processUuid = faker.datatype.uuid();
     status = faker.helpers.arrayElement(Object.values(ProcessStatus));
   });

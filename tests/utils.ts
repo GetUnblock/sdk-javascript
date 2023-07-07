@@ -1,18 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { DocumentSubType, DocumentType, SourceOfFundsType } from 'src/kyc/definitions';
 
-export const getRandomFromEnum = <T>(
-  enumeration:
-    | {
-        [s: string]: T;
-      }
-    | ArrayLike<T>,
-): T => {
-  const enumValues = Object.values(enumeration);
-  const randomIndex = Math.floor(Math.random() * enumValues.length);
-  return enumValues[randomIndex] as T[keyof T] as T;
-};
-
 export const getRandomSourceOfFundsType = (): SourceOfFundsType =>
   faker.helpers.arrayElement(['SALARY', 'BUSINESS_INCOME', 'PENSION', 'OTHER']);
 

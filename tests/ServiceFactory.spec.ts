@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { ServiceFactory } from '../src/ServiceFactory';
 import { AuthService } from '../src/auth/AuthService';
+import { CompanyService } from '../src/company/CompanyService';
 import { SdkSettings } from '../src/definitions';
 import { ExchangeRatesService } from '../src/exchange-rates/ExchangeRatesService';
 import { KycService } from '../src/kyc/KycService';
@@ -107,5 +108,16 @@ describe('ServiceFactory', () => {
 
     // Assert
     expect(service).toBeInstanceOf(ProcessService);
+  });
+
+  it('Should create an CompanyService instance', () => {
+    // Arrange
+    const factory = new ServiceFactory(props);
+
+    // Act
+    const service = factory.createCompanyService();
+
+    // Assert
+    expect(service).toBeInstanceOf(CompanyService);
   });
 });
