@@ -1,5 +1,6 @@
 import { IServiceFactory } from './ServiceFactory';
 import { IAuthService } from './auth/AuthService';
+import { ICompanyService } from './company/CompanyService';
 import { IExchangeRatesService } from './exchange-rates/ExchangeRatesService';
 import { IKycService } from './kyc/KycService';
 import { IProcessService } from './process/ProcessService';
@@ -17,6 +18,7 @@ export class SDK {
   private unblockBankAccountService: IUnblockBankAccountService;
   private transactionFeeService: ITransactionFeeService;
   private processService: IProcessService;
+  private companyService: ICompanyService;
 
   constructor(private ServiceFactory: IServiceFactory) {
     // this.healthCheck();
@@ -28,6 +30,7 @@ export class SDK {
     this.unblockBankAccountService = this.ServiceFactory.createUnblockBankAccountService();
     this.transactionFeeService = this.ServiceFactory.createTransactionFeeService();
     this.processService = this.ServiceFactory.createProcessService();
+    this.companyService = this.ServiceFactory.createCompanyService();
   }
 
   private async healthCheck(): Promise<boolean> {
@@ -65,5 +68,9 @@ export class SDK {
 
   get process(): IProcessService {
     return this.processService;
+  }
+
+  get company(): ICompanyService {
+    return this.companyService;
   }
 }

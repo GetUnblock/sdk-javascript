@@ -1,39 +1,35 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { SdkSettings } from '../../src/definitions';
-import { UnblockBankAccountService } from '../../src/unblock-bank-account/UnblockBankAccountService';
+import { CompanyService } from '../../src/company/CompanyService';
 import {
-  CreateUnblockUserBankAccountResponse,
-  GetAllunblockUserBankAccountsResponse,
-  GetUnblockBankAccountByIdResponse,
-  SimulateOnRampResponse,
-  UnblockUserBankAccount,
-  UnblockUserBankAccountFull,
-  UserSessionData,
-} from '../../src/unblock-bank-account/definitions';
+  AddUserToCompanyApiRequestBody,
+  CompanyDetails,
+  CreateCompanyApiRequestBody,
+  CreateCompanyApiResponseData,
+  CreateCompanyResponse,
+  TargetAddress,
+  UpdateCompanyApiRequestBody,
+} from '../../src/company/definitions';
+import { SdkSettings } from '../../src/definitions';
+import { UserCompanyRole } from '../../src/enums/UserCompanyRole';
 import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
 import { propsMock } from '../mocks/props.mock';
+import { companyDetailsMock } from './companyDetails.mock';
 
-describe('UnblockBankAccountService', () => {
+describe('CompanyService', () => {
   jest.mock('axios');
   const mockedAxios = axios as jest.Mocked<typeof axios>;
   let axiosClient: AxiosInstance;
   let props: SdkSettings;
-
-  let userUuid: string;
-  let unblockSessionID: string;
-  let currency: string;
-
-  let createdAt: string;
-  let updatedAt: string;
-  let uuid: string;
-
-  let amount: number;
-
   let axiosError: AxiosError;
   let randomError: unknown;
 
-  let userSessionData: UserSessionData;
+  let companyDetails: CompanyDetails;
+  let targetAddress: TargetAddress;
+  let message: string;
+  let uuid: string;
+  let userUuid: string;
+  let role: UserCompanyRole;
 
   beforeAll(() => {
     axiosClient = mockedAxios.create();
@@ -43,68 +39,68 @@ describe('UnblockBankAccountService', () => {
     props = propsMock();
     axiosError = axiosErrorMock();
     randomError = randomErrorMock();
-
-    userUuid = faker.datatype.uuid();
-    unblockSessionID = faker.datatype.uuid();
-    currency = faker.finance.currencyCode();
-
-    createdAt = faker.date.recent().toDateString();
-    updatedAt = createdAt;
+    companyDetails = companyDetailsMock();
+    targetAddress = { targetAddress: faker.datatype.hexadecimal({ length: 42 }) };
+    message = faker.lorem.sentence();
     uuid = faker.datatype.uuid();
-
-    amount = faker.datatype.number({ min: 0.01, max: 100000000, precision: 0.01 });
-
-    userSessionData = {
-      unblockSessionID: unblockSessionID,
-      userUuid: userUuid,
-    };
+    userUuid = faker.datatype.uuid();
+    role = faker.helpers.arrayElement(Object.values(UserCompanyRole));
   });
 
   afterEach(() => {
     jest.resetAllMocks();
   });
 
-  describe('createUnblockUserBankAccount', () => {
+  describe('createCompany', () => {
     // Happy
     it('should call axios post method with expected params and return the expected response', async () => {
       // Arrange
-      const expectedPath = `/user/${userUuid}/bank-account/unblock`;
-      const expectedBody = { currency: currency };
+      const expectedResult: CreateCompanyResponse = {
+        message: message,
+        uuid: uuid,
+      };
+
+      const expectedPath = '/company';
+      const expectedBody: CreateCompanyApiRequestBody = {
+        name: companyDetails.name,
+        type: companyDetails.type,
+        registered_address: companyDetails.registeredAddress,
+        city: companyDetails.city,
+        country: companyDetails.country,
+        registration_number: companyDetails.registrationNumber,
+        contact_name: companyDetails.contactName,
+        phone: companyDetails.phone,
+        email: companyDetails.email,
+        industry_sector_type: companyDetails.industrySectorType,
+        industry_sector_value: companyDetails.industrySectorValue,
+        target_address: targetAddress.targetAddress,
+      };
       const expectedConfig = {
         headers: {
           'content-type': 'application/json',
           accept: 'application/json',
           Authorization: props.apiKey,
-          'unblock-session-id': unblockSessionID,
         },
       };
 
-      const expectedResult: CreateUnblockUserBankAccountResponse = {
-        currency: currency,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-        uuid: uuid,
-      };
-
-      const responseData = {
-        currency: currency,
-        created_at: createdAt,
-        updated_at: updatedAt,
+      const responseData: CreateCompanyApiResponseData = {
+        message: message,
         uuid: uuid,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockResolvedValueOnce({
-        status: 201,
+        status: 200,
         data: responseData,
       });
 
-      const service = new UnblockBankAccountService(props);
+      const service = new CompanyService(props);
 
       // Act
-      const result = await service.createUnblockUserBankAccount({
-        ...userSessionData,
-        currency: currency,
+      const result = await service.createCompany({
+        ...companyDetails,
+        ...targetAddress,
+        companyUuid: uuid,
       });
 
       // Assert
@@ -116,20 +112,18 @@ describe('UnblockBankAccountService', () => {
     // Sad
     it('should throw expected error when an Axios Error Happens', async () => {
       // Arrange
+
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(axiosError);
 
       const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
 
-      const service = new UnblockBankAccountService(props);
+      const service = new CompanyService(props);
 
       // Act
       try {
-        await service.createUnblockUserBankAccount({
-          ...userSessionData,
-          currency: currency,
-        });
+        await service.createCompany({ ...companyDetails, ...targetAddress, companyUuid: uuid });
       } catch (error) {
         resultedError = error;
       }
@@ -142,20 +136,18 @@ describe('UnblockBankAccountService', () => {
 
     it('should throw expected error when an Unexpected Error Happens', async () => {
       // Arrange
+
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(randomError);
 
       const expectedErrorMesage = `Unexpected error': ${randomError}`;
       let resultedError;
 
-      const service = new UnblockBankAccountService(props);
+      const service = new CompanyService(props);
 
       // Act
       try {
-        await service.createUnblockUserBankAccount({
-          ...userSessionData,
-          currency: currency,
-        });
+        await service.createCompany({ ...companyDetails, ...targetAddress, companyUuid: uuid });
       } catch (error) {
         resultedError = error;
       }
@@ -166,98 +158,101 @@ describe('UnblockBankAccountService', () => {
     });
   });
 
-  describe('getAllUnblockUserBankAccounts', () => {
+  describe('updateCompany', () => {
     // Happy
-    it('should call axios get method with expected params and return the expected response', async () => {
+    it('should call axios patch method with expected params and return the expected response', async () => {
       // Arrange
-      const expectedPath = `/user/${userUuid}/bank-account/unblock`;
+      const expectedResult: CreateCompanyResponse = {
+        message: message,
+        uuid: uuid,
+      };
+
+      const expectedPath = `/company/${uuid}`;
+      const expectedBody: UpdateCompanyApiRequestBody = {
+        name: companyDetails.name,
+        type: companyDetails.type,
+        registered_address: companyDetails.registeredAddress,
+        city: companyDetails.city,
+        country: companyDetails.country,
+        registration_number: companyDetails.registrationNumber,
+        contact_name: companyDetails.contactName,
+        phone: companyDetails.phone,
+        email: companyDetails.email,
+        industry_sector_type: companyDetails.industrySectorType,
+        industry_sector_value: companyDetails.industrySectorValue,
+      };
       const expectedConfig = {
         headers: {
+          'content-type': 'application/json',
           accept: 'application/json',
           Authorization: props.apiKey,
-          'unblock-session-id': unblockSessionID,
         },
       };
 
-      const accounts = [];
-      const accountsLength = faker.datatype.number(5);
-
-      for (let i = 0; i < accountsLength; i++) {
-        accounts.push({
-          currency: faker.finance.currencyCode(),
-          createdAt: faker.date.recent().toDateString(),
-          updatedAt: createdAt,
-          uuid: faker.datatype.uuid(),
-        });
-      }
-
-      const expectedResult: GetAllunblockUserBankAccountsResponse = accounts;
-
-      const responseData: UnblockUserBankAccount[] = accounts.map((item) => {
-        return {
-          currency: item.currency,
-          created_at: item.createdAt,
-          updated_at: item.updatedAt,
-          uuid: item.uuid,
-        };
-      });
+      const responseData: CreateCompanyApiResponseData = {
+        message: message,
+        uuid: uuid,
+      };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockResolvedValueOnce({
+      jest.spyOn(axiosClient, 'patch').mockResolvedValueOnce({
         status: 200,
         data: responseData,
       });
 
-      const service = new UnblockBankAccountService(props);
+      const service = new CompanyService(props);
 
       // Act
-      const result = await service.getAllUnblockUserBankAccounts({
-        ...userSessionData,
-      });
+      const result = await service.updateCompany({ ...companyDetails, companyUuid: uuid });
 
       // Assert
-      expect(axiosClient.get).toBeCalledTimes(1);
-      expect(axiosClient.get).toHaveBeenLastCalledWith(expectedPath, expectedConfig);
+      expect(axiosClient.patch).toBeCalledTimes(1);
+      expect(axiosClient.patch).toHaveBeenLastCalledWith(
+        expectedPath,
+        expectedBody,
+        expectedConfig,
+      );
       expect(result).toStrictEqual(expectedResult);
     });
 
     // Sad
     it('should throw expected error when an Axios Error Happens', async () => {
       // Arrange
+
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
+      jest.spyOn(axiosClient, 'patch').mockRejectedValueOnce(axiosError);
 
       const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
-
-      const service = new UnblockBankAccountService(props);
+      const service = new CompanyService(props);
 
       // Act
       try {
-        await service.getAllUnblockUserBankAccounts({ ...userSessionData });
+        await service.updateCompany({ ...companyDetails, companyUuid: uuid });
       } catch (error) {
         resultedError = error;
       }
 
       // Assert
-      expect(axiosClient.get).toBeCalledTimes(1);
+      expect(axiosClient.patch).toBeCalledTimes(1);
       expect(resultedError).toBeInstanceOf(Error);
       expect((resultedError as Error).message).toBe(expectedErrorMesage);
     });
 
     it('should throw expected error when an Unexpected Error Happens', async () => {
       // Arrange
+
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
+      jest.spyOn(axiosClient, 'patch').mockRejectedValueOnce(randomError);
 
       const expectedErrorMesage = `Unexpected error': ${randomError}`;
       let resultedError;
 
-      const service = new UnblockBankAccountService(props);
+      const service = new CompanyService(props);
 
       // Act
       try {
-        await service.getAllUnblockUserBankAccounts({ ...userSessionData });
+        await service.updateCompany({ ...companyDetails, companyUuid: uuid });
       } catch (error) {
         resultedError = error;
       }
@@ -268,29 +263,32 @@ describe('UnblockBankAccountService', () => {
     });
   });
 
-  describe('simulateOnRamp', () => {
+  describe('addUserToCampany', () => {
     // Happy
     it('should call axios post method with expected params and return the expected response', async () => {
       // Arrange
-      const expectedPath = `/user/${userUuid}/bank-account/unblock/test`;
-      const expectedBody = { currency: currency, value: amount };
+      const expectedResult: CreateCompanyResponse = {
+        message: message,
+        uuid: uuid,
+      };
+
+      const expectedPath = `/company/${uuid}/user`;
+      const expectedBody: AddUserToCompanyApiRequestBody = {
+        company_uuid: uuid,
+        user_uuid: userUuid,
+        role: role,
+      };
       const expectedConfig = {
         headers: {
           'content-type': 'application/json',
           accept: 'application/json',
           Authorization: props.apiKey,
-          'unblock-session-id': unblockSessionID,
         },
       };
 
-      const message = faker.lorem.sentence();
-
-      const expectedResult: SimulateOnRampResponse = {
+      const responseData: CreateCompanyApiResponseData = {
         message: message,
-      };
-
-      const responseData = {
-        message: message,
+        uuid: uuid,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -299,13 +297,13 @@ describe('UnblockBankAccountService', () => {
         data: responseData,
       });
 
-      const service = new UnblockBankAccountService(props);
+      const service = new CompanyService(props);
 
       // Act
-      const result = await service.simulateOnRamp({
-        ...userSessionData,
-        currency: currency,
-        value: amount,
+      const result = await service.addUserToCompany({
+        companyUuid: uuid,
+        userUuid: userUuid,
+        role: role,
       });
 
       // Assert
@@ -317,20 +315,21 @@ describe('UnblockBankAccountService', () => {
     // Sad
     it('should throw expected error when an Axios Error Happens', async () => {
       // Arrange
+
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(axiosError);
 
       const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
 
-      const service = new UnblockBankAccountService(props);
+      const service = new CompanyService(props);
 
       // Act
       try {
-        await service.simulateOnRamp({
-          ...userSessionData,
-          currency: currency,
-          value: amount,
+        await service.addUserToCompany({
+          companyUuid: uuid,
+          userUuid: userUuid,
+          role: role,
         });
       } catch (error) {
         resultedError = error;
@@ -344,20 +343,21 @@ describe('UnblockBankAccountService', () => {
 
     it('should throw expected error when an Unexpected Error Happens', async () => {
       // Arrange
+
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(randomError);
 
       const expectedErrorMesage = `Unexpected error': ${randomError}`;
       let resultedError;
 
-      const service = new UnblockBankAccountService(props);
+      const service = new CompanyService(props);
 
       // Act
       try {
-        await service.simulateOnRamp({
-          ...userSessionData,
-          currency: currency,
-          value: amount,
+        await service.addUserToCompany({
+          companyUuid: uuid,
+          userUuid: userUuid,
+          role: role,
         });
       } catch (error) {
         resultedError = error;
@@ -369,115 +369,90 @@ describe('UnblockBankAccountService', () => {
     });
   });
 
-  describe('getUnblockBankAccountById', () => {
+  describe('removeUserFromCompany', () => {
     // Happy
-    it('should call axios get method with expected params and return the expected response', async () => {
+    it('should call axios delete method with expected params and return the expected response', async () => {
       // Arrange
-      const expectedPath = `/user/${userUuid}/bank-account/unblock/${uuid}`;
+      const expectedResult: CreateCompanyResponse = {
+        message: message,
+        uuid: uuid,
+      };
+
+      const expectedPath = `/company/${uuid}/user/${userUuid}`;
       const expectedConfig = {
         headers: {
           accept: 'application/json',
           Authorization: props.apiKey,
-          'unblock-session-id': unblockSessionID,
         },
       };
 
-      const bic = faker.finance.bic();
-      const accountNumber = faker.finance.account();
-      const iban = faker.finance.iban();
-      const holderName = faker.lorem.word();
-      const currentBalance = faker.datatype.number({ min: 0.01, max: 100000000, precision: 0.01 });
-      const availableBalance = faker.datatype.number({
-        min: 0.01,
-        max: 100000000,
-        precision: 0.01,
-      });
-      const sortCode = faker.finance.account(6);
-
-      const expectedResult: GetUnblockBankAccountByIdResponse = {
-        currency: currency,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
+      const responseData = {
+        message: message,
         uuid: uuid,
-        bic: bic,
-        accountNumber: accountNumber,
-        iban: iban,
-        holderName: holderName,
-        currentBalance: currentBalance,
-        availableBalance: availableBalance,
-        sortCode: sortCode,
-      };
-      const responseData: UnblockUserBankAccountFull = {
-        currency: currency,
-        created_at: createdAt,
-        updated_at: updatedAt,
-        uuid: uuid,
-        bic: bic,
-        account_number: accountNumber,
-        iban: iban,
-        holder_name: holderName,
-        current_balance: currentBalance,
-        available_balance: availableBalance,
-        sort_code: sortCode,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockResolvedValueOnce({
+      jest.spyOn(axiosClient, 'delete').mockResolvedValueOnce({
         status: 200,
         data: responseData,
       });
-
-      const service = new UnblockBankAccountService(props);
+      const service = new CompanyService(props);
 
       // Act
-      const result = await service.getUnblockBankAccountById({
-        ...userSessionData,
-        accountUuid: uuid,
+      const result = await service.removeUserFromCompany({
+        companyUuid: uuid,
+        companyUserUuid: userUuid,
       });
 
       // Assert
-      expect(axiosClient.get).toBeCalledTimes(1);
-      expect(axiosClient.get).toHaveBeenLastCalledWith(expectedPath, expectedConfig);
+      expect(axiosClient.delete).toBeCalledTimes(1);
+      expect(axiosClient.delete).toHaveBeenLastCalledWith(expectedPath, expectedConfig);
       expect(result).toStrictEqual(expectedResult);
     });
-
     // Sad
     it('should throw expected error when an Axios Error Happens', async () => {
       // Arrange
+
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
+      jest.spyOn(axiosClient, 'delete').mockRejectedValueOnce(axiosError);
 
       const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
 
-      const service = new UnblockBankAccountService(props);
+      const service = new CompanyService(props);
 
       // Act
       try {
-        await service.getUnblockBankAccountById({ ...userSessionData, accountUuid: uuid });
+        await service.removeUserFromCompany({
+          companyUuid: uuid,
+          companyUserUuid: userUuid,
+        });
       } catch (error) {
         resultedError = error;
       }
 
       // Assert
-      expect(axiosClient.get).toBeCalledTimes(1);
+      expect(axiosClient.delete).toBeCalledTimes(1);
       expect(resultedError).toBeInstanceOf(Error);
       expect((resultedError as Error).message).toBe(expectedErrorMesage);
     });
 
     it('should throw expected error when an Unexpected Error Happens', async () => {
       // Arrange
+
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
+      jest.spyOn(axiosClient, 'delete').mockRejectedValueOnce(randomError);
 
       const expectedErrorMesage = `Unexpected error': ${randomError}`;
       let resultedError;
-
-      const service = new UnblockBankAccountService(props);
+      const service = new CompanyService(props);
 
       // Act
       try {
-        await service.getUnblockBankAccountById({ ...userSessionData, accountUuid: uuid });
+        await service.removeUserFromCompany({
+          companyUuid: uuid,
+          companyUserUuid: userUuid,
+        });
       } catch (error) {
         resultedError = error;
       }

@@ -23,7 +23,6 @@ import { propsMock } from '../mocks/props.mock';
 import {
   getRandomDocumentSubType,
   getRandomDocumentType,
-  getRandomFromEnum,
   getRandomSourceOfFundsType,
 } from '../utils';
 
@@ -43,9 +42,9 @@ describe('KycService', () => {
   });
 
   beforeEach(() => {
-    props = propsMock;
-    axiosError = axiosErrorMock;
-    randomError = randomErrorMock;
+    props = propsMock();
+    axiosError = axiosErrorMock();
+    randomError = randomErrorMock();
     userUuid = faker.datatype.uuid();
     unblockSessionId = faker.datatype.uuid();
   });
@@ -279,7 +278,7 @@ describe('KycService', () => {
       // Arrange
       const uploadKycDocumentParams: UploadKycDocumentRequest = {
         content: faker.datatype.string(),
-        country: getRandomFromEnum(Country),
+        country: faker.helpers.arrayElement(Object.values(Country)),
         documentType: getRandomDocumentType(),
         filename: faker.system.commonFileName('jpg'),
         documentSubType: getRandomDocumentSubType(),
@@ -325,7 +324,7 @@ describe('KycService', () => {
       // Arrange
       const uploadKycDocumentParams: UploadKycDocumentRequest = {
         content: faker.datatype.string(),
-        country: getRandomFromEnum(Country),
+        country: faker.helpers.arrayElement(Object.values(Country)),
         documentType: getRandomDocumentType(),
         filename: faker.system.commonFileName('jpg'),
         documentSubType: getRandomDocumentSubType(),
@@ -356,7 +355,7 @@ describe('KycService', () => {
       // Arrange
       const uploadKycDocumentParams: UploadKycDocumentRequest = {
         content: faker.datatype.string(),
-        country: getRandomFromEnum(Country),
+        country: faker.helpers.arrayElement(Object.values(Country)),
         documentType: getRandomDocumentType(),
         filename: faker.system.commonFileName('jpg'),
         documentSubType: getRandomDocumentSubType(),
@@ -398,7 +397,7 @@ describe('KycService', () => {
       for (let i = 0; i < faker.datatype.number(5); i++) {
         expectedResponse.push({
           checkUuid: faker.datatype.uuid(),
-          country: getRandomFromEnum(Country),
+          country: faker.helpers.arrayElement(Object.values(Country)),
           createdAt: faker.datatype.datetime().toISOString(),
           documentType: getRandomDocumentType(),
           name: faker.system.commonFileName('jpg'),

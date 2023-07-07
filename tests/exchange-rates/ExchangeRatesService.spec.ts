@@ -9,7 +9,6 @@ import {
 } from '../../src/exchange-rates/definitions';
 import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
 import { propsMock } from '../mocks/props.mock';
-import { getRandomFromEnum } from '../utils';
 
 describe('ExchangeRatesService', () => {
   jest.mock('axios');
@@ -24,9 +23,9 @@ describe('ExchangeRatesService', () => {
   });
 
   beforeEach(() => {
-    props = propsMock;
-    axiosError = axiosErrorMock;
-    randomError = randomErrorMock;
+    props = propsMock();
+    axiosError = axiosErrorMock();
+    randomError = randomErrorMock();
   });
 
   afterEach(() => {
@@ -39,8 +38,8 @@ describe('ExchangeRatesService', () => {
       // Arrange
 
       const params: ExchangeRatesServiceRequest = {
-        baseCurrency: getRandomFromEnum(Currency),
-        targetCurrency: getRandomFromEnum(Currency),
+        baseCurrency: faker.helpers.arrayElement(Object.values(Currency)),
+        targetCurrency: faker.helpers.arrayElement(Object.values(Currency)),
       };
 
       const expectedResponse: ExchangeRatesServiceResponse = {
@@ -84,8 +83,8 @@ describe('ExchangeRatesService', () => {
       // Arrange
 
       const params: ExchangeRatesServiceRequest = {
-        baseCurrency: getRandomFromEnum(Currency),
-        targetCurrency: getRandomFromEnum(Currency),
+        baseCurrency: faker.helpers.arrayElement(Object.values(Currency)),
+        targetCurrency: faker.helpers.arrayElement(Object.values(Currency)),
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -111,8 +110,8 @@ describe('ExchangeRatesService', () => {
       // Arrange
 
       const params: ExchangeRatesServiceRequest = {
-        baseCurrency: getRandomFromEnum(Currency),
-        targetCurrency: getRandomFromEnum(Currency),
+        baseCurrency: faker.helpers.arrayElement(Object.values(Currency)),
+        targetCurrency: faker.helpers.arrayElement(Object.values(Currency)),
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
