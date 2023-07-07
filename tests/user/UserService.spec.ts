@@ -16,7 +16,6 @@ import {
 } from '../../src/user/definitions';
 import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
 import { propsMock } from '../mocks/props.mock';
-import { getRandomFromEnum } from '../utils';
 
 describe('UserService', () => {
   jest.mock('axios');
@@ -48,7 +47,7 @@ describe('UserService', () => {
     it('Should call axios POST with expected headers, params and body and return an expected response', async () => {
       // Arrange
       const params: CreateUserRequest = {
-        country: getRandomFromEnum(Country),
+        country: faker.helpers.arrayElement(Object.values(Country)),
         email: faker.internet.email(),
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
@@ -57,7 +56,7 @@ describe('UserService', () => {
 
       const expectedResponse: CreateUserResponse = {
         message: faker.lorem.sentence(),
-        status: getRandomFromEnum(UserStatus),
+        status: faker.helpers.arrayElement(Object.values(UserStatus)),
         userUuid: faker.datatype.uuid(),
       };
 
@@ -110,7 +109,7 @@ describe('UserService', () => {
     it('Should throw expected error when an Axios Error Happens', async () => {
       // Arrange
       const params: CreateUserRequest = {
-        country: getRandomFromEnum(Country),
+        country: faker.helpers.arrayElement(Object.values(Country)),
         email: faker.internet.email(),
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
@@ -139,7 +138,7 @@ describe('UserService', () => {
     it('Should throw expected error when an Unexpected Error Happens', async () => {
       // Arrange
       const params: CreateUserRequest = {
-        country: getRandomFromEnum(Country),
+        country: faker.helpers.arrayElement(Object.values(Country)),
         email: faker.internet.email(),
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
@@ -176,7 +175,7 @@ describe('UserService', () => {
       };
 
       const expectedResponse: GetUserStatusResponse = {
-        status: getRandomFromEnum(UserStatus),
+        status: faker.helpers.arrayElement(Object.values(UserStatus)),
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -277,7 +276,7 @@ describe('UserService', () => {
         offrampProcesses.push({
           amount: faker.datatype.number(),
           createdAt: faker.datatype.datetime().toString(),
-          status: getRandomFromEnum(ProcessStatus),
+          status: faker.helpers.arrayElement(Object.values(ProcessStatus)),
           updatedAt: faker.datatype.datetime().toString(),
           uuid: faker.datatype.uuid(),
         });
@@ -287,7 +286,7 @@ describe('UserService', () => {
         onrampProcesses.push({
           amount: faker.datatype.number(),
           createdAt: faker.datatype.datetime().toString(),
-          status: getRandomFromEnum(ProcessStatus),
+          status: faker.helpers.arrayElement(Object.values(ProcessStatus)),
           updatedAt: faker.datatype.datetime().toString(),
           uuid: faker.datatype.uuid(),
         });
