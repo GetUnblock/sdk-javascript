@@ -8,7 +8,7 @@
 
 ## Enums
 
-### <span id="Country"></span> Country
+### <span id="Country"></span>Country
 
 ```typescript
 enum Country {
@@ -264,7 +264,7 @@ enum Country {
 }
 ```
 
-### <span id="Currency"></span> Currency
+### <span id="Currency"></span>Currency
 
 ```typescript
 enum Currency {
@@ -274,7 +274,7 @@ enum Currency {
 }
 ```
 
-### <span id="ProcessStatus"></span> ProcessStatus
+### <span id="ProcessStatus"></span>ProcessStatus
 
 ```typescript
 enum ProcessStatus {
@@ -313,7 +313,7 @@ enum ProcessStatus {
 }
 ```
 
-### <span id="PaymentMethods"></span> PaymentMethods
+### <span id="PaymentMethods"></span>PaymentMethods
 
 ```typescript
 enum PaymentMethods {
@@ -321,11 +321,23 @@ enum PaymentMethods {
 }
 ```
 
-### <span id="ProcessDirection"></span> ProcessDirection
+### <span id="ProcessDirection"></span>ProcessDirection
 
 ```typescript
 enum ProcessDirection {
   ONRAMP = 'ONRAMP',
   OFFRAMP = 'OFFRAMP',
+}
+```
+
+### <span id="Chain"></span>Chain
+
+```typescript
+enum Chain {
+  POLYGON = 'polygon',
+  CELO = 'celo',
+  OPTIMISM = 'optimism',
+  MAINNET = 'mainnet',
+  ARBITRUM = 'arbitrum',
 }
 ```
