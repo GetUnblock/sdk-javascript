@@ -1,26 +1,38 @@
 {
-  "name": "sdk-javascript",
-  "version": "0.0.1",
+  "name": "@getunblock/sdk",
+  "version": "0.1.0",
   "description": "SDK for Unblock API.",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist", "docs"
+  ],
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
-    "lint": "eslint '(src|tests)/**/*.{ts,js}'",
+    "lint": "eslint 'src/**/*.{ts,js}' 'tests/**/*.{ts,js}'",
+    "prettier": "prettier --check '(src|tests)/**/*.{ts,js,json}'",
     "format": "prettier --write '(src|tests)/**/*.{ts,js,json}'",
-    "pre-commit": "prettier -c ./(src|tests) && eslint ./(src|tests) && npx jest -o",
-    "start": "tsc && node dist/index.js",
+    "pre-commit": "prettier -c ./src && prettier -c ./tests && eslint ./src && eslint ./tests",
     "test": "jest",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "prepare": "husky install"
   },
   "author": "",
   "license": "MIT",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "luxon": "^3.3.0"
+  },
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@types/jest": "^29.5.2",
+    "@types/luxon": "^3.3.0",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.0",
     "jest": "^29.5.0",
     "prettier": "^2.8.8",
     "ts-jest": "^29.1.0",
@@ -39,7 +51,17 @@
     "collectCoverageFrom": [
       "**/src/**/*.ts"
     ],
+    "coverageThreshold": {
+      "global": {
+        "lines": 90
+      }
+    },
     "coverageDirectory": "<rootDir>/../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "openHandlesTimeout": 3000,
+    "roots": [
+      "<rootDir>/src/",
+      "<rootDir>/tests/"
+    ]
   }
 }

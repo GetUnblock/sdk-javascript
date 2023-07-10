@@ -1,0 +1,46 @@
+name: Publish Hotfix Alpha
+
+on:
+  push:
+    branches: [hotfix/**/*]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: PROD
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set Git config
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Github Actions"
+      - name: Create branch for alpha deploy
+        run: |
+          PACKAGE_VERSION="$(cut -c 9- <<<'${{github.ref_name}}')"
+          git fetch --unshallow
+          git checkout -b "alpha-${PACKAGE_VERSION}"
+      - name: Get current time
+        uses: josStorer/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYYMMDDHHmmss
+          utcOffset: '+00:00'
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: npm run build
+      - run: |
+          PACKAGE_VERSION="$(cut -c 9- <<<'${{github.ref_name}}')"
+          npm version "${PACKAGE_VERSION}-fix.${{ steps.current-time.outputs.formattedTime }}"
+      - name: Publish package to NPM 📦
+        run: npm publish --tag alpha --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,9 +1,13 @@
-import { HelloWorld } from '../src/index';
+import { faker } from '@faker-js/faker';
+import GetUnblock from '../src';
+import { SDK } from '../src/SDK';
 
-describe('hello-world', () => {
-  it('isValid', () => {
-    const obj = new HelloWorld();
-
-    expect(obj.sayHello()).toBe('Hello World');
+describe('index', () => {
+  it('Should SDK be defined', () => {
+    const sdk = GetUnblock({
+      apiKey: `API-Key ${faker.datatype.string(128)}`,
+      prod: false,
+    });
+    expect(sdk).toBeInstanceOf(SDK);
   });
 });
