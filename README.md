@@ -1,11 +1,7 @@
 ---
 title: System Development Kit - Javascript
-excerpt: Custom SDK for the Unblock API, covers all aspects of a user lifecycle
+excerpt: GetUnblock SDK is a JS library for interacting with Unblock APIs
 ---
-
-# Software development kit (SDK) - Javascript
-
-GetUnblock SDK is a JS library for dealing with getunblock API
 
 ## Installation
 
