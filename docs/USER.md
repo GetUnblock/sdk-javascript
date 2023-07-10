@@ -115,7 +115,7 @@ const sdk = getunblockSDK({
 });
 
 // SDK API call example
-const result = await sdk.exchangeRates.createUser({
+const result = await sdk.user.createUser({
   firstName: "John",
   lastName: "Doe",
   email: "john.doe@getunblock.com",
@@ -138,7 +138,7 @@ const sdk = getunblockSDK({
 });
 
 // SDK API call example
-const result = await sdk.exchangeRates.createUser({
+const result = await sdk.user.createUser({
   firstName: "John",
   lastName: "Doe",
   email: "john.doe@getunblock.com",
@@ -177,7 +177,7 @@ const loginResult = await sdk.auth.login({
 // * more info at https://docs.getunblock.com/docs/unblocker
 
 // SDK API call example
-const result = await sdk.exchangeRates.getUserStatus({
+const result = await sdk.user.getUserStatus({
   unblockSessionId: loginResult.unblockSessionId,
   userUuid: loginResult.userUuid,
 });
@@ -204,7 +204,7 @@ const loginResult = await sdk.auth.login({
 // * more info at https://docs.getunblock.com/docs/unblocker
 
 // SDK API call example
-const result = await sdk.exchangeRates.getUserStatus({
+const result = await sdk.user.getUserStatus({
   unblockSessionId: loginResult.unblockSessionId,
   userUuid: loginResult.userUuid,
 });
@@ -240,7 +240,7 @@ const loginResult = await sdk.auth.login({
 // * more info at https://docs.getunblock.com/docs/unblocker
 
 // SDK API call example
-const result = await sdk.exchangeRates.getUserRampTransactions({
+const result = await sdk.user.getUserRampTransactions({
   unblockSessionId: loginResult.unblockSessionId,
   userUuid: loginResult.userUuid,
 });
@@ -267,7 +267,7 @@ const loginResult = await sdk.auth.login({
 // * more info at https://docs.getunblock.com/docs/unblocker
 
 // SDK API call example
-const result = await sdk.exchangeRates.getUserRampTransactions({
+const result = await sdk.user.getUserRampTransactions({
   unblockSessionId: loginResult.unblockSessionId,
   userUuid: loginResult.userUuid,
 });

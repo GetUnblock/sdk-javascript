@@ -342,6 +342,27 @@ enum Chain {
 }
 ```
 
+### <span id="CompanyType"></span>Chain
+
+```typescript
+enum CompanyType {
+  LIMITED_LIABILITY = 'LIMITED_LIABILITY',
+  SOLE_TRADER = 'SOLE_TRADER',
+  PARTNERSHIP = 'PARTNERSHIP',
+  PUBLIC_LIMITED_COMPANY = 'PUBLIC_LIMITED_COMPANY',
+  JOINT_STOCK_COMPANY = 'JOINT_STOCK_COMPANY',
+  CHARITY = 'CHARITY',
+}
+```
+
+### <span id="UserCompanyRole"></span>Chain
+
+```typescript
+enum UserCompanyRole {
+  ADMINISTARTOR = 'ADMINISTARTOR',
+}
+```
+
 ## List of Services Available
 
 * [auth](/docs/AUTH.md)
