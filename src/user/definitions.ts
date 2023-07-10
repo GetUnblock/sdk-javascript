@@ -1,3 +1,4 @@
+import { UserSessionData } from '../definitions';
 import Country from '../enums/Country';
 import { ProcessStatus } from '../enums/ProcessStatus';
 
@@ -23,11 +24,6 @@ export type CreateUserResponse = {
   message: string;
   userUuid: string;
   status: UserStatus;
-};
-
-export type UserSessionData = {
-  unblockSessionId: string;
-  userUuid: string;
 };
 
 export type GetUserStatusRequest = UserSessionData;

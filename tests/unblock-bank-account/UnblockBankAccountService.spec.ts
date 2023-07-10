@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { SdkSettings } from '../../src/definitions';
+import { SdkSettings, UserSessionData } from '../../src/definitions';
 import { UnblockBankAccountService } from '../../src/unblock-bank-account/UnblockBankAccountService';
 import {
   CreateUnblockUserBankAccountResponse,
@@ -9,7 +9,6 @@ import {
   SimulateOnRampResponse,
   UnblockUserBankAccount,
   UnblockUserBankAccountFull,
-  UserSessionData,
 } from '../../src/unblock-bank-account/definitions';
 import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
 import { propsMock } from '../mocks/props.mock';
@@ -21,7 +20,7 @@ describe('UnblockBankAccountService', () => {
   let props: SdkSettings;
 
   let userUuid: string;
-  let unblockSessionID: string;
+  let unblockSessionId: string;
   let currency: string;
 
   let createdAt: string;
@@ -45,7 +44,7 @@ describe('UnblockBankAccountService', () => {
     randomError = randomErrorMock();
 
     userUuid = faker.datatype.uuid();
-    unblockSessionID = faker.datatype.uuid();
+    unblockSessionId = faker.datatype.uuid();
     currency = faker.finance.currencyCode();
 
     createdAt = faker.date.recent().toDateString();
@@ -55,7 +54,7 @@ describe('UnblockBankAccountService', () => {
     amount = faker.datatype.number({ min: 0.01, max: 100000000, precision: 0.01 });
 
     userSessionData = {
-      unblockSessionID: unblockSessionID,
+      unblockSessionId: unblockSessionId,
       userUuid: userUuid,
     };
   });
@@ -75,7 +74,7 @@ describe('UnblockBankAccountService', () => {
           'content-type': 'application/json',
           accept: 'application/json',
           Authorization: props.apiKey,
-          'unblock-session-id': unblockSessionID,
+          'unblock-session-id': unblockSessionId,
         },
       };
 
@@ -175,7 +174,7 @@ describe('UnblockBankAccountService', () => {
         headers: {
           accept: 'application/json',
           Authorization: props.apiKey,
-          'unblock-session-id': unblockSessionID,
+          'unblock-session-id': unblockSessionId,
         },
       };
 
@@ -279,7 +278,7 @@ describe('UnblockBankAccountService', () => {
           'content-type': 'application/json',
           accept: 'application/json',
           Authorization: props.apiKey,
-          'unblock-session-id': unblockSessionID,
+          'unblock-session-id': unblockSessionId,
         },
       };
 
@@ -378,7 +377,7 @@ describe('UnblockBankAccountService', () => {
         headers: {
           accept: 'application/json',
           Authorization: props.apiKey,
-          'unblock-session-id': unblockSessionID,
+          'unblock-session-id': unblockSessionId,
         },
       };
 

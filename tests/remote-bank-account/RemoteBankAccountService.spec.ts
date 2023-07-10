@@ -1,14 +1,13 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import Country from 'src/enums/Country';
-import { SdkSettings } from '../../src/definitions';
+import { SdkSettings, UserSessionData } from '../../src/definitions';
 import { RemoteBankAccountService } from '../../src/remote-bank-account/RemoteBankAccountService';
 import {
   RemoteUserBankAccountRequest,
   RemoteUserBankAccountResponse,
   UnblockCreateRemoteUserBankAccount,
   UnblockRemoteUserBankAccount,
-  UserSessionData,
 } from '../../src/remote-bank-account/definitions';
 import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
 import { propsMock } from '../mocks/props.mock';
@@ -36,7 +35,7 @@ describe('RemoteBankAccountService', () => {
   });
 
   const userUuid = faker.datatype.uuid();
-  const unblockSessionID = faker.datatype.uuid();
+  const unblockSessionId = faker.datatype.uuid();
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
   const bic = faker.finance.bic();
@@ -46,7 +45,7 @@ describe('RemoteBankAccountService', () => {
   const uuid = faker.datatype.uuid();
 
   const userSessionData: UserSessionData = {
-    unblockSessionID: unblockSessionID,
+    unblockSessionId: unblockSessionId,
     userUuid: userUuid,
   };
 
@@ -63,7 +62,7 @@ describe('RemoteBankAccountService', () => {
 
   const dtoGbp: RemoteUserBankAccountRequest = {
     userUuid: userUuid,
-    unblockSessionID: unblockSessionID,
+    unblockSessionId: unblockSessionId,
     accountName: faker.finance.accountName(),
     accountCountry: faker.address.countryCode() as Country,
     beneficiaryCountry: faker.address.countryCode(),
@@ -73,7 +72,7 @@ describe('RemoteBankAccountService', () => {
 
   const dtoEur: RemoteUserBankAccountRequest = {
     userUuid: userUuid,
-    unblockSessionID: unblockSessionID,
+    unblockSessionId: unblockSessionId,
     accountName: faker.finance.accountName(),
     accountCountry: faker.address.countryCode() as Country,
     beneficiaryCountry: faker.address.countryCode(),
@@ -119,7 +118,7 @@ describe('RemoteBankAccountService', () => {
           'content-type': 'application/json',
           accept: 'application/json',
           Authorization: props.apiKey,
-          'unblock-session-id': unblockSessionID,
+          'unblock-session-id': unblockSessionId,
         },
       };
 
@@ -325,7 +324,7 @@ describe('RemoteBankAccountService', () => {
         headers: {
           accept: 'application/json',
           Authorization: props.apiKey,
-          'unblock-session-id': unblockSessionID,
+          'unblock-session-id': unblockSessionId,
         },
       };
 
@@ -484,7 +483,7 @@ describe('RemoteBankAccountService', () => {
           'content-type': 'application/json',
           accept: 'application/json',
           Authorization: props.apiKey,
-          'unblock-session-id': unblockSessionID,
+          'unblock-session-id': unblockSessionId,
         },
       };
       const expectedBody = {
@@ -570,7 +569,7 @@ describe('RemoteBankAccountService', () => {
         headers: {
           accept: 'application/json',
           Authorization: props.apiKey,
-          'unblock-session-id': unblockSessionID,
+          'unblock-session-id': unblockSessionId,
         },
       };
 

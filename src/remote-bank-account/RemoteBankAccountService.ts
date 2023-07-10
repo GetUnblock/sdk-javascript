@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { BaseService } from '../BaseService';
 import { ErrorHandler } from '../ErrorHandler';
+import { UserSessionData } from '../definitions';
 import {
   NewRemoteUserBankAccount,
   RemoteUserBankAccountRequest,
@@ -9,7 +10,6 @@ import {
   UnblockEurAccountDetails,
   UnblockGbpAccountDetails,
   UnblockRemoteUserBankAccount,
-  UserSessionData,
 } from './definitions';
 
 export interface IRemoteBankAccountService {
@@ -71,7 +71,7 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
         'content-type': 'application/json',
         accept: 'application/json',
         Authorization: apiKey,
-        'unblock-session-id': dto.unblockSessionID,
+        'unblock-session-id': dto.unblockSessionId,
       },
     };
 
@@ -105,7 +105,7 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
       headers: {
         accept: 'application/json',
         Authorization: apiKey,
-        'unblock-session-id': dto.unblockSessionID,
+        'unblock-session-id': dto.unblockSessionId,
       },
     };
 
@@ -145,7 +145,7 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
         'content-type': 'application/json',
         accept: 'application/json',
         Authorization: apiKey,
-        'unblock-session-id': dto.unblockSessionID,
+        'unblock-session-id': dto.unblockSessionId,
       },
     };
 
@@ -174,7 +174,7 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
       headers: {
         accept: 'application/json',
         Authorization: apiKey,
-        'unblock-session-id': dto.unblockSessionID,
+        'unblock-session-id': dto.unblockSessionId,
       },
     };
 
