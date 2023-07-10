@@ -7,6 +7,7 @@ import { ExchangeRatesService } from '../src/exchange-rates/ExchangeRatesService
 import { KycService } from '../src/kyc/KycService';
 import { ProcessService } from '../src/process/ProcessService';
 import { RemoteBankAccountService } from '../src/remote-bank-account/RemoteBankAccountService';
+import { TokenPreferenceService } from '../src/token-preference/TokenPreferenceService';
 import { TransactionFeeService } from '../src/transaction-fee/TransactionFeeService';
 import { UnblockBankAccountService } from '../src/unblock-bank-account/UnblockBankAccountService';
 
@@ -119,5 +120,16 @@ describe('ServiceFactory', () => {
 
     // Assert
     expect(service).toBeInstanceOf(CompanyService);
+  });
+
+  it('Should create an TokenPreferenceService instance', () => {
+    // Arrange
+    const factory = new ServiceFactory(props);
+
+    // Act
+    const service = factory.createTokenPreferenceService();
+
+    // Assert
+    expect(service).toBeInstanceOf(TokenPreferenceService);
   });
 });

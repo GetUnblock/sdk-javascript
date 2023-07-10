@@ -9,6 +9,10 @@ import {
   RemoteBankAccountService,
 } from './remote-bank-account/RemoteBankAccountService';
 import {
+  ITokenPreferenceService,
+  TokenPreferenceService,
+} from './token-preference/TokenPreferenceService';
+import {
   ITransactionFeeService,
   TransactionFeeService,
 } from './transaction-fee/TransactionFeeService';
@@ -28,10 +32,14 @@ export interface IServiceFactory {
   createTransactionFeeService(): ITransactionFeeService;
   createProcessService(): IProcessService;
   createCompanyService(): ICompanyService;
+  createTokenPreferenceService(): ITokenPreferenceService;
 }
 
 export class ServiceFactory implements IServiceFactory {
   constructor(private props: SdkSettings) {}
+  createTokenPreferenceService(): ITokenPreferenceService {
+    return new TokenPreferenceService(this.props);
+  }
   createCompanyService(): ICompanyService {
     return new CompanyService(this.props);
   }
