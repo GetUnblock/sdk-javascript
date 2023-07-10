@@ -9,5 +9,13 @@
   },
   "jest.autoRun": "off",
   "javascript.format.semicolons": "insert",
-  "typescript.preferences.importModuleSpecifier": "relative"
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "markdownlint.config": {
+    "MD033": {
+      "allowed_elements": ["a", "span", "div", "pre"],
+    },
+    "MD024": {
+      "siblings_only": true
+    }
+  }
 }

@@ -63,5 +63,5 @@ export type GetRequiredKycInformationRequest = UserSessionData;
 
 export type GetRequiredKycInformationResponse = {
   documentClass: string;
-  documentType: string;
+  documentTypes: DocumentType[];
 };

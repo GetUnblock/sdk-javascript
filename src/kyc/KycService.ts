@@ -241,16 +241,16 @@ export class KycService extends BaseService implements IKycService {
       },
     };
     try {
-      const response: AxiosResponse<
-        {
+      const response: AxiosResponse<{
+        required_documents: {
           document_class: string;
-          one_of_document_type: DocumentType;
-        }[]
-      > = await this.axiosClient.get(path, config);
+          one_of_document_type: DocumentType[];
+        }[];
+      }> = await this.axiosClient.get(path, config);
 
-      return response.data.map((item) => ({
+      return response.data.required_documents.map((item) => ({
         documentClass: item.document_class,
-        documentType: item.one_of_document_type,
+        documentTypes: item.one_of_document_type,
       }));
     } catch (error) {
       ErrorHandler.handle(error);
