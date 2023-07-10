@@ -74,7 +74,7 @@ type GetUnblockBankAccountByIdResponse = UserBankAccount & UserBankAccountDetail
 | updatedAt | string |
 | uuid | string |
 
-### <span id="UserBankAccountDetails"></span>UserBankAccountDetails
+#### <span id="UserBankAccountDetails"></span>UserBankAccountDetails
 
 | Field Name | Type |
 | ---------- | ---- |
@@ -86,7 +86,7 @@ type GetUnblockBankAccountByIdResponse = UserBankAccount & UserBankAccountDetail
 | availableBalance | number |
 | sortCode | string |
 
-### <span id="SimulateOnRampResponse"></span>SimulateOnRampResponse
+#### <span id="SimulateOnRampResponse"></span>SimulateOnRampResponse
 
 | Field Name | Type |
 | ---------- | ---- |
@@ -235,7 +235,7 @@ This method simulates an on-ramp operation - Sandbox environment only
 ###### Typescript
 
 ```typescript
-import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
+import getunblockSDK, { AuthenticationMethod, Currency } from "@getunblock/sdk";
 
 // setup SDK
 const sdk = getunblockSDK({
@@ -264,7 +264,7 @@ const result = await sdk.unblockBankAccount.simulateOnRamp({
 
 ```javascript
 const getunblockSDK = require("@getunblock/sdk").default;
-const { AuthenticationMethod } = require("@getunblock/sdk"); 
+const { AuthenticationMethod, Currency } = require("@getunblock/sdk"); 
 
 // setup SDK
 const sdk = getunblockSDK({
