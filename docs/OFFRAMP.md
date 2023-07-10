@@ -27,7 +27,7 @@ interface IOfframpService {
 
 ### Service Methods
 
-#### createRemoteUserBankAccount
+#### getUserOfframpAddress
 
 <div><pre>getUserOfframpAddress(params: <a href="#GetUserOfframpAddressRequest">GetUserOfframpAddressRequest</a>): Promise&#60;<a href="#GetUserOfframpAddressResponse">GetUserOfframpAddressResponse</a>&#62;</pre></div>
 

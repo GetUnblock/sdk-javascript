@@ -3,7 +3,7 @@
 ## Interface
 
 ```typescript
-interface IRemoteBankAccountService {
+interface ITransactionFeeService {
   getTransactionFeeEstimation(dto: TransactionFeeEstRequest): Promise<TransactionFeeEstResponse>;
 }
 ```
