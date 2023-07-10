@@ -1,11 +1,7 @@
+import { UserSessionData } from '../definitions';
 import Country from '../enums/Country';
 
 export type SourceOfFundsType = 'SALARY' | 'BUSINESS_INCOME' | 'PENSION' | 'OTHER';
-
-export type UserSessionData = {
-  unblockSessionId: string;
-  userUuid: string;
-};
 
 export type CreateKYCApplicantRequest = UserSessionData & {
   address: string;

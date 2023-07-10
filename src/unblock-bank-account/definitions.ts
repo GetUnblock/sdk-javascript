@@ -1,3 +1,5 @@
+import { UserSessionData } from '../definitions';
+
 // TYPES
 export type UserBankAccount = {
   currency: string; // ISO-4217 currency code
@@ -17,11 +19,6 @@ export type UserBankAccountDetails = {
 };
 
 export type UserBankAccountFull = UserBankAccount & UserBankAccountDetails;
-
-export type UserSessionData = {
-  unblockSessionID: string;
-  userUuid: string;
-};
 
 // REQUESTS DTO
 export type CreateUnblockUserBankAccountRequest = UserSessionData & { currency: string };

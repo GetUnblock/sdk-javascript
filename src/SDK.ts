@@ -3,8 +3,10 @@ import { IAuthService } from './auth/AuthService';
 import { ICompanyService } from './company/CompanyService';
 import { IExchangeRatesService } from './exchange-rates/ExchangeRatesService';
 import { IKycService } from './kyc/KycService';
+import { IOfframpService } from './offramp/OfframpService';
 import { IProcessService } from './process/ProcessService';
 import { IRemoteBankAccountService } from './remote-bank-account/RemoteBankAccountService';
+import { ITokenPreferenceService } from './token-preference/TokenPreferenceService';
 import { ITransactionFeeService } from './transaction-fee/TransactionFeeService';
 import { IUnblockBankAccountService } from './unblock-bank-account/UnblockBankAccountService';
 import { IUserService } from './user/UserService';
@@ -19,6 +21,8 @@ export class SDK {
   private transactionFeeService: ITransactionFeeService;
   private processService: IProcessService;
   private companyService: ICompanyService;
+  private tokenPreferenceService: ITokenPreferenceService;
+  private offrampService: IOfframpService;
 
   constructor(private ServiceFactory: IServiceFactory) {
     // this.healthCheck();
@@ -31,6 +35,8 @@ export class SDK {
     this.transactionFeeService = this.ServiceFactory.createTransactionFeeService();
     this.processService = this.ServiceFactory.createProcessService();
     this.companyService = this.ServiceFactory.createCompanyService();
+    this.tokenPreferenceService = this.ServiceFactory.createTokenPreferenceService();
+    this.offrampService = this.ServiceFactory.createOfframpService();
   }
 
   private async healthCheck(): Promise<boolean> {
@@ -72,5 +78,13 @@ export class SDK {
 
   get company(): ICompanyService {
     return this.companyService;
+  }
+
+  get tokenPreference(): ITokenPreferenceService {
+    return this.tokenPreferenceService;
+  }
+
+  get offramp(): IOfframpService {
+    return this.offrampService;
   }
 }

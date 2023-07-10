@@ -38,7 +38,7 @@ export class UnblockBankAccountService extends BaseService implements IUnblockBa
    *
    * `userUuid`: UUID of the user for whom the bank account is being created.
    *
-   * `unblockSessionID`: Session ID.
+   * `unblockSessionId`: Session ID.
    *
    * `currency`: ISO 4217 currency code.
    *
@@ -57,7 +57,7 @@ export class UnblockBankAccountService extends BaseService implements IUnblockBa
         'content-type': 'application/json',
         accept: 'application/json',
         Authorization: apiKey,
-        'unblock-session-id': dto.unblockSessionID,
+        'unblock-session-id': dto.unblockSessionId,
       },
     };
     try {
@@ -84,7 +84,7 @@ export class UnblockBankAccountService extends BaseService implements IUnblockBa
    *
    * `userUuid`: UUID of the user for whom the bank account is being created.
    *
-   * `unblockSessionID`: Session ID.
+   * `unblockSessionId`: Session ID.
    *
    * @returns {Promise<GetAllunblockUserBankAccountsResponse[]>} - A promise that resolves to an array of user bank accounts.
    *
@@ -100,7 +100,7 @@ export class UnblockBankAccountService extends BaseService implements IUnblockBa
       headers: {
         accept: 'application/json',
         Authorization: apiKey,
-        'unblock-session-id': dto.unblockSessionID,
+        'unblock-session-id': dto.unblockSessionId,
       },
     };
     try {
@@ -131,7 +131,7 @@ export class UnblockBankAccountService extends BaseService implements IUnblockBa
         'content-type': 'application/json',
         accept: 'application/json',
         Authorization: apiKey,
-        'unblock-session-id': dto.unblockSessionID,
+        'unblock-session-id': dto.unblockSessionId,
       },
     };
     try {
@@ -155,7 +155,7 @@ export class UnblockBankAccountService extends BaseService implements IUnblockBa
       headers: {
         accept: 'application/json',
         Authorization: apiKey,
-        'unblock-session-id': dto.unblockSessionID,
+        'unblock-session-id': dto.unblockSessionId,
       },
     };
     try {

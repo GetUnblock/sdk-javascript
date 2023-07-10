@@ -1,3 +1,4 @@
+import { UserSessionData } from '../definitions';
 import Country from '../enums/Country';
 
 // TYPES
@@ -35,11 +36,6 @@ export type NewRemoteUserBankAccount = {
   bankName: string;
   uuid: string;
   sortCode: string;
-};
-
-export type UserSessionData = {
-  unblockSessionID: string;
-  userUuid: string;
 };
 
 // REQUESTS

@@ -10,3 +10,8 @@ export type GlobalSettings = {
 };
 
 export type SdkSettings = SdkProps & GlobalSettings;
+
+export type UserSessionData = {
+  unblockSessionId: string;
+  userUuid: string;
+};
