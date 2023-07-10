@@ -5,6 +5,7 @@ import { CompanyService } from '../src/company/CompanyService';
 import { SdkSettings } from '../src/definitions';
 import { ExchangeRatesService } from '../src/exchange-rates/ExchangeRatesService';
 import { KycService } from '../src/kyc/KycService';
+import { OfframpService } from '../src/offramp/OfframpService';
 import { ProcessService } from '../src/process/ProcessService';
 import { RemoteBankAccountService } from '../src/remote-bank-account/RemoteBankAccountService';
 import { TokenPreferenceService } from '../src/token-preference/TokenPreferenceService';
@@ -131,5 +132,16 @@ describe('ServiceFactory', () => {
 
     // Assert
     expect(service).toBeInstanceOf(TokenPreferenceService);
+  });
+
+  it('Should create an OfframpService instance', () => {
+    // Arrange
+    const factory = new ServiceFactory(props);
+
+    // Act
+    const service = factory.createOfframpService();
+
+    // Assert
+    expect(service).toBeInstanceOf(OfframpService);
   });
 });

@@ -3,6 +3,7 @@ import { CompanyService, ICompanyService } from './company/CompanyService';
 import { SdkSettings } from './definitions';
 import { ExchangeRatesService, IExchangeRatesService } from './exchange-rates/ExchangeRatesService';
 import { IKycService, KycService } from './kyc/KycService';
+import { IOfframpService, OfframpService } from './offramp/OfframpService';
 import { IProcessService, ProcessService } from './process/ProcessService';
 import {
   IRemoteBankAccountService,
@@ -33,13 +34,19 @@ export interface IServiceFactory {
   createProcessService(): IProcessService;
   createCompanyService(): ICompanyService;
   createTokenPreferenceService(): ITokenPreferenceService;
+  createOfframpService(): IOfframpService;
 }
 
 export class ServiceFactory implements IServiceFactory {
   constructor(private props: SdkSettings) {}
+  createOfframpService(): IOfframpService {
+    return new OfframpService(this.props);
+  }
+
   createTokenPreferenceService(): ITokenPreferenceService {
     return new TokenPreferenceService(this.props);
   }
+
   createCompanyService(): ICompanyService {
     return new CompanyService(this.props);
   }
