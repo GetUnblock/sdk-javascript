@@ -52,7 +52,7 @@ export type GetRemoteBankAccountByUuidRequest = UserSessionData & { accountUuid:
 export type CreateRemoteUserBankAccountResponse = RemoteUserBankAccount;
 
 /** Response dto */
-export type GetAllRemoteBankAccountsResponse = RemoteUserBankAccount[];
+export type GetAllRemoteBankAccountsResponse = RemoteUserBankAccount;
 
 /** Response dto */
 export type GetRemoteBankAccountByUuidResponse = RemoteUserBankAccount;

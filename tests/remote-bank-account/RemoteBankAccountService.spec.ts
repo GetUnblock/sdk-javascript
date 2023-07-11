@@ -349,7 +349,7 @@ describe('RemoteBankAccountService', () => {
     it('should return an array of remote bank accounts', async () => {
       // Arrange
 
-      const expectedResponse: GetAllRemoteBankAccountsResponse = [
+      const expectedResponse: GetAllRemoteBankAccountsResponse[] = [
         {
           firstName: firstName,
           lastName: lastName,

@@ -5,7 +5,7 @@
 ```typescript
 interface IRemoteBankAccountService {
   createRemoteUserBankAccount(params: CreateRemoteUserBankAccountRequest): Promise<CreateRemoteUserBankAccountRequest>;
-  getAllRemoteBankAccounts(params: GetAllRemoteBankAccountsRequest): Promise<GetAllRemoteBankAccountsResponse>;
+  getAllRemoteBankAccounts(params: GetAllRemoteBankAccountsRequest): Promise<GetAllRemoteBankAccountsResponse[]>;
   changeMainUserRemoteBankAccount(params: ChangeMainUserRemoteBankAccountRequest): Promise<void>;
   getRemoteBankAccountByUuid(params: GetRemoteBankAccountByUuidRequest): Promise<GetRemoteBankAccountByUuidResponse>;
 }
@@ -74,7 +74,7 @@ interface IRemoteBankAccountService {
 | unblockSessionID | string |
 | userUuid | string |
 
-#### <span id="GetAllRemoteBankAccountsResponse"></span>GetAllRemoteBankAccountsResponse []
+#### <span id="GetAllRemoteBankAccountsResponse"></span>GetAllRemoteBankAccountsResponse
 
 | Field Name | Type |
 | ---------- | ---- |
@@ -215,7 +215,7 @@ const { AuthenticationMethod, Country, Currency } = require("@getunblock/sdk");
 
 #### getAllRemoteBankAccounts
 
-<div><pre>getAllRemoteBankAccounts(params: <a href="#GetAllRemoteBankAccountsRequest">GetAllRemoteBankAccountsRequest</a>): Promise&#60;<a href="#GetAllRemoteBankAccountsResponse">GetAllRemoteBankAccountsResponse</a>&#62;</pre></div>
+<div><pre>getAllRemoteBankAccounts(params: <a href="#GetAllRemoteBankAccountsRequest">GetAllRemoteBankAccountsRequest</a>): Promise&#60;<a href="#GetAllRemoteBankAccountsResponse">GetAllRemoteBankAccountsResponse</a>[]&#62;</pre></div>
 
 ##### Overview
 

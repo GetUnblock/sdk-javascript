@@ -23,7 +23,7 @@ export interface IRemoteBankAccountService {
 
   getAllRemoteBankAccounts(
     dto: GetAllRemoteBankAccountsRequest,
-  ): Promise<GetAllRemoteBankAccountsResponse>;
+  ): Promise<GetAllRemoteBankAccountsResponse[]>;
 
   changeMainUserRemoteBankAccount(dto: ChangeMainUserRemoteBankAccountRequest): Promise<void>;
 
@@ -107,7 +107,7 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
    */
   async getAllRemoteBankAccounts(
     dto: GetAllRemoteBankAccountsRequest,
-  ): Promise<GetAllRemoteBankAccountsResponse> {
+  ): Promise<GetAllRemoteBankAccountsResponse[]> {
     const { apiKey } = this.props;
     const path = `/user/${dto.userUuid}/bank-account/remote`;
     const config = {
@@ -123,7 +123,7 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
         path,
         config,
       );
-      const remoteUserBankAccounts: GetAllRemoteBankAccountsResponse =
+      const remoteUserBankAccounts: GetAllRemoteBankAccountsResponse[] =
         this.mapToRemoteUserBankAccountResponse(response.data);
       return remoteUserBankAccounts;
     } catch (error) {
