@@ -4,8 +4,10 @@ import Country from 'src/enums/Country';
 import { SdkSettings, UserSessionData } from '../../src/definitions';
 import { RemoteBankAccountService } from '../../src/remote-bank-account/RemoteBankAccountService';
 import {
-  RemoteUserBankAccountRequest,
-  RemoteUserBankAccountResponse,
+  CreateRemoteUserBankAccountRequest,
+  CreateRemoteUserBankAccountResponse,
+  GetAllRemoteBankAccountsResponse,
+  GetRemoteBankAccountByUuidResponse,
   UnblockCreateRemoteUserBankAccount,
   UnblockRemoteUserBankAccount,
 } from '../../src/remote-bank-account/definitions';
@@ -60,7 +62,7 @@ describe('RemoteBankAccountService', () => {
     iban: faker.finance.iban(),
   };
 
-  const dtoGbp: RemoteUserBankAccountRequest = {
+  const dtoGbp: CreateRemoteUserBankAccountRequest = {
     userUuid: userUuid,
     unblockSessionId: unblockSessionId,
     accountName: faker.finance.accountName(),
@@ -70,7 +72,7 @@ describe('RemoteBankAccountService', () => {
     accountDetails: accountDetailsGbp,
   };
 
-  const dtoEur: RemoteUserBankAccountRequest = {
+  const dtoEur: CreateRemoteUserBankAccountRequest = {
     userUuid: userUuid,
     unblockSessionId: unblockSessionId,
     accountName: faker.finance.accountName(),
@@ -140,7 +142,7 @@ describe('RemoteBankAccountService', () => {
 
     it('should return created bank account data for GBP currency', async () => {
       // Arrange
-      const expectedResponse: RemoteUserBankAccountResponse = {
+      const expectedResponse: CreateRemoteUserBankAccountResponse = {
         firstName: firstName,
         lastName: lastName,
         currency: accountDetailsGbp.currency,
@@ -188,7 +190,7 @@ describe('RemoteBankAccountService', () => {
 
     it('should return created bank account data for EUR currency', async () => {
       // Arrange
-      const expectedResponse: RemoteUserBankAccountResponse = {
+      const expectedResponse: CreateRemoteUserBankAccountResponse = {
         firstName: firstName,
         lastName: lastName,
         currency: accountDetailsEur.currency,
@@ -302,7 +304,7 @@ describe('RemoteBankAccountService', () => {
 
       try {
         await service.createRemoteUserBankAccount(
-          invalidDto as unknown as RemoteUserBankAccountRequest,
+          invalidDto as unknown as CreateRemoteUserBankAccountRequest,
         );
       } catch (error) {
         resultedError = error;
@@ -347,7 +349,7 @@ describe('RemoteBankAccountService', () => {
     it('should return an array of remote bank accounts', async () => {
       // Arrange
 
-      const expectedResponse: RemoteUserBankAccountResponse[] = [
+      const expectedResponse: GetAllRemoteBankAccountsResponse = [
         {
           firstName: firstName,
           lastName: lastName,
@@ -592,7 +594,7 @@ describe('RemoteBankAccountService', () => {
     it('should return a remote bank account', async () => {
       // Arrange
 
-      const expectedResponse: RemoteUserBankAccountResponse = {
+      const expectedResponse: GetRemoteBankAccountByUuidResponse = {
         firstName: firstName,
         lastName: lastName,
         currency: accountDetailsGbp.currency,

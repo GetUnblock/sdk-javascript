@@ -1,7 +1,6 @@
 import { UserSessionData } from '../definitions';
 import Country from '../enums/Country';
 
-// TYPES
 export type GbpAccountDetails = {
   currency: string; // ISO-4217 currency code
   accountNumber: string;
@@ -13,7 +12,6 @@ export type EurAccountDetails = {
   iban: string;
 };
 
-// DTO
 export type CreateRemoteUserBankAccount = {
   accountName: string;
   accountCountry: Country; // ISO-3166 alpha-2 country code
@@ -22,7 +20,7 @@ export type CreateRemoteUserBankAccount = {
   accountDetails: GbpAccountDetails | EurAccountDetails;
 };
 
-export type NewRemoteUserBankAccount = {
+export type RemoteUserBankAccount = {
   firstName: string;
   lastName: string;
   currency: string;
@@ -38,25 +36,41 @@ export type NewRemoteUserBankAccount = {
   sortCode: string;
 };
 
-// REQUESTS
-export type RemoteUserBankAccountRequest = UserSessionData & CreateRemoteUserBankAccount;
+/** Request dto */
+export type CreateRemoteUserBankAccountRequest = UserSessionData & CreateRemoteUserBankAccount;
 
-// RESPONSES
-export type RemoteUserBankAccountResponse = NewRemoteUserBankAccount;
+/** Request dto */
+export type GetAllRemoteBankAccountsRequest = UserSessionData;
 
-// UNBLOCK API TYPES
-// REQUESTS
+/** Request dto */
+export type ChangeMainUserRemoteBankAccountRequest = UserSessionData & { accountUuid: string };
+
+/** Request dto */
+export type GetRemoteBankAccountByUuidRequest = UserSessionData & { accountUuid: string };
+
+/** Response dto */
+export type CreateRemoteUserBankAccountResponse = RemoteUserBankAccount;
+
+/** Response dto */
+export type GetAllRemoteBankAccountsResponse = RemoteUserBankAccount[];
+
+/** Response dto */
+export type GetRemoteBankAccountByUuidResponse = RemoteUserBankAccount;
+
+/** GetUnblock API request body */
 export type UnblockGbpAccountDetails = {
   currency: string; // ISO-4217 currency code
   account_number: string;
   sort_code: string;
 };
 
+/** GetUnblock API request body */
 export type UnblockEurAccountDetails = {
   currency: string; // ISO-4217 currency code
   iban: string;
 };
 
+/** GetUnblock API request body */
 export type UnblockCreateRemoteUserBankAccount = {
   account_name: string;
   account_country: Country; // ISO-3166 alpha-2 country code
@@ -65,7 +79,7 @@ export type UnblockCreateRemoteUserBankAccount = {
   account_details: UnblockGbpAccountDetails | UnblockEurAccountDetails;
 };
 
-// RESPONSES
+/** GetUnblock API response data */
 export type UnblockRemoteUserBankAccount = {
   first_name: string;
   last_name: string;
