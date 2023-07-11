@@ -342,7 +342,7 @@ enum Chain {
 }
 ```
 
-### <span id="CompanyType"></span>Chain
+### <span id="CompanyType"></span>CompanyType
 
 ```typescript
 enum CompanyType {
@@ -355,7 +355,7 @@ enum CompanyType {
 }
 ```
 
-### <span id="UserCompanyRole"></span>Chain
+### <span id="UserCompanyRole"></span>UserCompanyRole
 
 ```typescript
 enum UserCompanyRole {
