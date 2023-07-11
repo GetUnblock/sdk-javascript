@@ -83,34 +83,36 @@ This method creates an offramp bank account details for an end user. Creating th
 ```typescript
 import getunblockSDK, { AuthenticationMethod, Country, Currency } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-// SDK API call example
-const result = await sdk.remoteBankAccount.createRemoteUserBankAccount({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-  accountName: "[User account name]",
-  accountCountry: Country.UnitedKingdom,
-  beneficiaryCountry: Country.UnitedKingdom,
-  mainBeneficiary: false,
-  accountDetails: {
-    currency: Currency.GBP,
-    accountNumber: 31926819,
-    sortCode: 123456
-  },
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  // SDK API call example
+  const result = await sdk.remoteBankAccount.createRemoteUserBankAccount({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+    accountName: "[User account name]",
+    accountCountry: Country.UnitedKingdom,
+    beneficiaryCountry: Country.UnitedKingdom,
+    mainBeneficiary: false,
+    accountDetails: {
+      currency: Currency.GBP,
+      accountNumber: 31926819,
+      sortCode: 123456
+    },
+  });
+})();
 ```
 
 ###### Javascript
@@ -119,34 +121,36 @@ const result = await sdk.remoteBankAccount.createRemoteUserBankAccount({
 const getunblockSDK = require("@getunblock/sdk").default;
 const { AuthenticationMethod, Country, Currency } = require("@getunblock/sdk"); 
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-// SDK API call example
-const result = await sdk.remoteBankAccount.createRemoteUserBankAccount({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-  accountName: "[User account name]",
-  accountCountry: Country.UnitedKingdom,
-  beneficiaryCountry: Country.UnitedKingdom,
-  mainBeneficiary: false,
-  accountDetails: {
-    currency: Currency.GBP,
-    accountNumber: 31926819,
-    sortCode: 123456
-  },
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  // SDK API call example
+  const result = await sdk.remoteBankAccount.createRemoteUserBankAccount({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+    accountName: "[User account name]",
+    accountCountry: Country.UnitedKingdom,
+    beneficiaryCountry: Country.UnitedKingdom,
+    mainBeneficiary: false,
+    accountDetails: {
+      currency: Currency.GBP,
+      accountNumber: 31926819,
+      sortCode: 123456
+    },
+  });
+})();
 ```
 
 #### getAllRemoteBankAccounts
@@ -164,25 +168,27 @@ This method gets all the remote bank accounts linked to a user for the offramp p
 ```typescript
 import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-// SDK API call example
-const result = await sdk.remoteBankAccount.getAllRemoteBankAccounts({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  // SDK API call example
+  const result = await sdk.remoteBankAccount.getAllRemoteBankAccounts({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+  });
+})();
 ```
 
 ###### Javascript
@@ -191,25 +197,27 @@ const result = await sdk.remoteBankAccount.getAllRemoteBankAccounts({
 const getunblockSDK = require("@getunblock/sdk").default;
 const { AuthenticationMethod } = require("@getunblock/sdk"); 
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-// SDK API call example
-const result = await sdk.remoteBankAccount.getAllRemoteBankAccounts({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  // SDK API call example
+  const result = await sdk.remoteBankAccount.getAllRemoteBankAccounts({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+  });
+})();
 ```
 
 #### changeMainUserRemoteBankAccount
@@ -227,26 +235,28 @@ This method allows to change the main user remote bank account to which all off 
 ```typescript
 import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-// SDK API call example
-const result = await sdk.remoteBankAccount.changeMainUserRemoteBankAccount({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-  accountUuid: "b89b8075-e845-48a6-9b70-123c12e0aed0",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  // SDK API call example
+  const result = await sdk.remoteBankAccount.changeMainUserRemoteBankAccount({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+    accountUuid: "b89b8075-e845-48a6-9b70-123c12e0aed0",
+  });
+})();
 ```
 
 ###### Javascript
@@ -255,26 +265,28 @@ const result = await sdk.remoteBankAccount.changeMainUserRemoteBankAccount({
 const getunblockSDK = require("@getunblock/sdk").default;
 const { AuthenticationMethod } = require("@getunblock/sdk"); 
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-// SDK API call example
-const result = await sdk.remoteBankAccount.changeMainUserRemoteBankAccount({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-  accountUuid: "b89b8075-e845-48a6-9b70-123c12e0aed0",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  // SDK API call example
+  const result = await sdk.remoteBankAccount.changeMainUserRemoteBankAccount({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+    accountUuid: "b89b8075-e845-48a6-9b70-123c12e0aed0",
+  });
+})();
 ```
 
 #### getRemoteBankAccountByUuid
@@ -292,26 +304,28 @@ This method gets a specific remote bank account by UUID
 ```typescript
 import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-// SDK API call example
-const result = await sdk.remoteBankAccount.getRemoteBankAccountByUuid({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-  accountUuid: "b89b8075-e845-48a6-9b70-123c12e0aed0",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  // SDK API call example
+  const result = await sdk.remoteBankAccount.getRemoteBankAccountByUuid({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+    accountUuid: "b89b8075-e845-48a6-9b70-123c12e0aed0",
+  });
+})();
 ```
 
 ###### Javascript
@@ -320,26 +334,28 @@ const result = await sdk.remoteBankAccount.getRemoteBankAccountByUuid({
 const getunblockSDK = require("@getunblock/sdk").default;
 const { AuthenticationMethod } = require("@getunblock/sdk"); 
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-// SDK API call example
-const result = await sdk.remoteBankAccount.getRemoteBankAccountByUuid({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-  accountUuid: "b89b8075-e845-48a6-9b70-123c12e0aed0",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  // SDK API call example
+  const result = await sdk.remoteBankAccount.getRemoteBankAccountByUuid({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+    accountUuid: "b89b8075-e845-48a6-9b70-123c12e0aed0",
+  });
+})();
 ```
 
 ## Other Services Available

@@ -3,7 +3,7 @@
 ## Interface
 
 ```typescript
-interface IRemoteBankAccountService {
+interface ITransactionFeeService {
   getTransactionFeeEstimation(dto: TransactionFeeEstRequest): Promise<TransactionFeeEstResponse>;
 }
 ```
@@ -44,21 +44,23 @@ This method returns the estimated transaction fee
 ```typescript
 import getunblockSDK, { Currency, PaymentMethods, ProcessDirection } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.transactionFee.getTransactionFeeEstimation({
-  paymentMethod: PaymentMethods.OPEN_PAYD_BANK_TRANSFER,
-  direction: ProcessDirection.ONRAMP,
-  inputCurrency: Currency.EUR,
-  outputCurrency: Currency.USD,
-  amount: 100
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.transactionFee.getTransactionFeeEstimation({
+    paymentMethod: PaymentMethods.OPEN_PAYD_BANK_TRANSFER,
+    direction: ProcessDirection.ONRAMP,
+    inputCurrency: Currency.EUR,
+    outputCurrency: Currency.USD,
+    amount: 100
+  });
+})();
 ```
 
 ###### Javascript
@@ -67,21 +69,23 @@ const result = await sdk.transactionFee.getTransactionFeeEstimation({
 const getunblockSDK = require("@getunblock/sdk").default;
 const { Currency, PaymentMethods, ProcessDirection } = require("@getunblock/sdk"); 
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.transactionFee.getTransactionFeeEstimation({
-  paymentMethod: PaymentMethods.OPEN_PAYD_BANK_TRANSFER,
-  direction: ProcessDirection.ONRAMP,
-  inputCurrency: Currency.EUR,
-  outputCurrency: Currency.USD,
-  amount: 100
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.transactionFee.getTransactionFeeEstimation({
+    paymentMethod: PaymentMethods.OPEN_PAYD_BANK_TRANSFER,
+    direction: ProcessDirection.ONRAMP,
+    inputCurrency: Currency.EUR,
+    outputCurrency: Currency.USD,
+    amount: 100
+  });
+})();
 ```
 
 ## Other Services Available

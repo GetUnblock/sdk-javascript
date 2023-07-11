@@ -53,7 +53,7 @@ export type TargetAddress = {
 };
 
 /** Request dto */
-export type CreateCompanyRequest = CompanyDetails & TargetAddress & { companyUuid: string };
+export type CreateCompanyRequest = CompanyDetails & TargetAddress;
 
 /** Request dto*/
 export type UpdateCompanyRequest = CompanyDetails & { companyUuid: string };
