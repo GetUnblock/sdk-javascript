@@ -17,6 +17,10 @@
     "test:coverage": "jest --coverage",
     "prepare": "husky install"
   },
+  "repository": {
+    "url": "https://github.com/GetUnblock/sdk-javascript",
+    "type": "git"
+  },
   "author": "",
   "license": "MIT",
   "dependencies": {

@@ -8,7 +8,7 @@
 
 ## Enums
 
-### <span id="Country"></span> Country
+### <span id="Country"></span>Country
 
 ```typescript
 enum Country {
@@ -264,7 +264,7 @@ enum Country {
 }
 ```
 
-### <span id="Currency"></span> Currency
+### <span id="Currency"></span>Currency
 
 ```typescript
 enum Currency {
@@ -274,7 +274,7 @@ enum Currency {
 }
 ```
 
-### <span id="ProcessStatus"></span> ProcessStatus
+### <span id="ProcessStatus"></span>ProcessStatus
 
 ```typescript
 enum ProcessStatus {
@@ -313,7 +313,7 @@ enum ProcessStatus {
 }
 ```
 
-### <span id="PaymentMethods"></span> PaymentMethods
+### <span id="PaymentMethods"></span>PaymentMethods
 
 ```typescript
 enum PaymentMethods {
@@ -321,7 +321,7 @@ enum PaymentMethods {
 }
 ```
 
-### <span id="ProcessDirection"></span> ProcessDirection
+### <span id="ProcessDirection"></span>ProcessDirection
 
 ```typescript
 enum ProcessDirection {
@@ -329,3 +329,52 @@ enum ProcessDirection {
   OFFRAMP = 'OFFRAMP',
 }
 ```
+
+### <span id="Chain"></span>Chain
+
+```typescript
+enum Chain {
+  POLYGON = 'polygon',
+  CELO = 'celo',
+  OPTIMISM = 'optimism',
+  MAINNET = 'mainnet',
+  ARBITRUM = 'arbitrum',
+}
+```
+
+### <span id="CompanyType"></span>CompanyType
+
+```typescript
+enum CompanyType {
+  LIMITED_LIABILITY = 'LIMITED_LIABILITY',
+  SOLE_TRADER = 'SOLE_TRADER',
+  PARTNERSHIP = 'PARTNERSHIP',
+  PUBLIC_LIMITED_COMPANY = 'PUBLIC_LIMITED_COMPANY',
+  JOINT_STOCK_COMPANY = 'JOINT_STOCK_COMPANY',
+  CHARITY = 'CHARITY',
+}
+```
+
+### <span id="UserCompanyRole"></span>UserCompanyRole
+
+```typescript
+enum UserCompanyRole {
+  ADMINISTARTOR = 'ADMINISTARTOR',
+}
+```
+
+## List of Services Available
+
+* [auth](/docs/AUTH.md)
+* [company](/docs/COMPANY.md)
+* [exchangeRates](/docs/EXCHANGE_RATES.md)
+* [kyc](/docs/KYC.md)
+* [offramp](/docs/OFFRAMP.md)
+* [process](/docs/PROCESS.md)
+* [remoteBankAccount](/docs/REMOTE_BANK_ACCOUNT.md)
+* [tokenPreferences](/docs/TOKEN_PREFERENCES.md)
+* [transactionFee](/docs/TRANSACTION_FEE.md)
+* [unblockBankAccount](/docs/UNBLOCK_BANK_ACCOUNT.md)
+* [user](/docs/USER.md)
+
+[Back to README](/README.md)

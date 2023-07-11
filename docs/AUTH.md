@@ -89,20 +89,22 @@ This method allows you to log in as a user using SIWE or our Email system. The S
 ```typescript
 import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+})();
 ```
 
 ###### JavaScript using ```AuthenticationMethod.SIWE```
@@ -111,20 +113,22 @@ const result = await sdk.auth.login({
 const getunblockSDK = require("@getunblock/sdk").default;
 const { AuthenticationMethod } = require("@getunblock/sdk");
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+})();
 ```
 
 ###### Typescript using ```AuthenticationMethod.EMAIL```
@@ -132,18 +136,20 @@ const result = await sdk.auth.login({
 ```typescript
 import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.EMAIL,
-  userUuid: "[user uuid value]",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.EMAIL,
+    userUuid: "[user uuid value]",
+  });
+})();
 ```
 
 ###### JavaScript using ```AuthenticationMethod.EMAIL```
@@ -152,18 +158,20 @@ const result = await sdk.auth.login({
 const getunblockSDK = require("@getunblock/sdk").default;
 const { AuthenticationMethod } = require("@getunblock/sdk");
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.EMAIL,
-  userUuid: "[an user uuid value]",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.EMAIL,
+    userUuid: "[an user uuid value]",
+  });
+})();
 ```
 
 #### emailSession
@@ -181,18 +189,20 @@ If the Email login system (```AuthenticationMethod.EMAIL```) is used you will ne
 ```typescript
 import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.auth.emailSession({
-  userUuid: "[an user uuid value]",
-  code: "[The code received in the email]",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.auth.emailSession({
+    userUuid: "[an user uuid value]",
+    code: "[The code received in the email]",
+  });
+})();
 ```
 
 ###### JavaScript
@@ -201,18 +211,20 @@ const result = await sdk.auth.emailSession({
 const getunblockSDK = require("@getunblock/sdk").default;
 const { AuthenticationMethod } = require("@getunblock/sdk");
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.auth.emailSession({
-  userUuid: "[an user uuid value]",
-  code: "[The code received in the email]",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.auth.emailSession({
+    userUuid: "[an user uuid value]",
+    code: "[The code received in the email]",
+  });
+})();
 ```
 
 ## Other Services Available

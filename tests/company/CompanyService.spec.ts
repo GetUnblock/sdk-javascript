@@ -100,7 +100,6 @@ describe('CompanyService', () => {
       const result = await service.createCompany({
         ...companyDetails,
         ...targetAddress,
-        companyUuid: uuid,
       });
 
       // Assert
@@ -123,7 +122,7 @@ describe('CompanyService', () => {
 
       // Act
       try {
-        await service.createCompany({ ...companyDetails, ...targetAddress, companyUuid: uuid });
+        await service.createCompany({ ...companyDetails, ...targetAddress });
       } catch (error) {
         resultedError = error;
       }
@@ -147,7 +146,7 @@ describe('CompanyService', () => {
 
       // Act
       try {
-        await service.createCompany({ ...companyDetails, ...targetAddress, companyUuid: uuid });
+        await service.createCompany({ ...companyDetails, ...targetAddress });
       } catch (error) {
         resultedError = error;
       }
