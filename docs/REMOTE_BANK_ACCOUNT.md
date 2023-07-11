@@ -4,10 +4,10 @@
 
 ```typescript
 interface IRemoteBankAccountService {
-  createRemoteUserBankAccount(params: RemoteUserBankAccountRequest): Promise<RemoteUserBankAccountResponse>;
-  getAllRemoteBankAccounts(params: UserSessionData): Promise<RemoteUserBankAccountResponse[]>;
-  changeMainUserRemoteBankAccount(params: UserSessionData & { accountUuid: string }): Promise<void>;
-  getRemoteBankAccountByUuid(params: UserSessionData & { accountUuid: string }): Promise<RemoteUserBankAccountResponse>;
+  createRemoteUserBankAccount(params: CreateRemoteUserBankAccountRequest): Promise<CreateRemoteUserBankAccountRequest>;
+  getAllRemoteBankAccounts(params: GetAllRemoteBankAccountsRequest): Promise<GetAllRemoteBankAccountsResponse[]>;
+  changeMainUserRemoteBankAccount(params: ChangeMainUserRemoteBankAccountRequest): Promise<void>;
+  getRemoteBankAccountByUuid(params: GetRemoteBankAccountByUuidRequest): Promise<GetRemoteBankAccountByUuidResponse>;
 }
 ```
 
@@ -28,7 +28,7 @@ interface IRemoteBankAccountService {
 | currency | string |
 | iban | string |
 
-#### <span id="RemoteUserBankAccountRequest"></span>RemoteUserBankAccountRequest
+#### <span id="CreateRemoteUserBankAccountRequest"></span>CreateRemoteUserBankAccountRequest
 
 | Field Name | Type |
 | ---------- | ---- |
@@ -48,7 +48,67 @@ interface IRemoteBankAccountService {
 | unblockSessionID | string |
 | userUuid | string |
 
-#### <span id="RemoteUserBankAccountResponse"></span>RemoteUserBankAccountResponse
+#### <span id="CreateRemoteUserBankAccountResponse"></span>CreateRemoteUserBankAccountResponse
+
+| Field Name | Type |
+| ---------- | ---- |
+| firstName | string |
+| lastName | string |
+| currency | [Currency](/docs/COMMON_TYPES.md#Currency) |
+| mainBeneficiary | boolean |
+| iban | string |
+| bic | string |
+| accountNumber | string |
+| createdAt | string |
+| updatedAt | string |
+| accountName | string |
+| bankName | string |
+| uuid | string |
+| sortCode | string |
+
+
+#### <span id="GetAllRemoteBankAccountsRequest"></span>GetAllRemoteBankAccountsRequest
+
+| Field Name | Type |
+| ---------- | ---- |
+| unblockSessionID | string |
+| userUuid | string |
+
+#### <span id="GetAllRemoteBankAccountsResponse"></span>GetAllRemoteBankAccountsResponse
+
+| Field Name | Type |
+| ---------- | ---- |
+| firstName | string |
+| lastName | string |
+| currency | [Currency](/docs/COMMON_TYPES.md#Currency) |
+| mainBeneficiary | boolean |
+| iban | string |
+| bic | string |
+| accountNumber | string |
+| createdAt | string |
+| updatedAt | string |
+| accountName | string |
+| bankName | string |
+| uuid | string |
+| sortCode | string |
+
+#### <span id="ChangeMainUserRemoteBankAccountRequest"></span>ChangeMainUserRemoteBankAccountRequest
+
+| Field Name | Type |
+| ---------- | ---- |
+| unblockSessionID | string |
+| userUuid | string |
+| accountUuid | string |
+
+#### <span id="GetRemoteBankAccountByUuidRequest"></span>GetRemoteBankAccountByUuidRequest
+
+| Field Name | Type |
+| ---------- | ---- |
+| unblockSessionID | string |
+| userUuid | string |
+| accountUuid | string |
+
+#### <span id="GetRemoteBankAccountByUuidResponse"></span>GetRemoteBankAccountByUuidResponse
 
 | Field Name | Type |
 | ---------- | ---- |
@@ -70,7 +130,7 @@ interface IRemoteBankAccountService {
 
 #### createRemoteUserBankAccount
 
-<div><pre>createRemoteUserBankAccount(params: <a href="#RemoteUserBankAccountRequest">RemoteUserBankAccountRequest</a>): Promise&#60;<a href="#RemoteUserBankAccountResponse">RemoteUserBankAccountResponse</a>&#62;</pre></div>
+<div><pre>createRemoteUserBankAccount(params: <a href="#CreateRemoteUserBankAccountRequest">CreateRemoteUserBankAccountRequest</a>): Promise&#60;<a href="#CreateRemoteUserBankAccountResponse">CreateRemoteUserBankAccountResponse</a>&#62;</pre></div>
 
 ##### Overview
 
@@ -155,7 +215,7 @@ const { AuthenticationMethod, Country, Currency } = require("@getunblock/sdk");
 
 #### getAllRemoteBankAccounts
 
-<div><pre>getAllRemoteBankAccounts(params: <a href="#UserSessionData">UserSessionData</a>): Promise&#60;<a href="#RemoteUserBankAccountResponse">RemoteUserBankAccountResponse</a>&#62;</pre></div>
+<div><pre>getAllRemoteBankAccounts(params: <a href="#GetAllRemoteBankAccountsRequest">GetAllRemoteBankAccountsRequest</a>): Promise&#60;<a href="#GetAllRemoteBankAccountsResponse">GetAllRemoteBankAccountsResponse</a>[]&#62;</pre></div>
 
 ##### Overview
 
@@ -222,7 +282,7 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
 
 #### changeMainUserRemoteBankAccount
 
-<div><pre>changeMainUserRemoteBankAccount(params: <a href="#UserSessionData">UserSessionData</a> & { accountUuid: string }): Promise&#60;void&#62;</pre></div>
+<div><pre>changeMainUserRemoteBankAccount(params: <a href="#ChangeMainUserRemoteBankAccountRequest">ChangeMainUserRemoteBankAccountRequest): Promise&#60;void&#62;</pre></div>
 
 ##### Overview
 
@@ -291,7 +351,7 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
 
 #### getRemoteBankAccountByUuid
 
-<div><pre>getRemoteBankAccountByUuid(params: <a href="#UserSessionData">UserSessionData</a> & { accountUuid: string }): Promise&#60;<a href="#RemoteUserBankAccountResponse">RemoteUserBankAccountResponse</a>&#62;</pre></div>
+<div><pre>getRemoteBankAccountByUuid(params: <a href="#GetRemoteBankAccountByUuidRequest">GetRemoteBankAccountByUuidRequest): Promise&#60;<a href="#GetRemoteBankAccountByUuidResponse">GetRemoteBankAccountByUuidResponse</a>&#62;</pre></div>
 
 ##### Overview
 

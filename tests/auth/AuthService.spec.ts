@@ -1,8 +1,9 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { AuthService } from '../../src/auth/AuthService';
-import { AuthenticationMethod, LoginRequest, SessionRequest } from '../../src/auth/definitions';
+import { LoginRequest, SessionRequest } from '../../src/auth/definitions';
 import { SdkSettings } from '../../src/definitions';
+import { AuthenticationMethod } from '../../src/enums/AuthenticationMethod';
 import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
 import { propsMock } from '../mocks/props.mock';
 

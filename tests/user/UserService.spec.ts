@@ -3,6 +3,7 @@ import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { SdkSettings } from '../../src/definitions';
 import Country from '../../src/enums/Country';
 import { ProcessStatus } from '../../src/enums/ProcessStatus';
+import { UserStatus } from '../../src/enums/UserStatus';
 import { UserService } from '../../src/user/UserService';
 import {
   CreateUserRequest,
@@ -12,7 +13,6 @@ import {
   GetUserStatusRequest,
   GetUserStatusResponse,
   RampTransactionProcess,
-  UserStatus,
 } from '../../src/user/definitions';
 import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
 import { propsMock } from '../mocks/props.mock';

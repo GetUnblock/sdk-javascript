@@ -1,7 +1,7 @@
 import { BaseService } from '../BaseService';
 import { ErrorHandler } from '../ErrorHandler';
+import { AuthenticationMethod } from '../enums/AuthenticationMethod';
 import {
-  AuthenticationMethod,
   EmailLoginRequest,
   LoginRequest,
   LoginResponse,
