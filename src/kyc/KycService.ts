@@ -14,6 +14,8 @@ import {
   GetRequiredKycInformationResponse,
   GetUploadedKycDocumentsForUserRequest,
   GetUploadedKycDocumentsForUserResponse,
+  OnboardingRequest,
+  OnboardingResponse,
   StartKycVerificationRequest,
   StartKycVerificationResponse,
   UploadKycDocumentRequest,
@@ -44,6 +46,8 @@ export interface IKycService {
   getRequiredKycInformation(
     getRequiredKycInformationParams: GetRequiredKycInformationRequest,
   ): Promise<GetRequiredKycInformationResponse[]>;
+
+  onboarding(dto: OnboardingRequest): Promise<OnboardingResponse>;
 }
 
 export class KycService extends BaseService implements IKycService {
@@ -252,6 +256,30 @@ export class KycService extends BaseService implements IKycService {
         documentClass: item.document_class,
         documentTypes: item.one_of_document_type,
       }));
+    } catch (error) {
+      ErrorHandler.handle(error);
+    }
+  }
+
+  async onboarding(dto: OnboardingRequest): Promise<OnboardingResponse> {
+    const { sessionData, applicantData, documentData } = dto;
+    try {
+      const applicant: CreateKYCApplicantResponse = await this.createKYCApplicant({
+        ...sessionData,
+        ...applicantData,
+      });
+      const upload: UploadKycDocumentResponse = await this.uploadKycDocument({
+        ...sessionData,
+        ...documentData,
+      });
+      const verification: StartKycVerificationResponse = await this.startKycVerification({
+        ...sessionData,
+      });
+      return {
+        applicantCreated: applicant.created,
+        uploadUuid: upload.uploadUuid,
+        verificationStarted: verification.started,
+      };
     } catch (error) {
       ErrorHandler.handle(error);
     }
