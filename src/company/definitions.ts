@@ -46,7 +46,7 @@ export type CompanyDetails = {
   industrySectorValue?: string;
 };
 
-/**  * The target Ethereum address tpe */
+/**  * The target Ethereum address type */
 export type TargetAddress = {
   /** Must be a valid Ethereum address */
   targetAddress: string;
