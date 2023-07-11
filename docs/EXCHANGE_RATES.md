@@ -1,17 +1,41 @@
----
-title: System Development Kit - Javascript
-excerpt: GetUnblock SDK is a JS library for interacting with Unblock APIs
----
+# GetUnblock SDK - EXCHANGE RATES Service
 
-## Installation
+## Interface
 
-```bash
-npm i @getunblock/sdk
+```typescript
+interface IExchangeRatesService {
+  getExchangeRate(params: ExchangeRatesServiceRequest): Promise<ExchangeRatesServiceResponse>;
+}
 ```
 
-## Usage
+### Structures used
 
-### Typescript
+#### <span id="ExchangeRatesServiceRequest"></span>ExchangeRatesServiceRequest
+
+| Field Name | Type |
+| ---------- | ---- |
+| baseCurrency | [Currency](/docs/COMMON_TYPES.md#Currency) |
+| targetCurrency | [Currency](/docs/COMMON_TYPES.md#Currency) |
+
+#### <span id="ExchangeRatesServiceResponse"></span>ExchangeRatesServiceResponse
+
+| Field Name | Type |
+| ---------- | ---- |
+| exchangeRate | number |
+
+### Service Methods
+
+#### getExchangeRate
+
+<div><pre>getExchangeRate(params: <a href="#ExchangeRatesServiceRequest">ExchangeRatesServiceRequest</a>): Promise&#60;<a href="#ExchangeRatesServiceResponse">ExchangeRatesServiceResponse</a>&#62;</pre></div>
+
+##### Overview
+
+This method allows you to get a conversion rate by giving a base currency and a target currency.
+
+##### Usage
+
+###### Typescript
 
 ```typescript
 import getunblockSDK, { Currency } from "@getunblock/sdk";
@@ -30,7 +54,7 @@ const result = await sdk.exchangeRates.getExchangeRate({
 });
 ```
 
-### JavaScript
+###### Javascript
 
 ```javascript
 const getunblockSDK = require("@getunblock/sdk").default;
@@ -50,11 +74,10 @@ const result = await sdk.exchangeRates.getExchangeRate({
 });
 ```
 
-## List of Services Available
+## Other Services Available
 
 * [auth](/docs/AUTH.md)
 * [company](/docs/COMPANY.md)
-* [exchangeRates](/docs/EXCHANGE_RATES.md)
 * [kyc](/docs/KYC.md)
 * [offramp](/docs/OFFRAMP.md)
 * [process](/docs/PROCESS.md)
@@ -63,3 +86,5 @@ const result = await sdk.exchangeRates.getExchangeRate({
 * [transactionFee](/docs/TRANSACTION_FEE.md)
 * [unblockBankAccount](/docs/UNBLOCK_BANK_ACCOUNT.md)
 * [user](/docs/USER.md)
+
+[Back to README](/README.md)
