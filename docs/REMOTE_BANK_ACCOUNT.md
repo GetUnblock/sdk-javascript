@@ -66,7 +66,6 @@ interface IRemoteBankAccountService {
 | uuid | string |
 | sortCode | string |
 
-
 #### <span id="GetAllRemoteBankAccountsRequest"></span>GetAllRemoteBankAccountsRequest
 
 | Field Name | Type |
