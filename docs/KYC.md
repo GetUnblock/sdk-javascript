@@ -153,32 +153,34 @@ This method allows you to create a KYC Application for a user.
 ```typescript
 import getunblockSDK, { AuthenticationMethod, Country } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-const result = await sdk.kyc.createKYCApplicant({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-  address: "[user address]",
-  postcode: "[user postcode]",
-  city: "[user city]",
-  country: Country.UnitedStates,
-  dateOfBirth: new Date("[user birhday]"),
-  sourceOfFunds: "['SALARY' | 'BUSINESS_INCOME' | 'PENSION' | 'OTHER']",
-  sourceOfFundsDescription: "[Funds Description]",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  const result = await sdk.kyc.createKYCApplicant({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+    address: "[user address]",
+    postcode: "[user postcode]",
+    city: "[user city]",
+    country: Country.UnitedStates,
+    dateOfBirth: new Date("[user birhday]"),
+    sourceOfFunds: "['SALARY' | 'BUSINESS_INCOME' | 'PENSION' | 'OTHER']",
+    sourceOfFundsDescription: "[Funds Description]",
+  });
+})();
 ```
 
 ###### Javascript
@@ -187,32 +189,34 @@ const result = await sdk.kyc.createKYCApplicant({
 const getunblockSDK = require("@getunblock/sdk").default;
 const { AuthenticationMethod, Country } = require("@getunblock/sdk");
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-// SDK API call example
-const result = await sdk.kyc.createKYCApplicant({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-  address: "[user address]",
-  postcode: "[user postcode]",
-  city: "[user city]",
-  country: Country.UnitedStates,
-  dateOfBirth: new Date("[user birhday]"),
-  sourceOfFunds: "['SALARY' | 'BUSINESS_INCOME' | 'PENSION' | 'OTHER']",
-  sourceOfFundsDescription: "[Funds Description]",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  // SDK API call example
+  const result = await sdk.kyc.createKYCApplicant({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+    address: "[user address]",
+    postcode: "[user postcode]",
+    city: "[user city]",
+    country: Country.UnitedStates,
+    dateOfBirth: new Date("[user birhday]"),
+    sourceOfFunds: "['SALARY' | 'BUSINESS_INCOME' | 'PENSION' | 'OTHER']",
+    sourceOfFundsDescription: "[Funds Description]",
+  });
+})();
 ```
 
 #### getAccessTokenForUserApplicant
@@ -231,25 +235,27 @@ This method allows to get an access token which can be used with Sumsub's Web or
 import getunblockSDK from "@getunblock/sdk";
 import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-const result = await sdk.kyc.getAccessTokenForUserApplicant({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  const result = await sdk.kyc.getAccessTokenForUserApplicant({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+  });
+})();
 ```
 
 ###### Javascript
@@ -258,25 +264,27 @@ const result = await sdk.kyc.getAccessTokenForUserApplicant({
 const getunblockSDK = require("@getunblock/sdk").default;
 const { AuthenticationMethod } = require("@getunblock/sdk")
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-const result = await sdk.kyc.getAccessTokenForUserApplicant({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  const result = await sdk.kyc.getAccessTokenForUserApplicant({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+  });
+})();
 ```
 
 #### uploadKycDocument
@@ -294,30 +302,32 @@ This method allows to upload multiple KYC documents into Unblock. Please call re
 ```typescript
 import getunblockSDK, { AuthenticationMethod, Country } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-const result = await sdk.kyc.uploadKycDocument({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-  content: "[base64 image data]",
-  filename: "[filename].[file_extension]",
-  documentType: "['SELFIE' | 'PASSPORT' | 'DRIVERS' | 'ID_CARD' | 'RESIDENCE_PERMIT']",
-  documentSubType?: "['FRONT_SIDE' | 'BACK_SIDE']",
-  country: Country.Portugal,
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  const result = await sdk.kyc.uploadKycDocument({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+    content: "[base64 image data]",
+    filename: "[filename].[file_extension]",
+    documentType: "['SELFIE' | 'PASSPORT' | 'DRIVERS' | 'ID_CARD' | 'RESIDENCE_PERMIT']",
+    documentSubType?: "['FRONT_SIDE' | 'BACK_SIDE']",
+    country: Country.Portugal,
+  });
+})();
 ```
 
 ###### Javascript
@@ -326,30 +336,32 @@ const result = await sdk.kyc.uploadKycDocument({
 const getunblockSDK = require("@getunblock/sdk").default;
 const { AuthenticationMethod, Country } = require("@getunblock/sdk");
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-const result = await sdk.kyc.uploadKycDocument({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-  content: "[base64 image data]",
-  filename: "[filename].[file_extension]",
-  documentType: "['SELFIE' | 'PASSPORT' | 'DRIVERS' | 'ID_CARD' | 'RESIDENCE_PERMIT']",
-  documentSubType?: "['FRONT_SIDE' | 'BACK_SIDE']",
-  country: Country.Portugal,
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  const result = await sdk.kyc.uploadKycDocument({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+    content: "[base64 image data]",
+    filename: "[filename].[file_extension]",
+    documentType: "['SELFIE' | 'PASSPORT' | 'DRIVERS' | 'ID_CARD' | 'RESIDENCE_PERMIT']",
+    documentSubType?: "['FRONT_SIDE' | 'BACK_SIDE']",
+    country: Country.Portugal,
+  });
+})();
 ```
 
 #### getUploadedKycDocumentsForUser
@@ -367,25 +379,27 @@ This method returns a set of documents uploaded for particular user
 ```typescript
 import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-const result = await sdk.kyc.getUploadedKycDocumentsForUser({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  const result = await sdk.kyc.getUploadedKycDocumentsForUser({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+  });
+})();
 ```
 
 ###### Javascript
@@ -394,25 +408,27 @@ const result = await sdk.kyc.getUploadedKycDocumentsForUser({
 const getunblockSDK = require("@getunblock/sdk").default;
 const { AuthenticationMethod } = require("@getunblock/sdk");
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-const result = await sdk.kyc.getUploadedKycDocumentsForUser({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  const result = await sdk.kyc.getUploadedKycDocumentsForUser({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+  });
+})();
 ```
 
 #### startKycVerification
@@ -430,25 +446,27 @@ This method starts the verification process for KYC. It should be called after t
 ```typescript
 import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-const result = await sdk.kyc.startKycVerification({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  const result = await sdk.kyc.startKycVerification({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+  });
+})();
 ```
 
 ###### Javascript
@@ -457,25 +475,27 @@ const result = await sdk.kyc.startKycVerification({
 const getunblockSDK = require("@getunblock/sdk").default;
 const { AuthenticationMethod } = require("@getunblock/sdk");
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-const result = await sdk.kyc.startKycVerification({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  const result = await sdk.kyc.startKycVerification({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+  });
+})();
 ```
 
 #### getRequiredKycInformation
@@ -493,25 +513,27 @@ This method returns which documents are needed to perform KYC for a particular u
 ```typescript
 import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-const result = await sdk.kyc.getRequiredKycInformation({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  const result = await sdk.kyc.getRequiredKycInformation({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+  });
+})();
 ```
 
 ###### Javascript
@@ -520,25 +542,27 @@ const result = await sdk.kyc.getRequiredKycInformation({
 const getunblockSDK = require("@getunblock/sdk").default;
 const { AuthenticationMethod } = require("@getunblock/sdk");
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-const result = await sdk.kyc.getRequiredKycInformation({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  const result = await sdk.kyc.getRequiredKycInformation({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+  });
+})();
 ```
 
 ## Other Services Available

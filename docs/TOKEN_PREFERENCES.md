@@ -102,54 +102,58 @@ This method returns token preferences for each currency for a particular user.
 ###### Typescript
 
 ```typescript
-import getunblockSDK, { Chain } from "@getunblock/sdk";
+import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-// SDK API call example
-const result = await sdk.tokenPreference.getUserTokenPreference({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  // SDK API call example
+  const result = await sdk.tokenPreference.getUserTokenPreference({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+  });
+})();
 ```
 
 ###### Javascript
 
 ```javascript
 const getunblockSDK = require("@getunblock/sdk").default;
-const { Chain } = require("@getunblock/sdk"); 
+const { AuthenticationMethod } = require("@getunblock/sdk"); 
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-// SDK API call example
-const result = await sdk.tokenPreference.getUserTokenPreference({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  // SDK API call example
+  const result = await sdk.tokenPreference.getUserTokenPreference({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+  });
+})();
 ```
 
 #### updateUserTokenPreference
@@ -165,68 +169,72 @@ This method allows to change the token preferences by giving a currency and a to
 ###### Typescript
 
 ```typescript
-import getunblockSDK, { Chain } from "@getunblock/sdk";
+import getunblockSDK, { AuthenticationMethod, Currency, OptimismToken, Chain } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-// SDK API call example
-const result = await sdk.tokenPreference.updateUserTokenPreference({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-  preferences: [
-    {
-      currency: Currency.EUR,
-      chain: Chain.OPTIMISM,
-      token: OptimismToken.USDC
-    }
-  ]
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  // SDK API call example
+  const result = await sdk.tokenPreference.updateUserTokenPreference({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+    preferences: [
+      {
+        currency: Currency.EUR,
+        chain: Chain.OPTIMISM,
+        token: OptimismToken.USDC
+      }
+    ]
+  });
+})();
 ```
 
 ###### Javascript
 
 ```javascript
 const getunblockSDK = require("@getunblock/sdk").default;
-const { Chain } = require("@getunblock/sdk"); 
+const { AuthenticationMethod, Currency, Chain, OptimismToken } = require("@getunblock/sdk"); 
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-// SDK API call example
-const result = await sdk.tokenPreference.updateUserTokenPreference({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-  preferences: [
-    {
-      currency: Currency.EUR,
-      chain: Chain.OPTIMISM,
-      token: OptimismToken.USDC
-    }
-  ]
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  // SDK API call example
+  const result = await sdk.tokenPreference.updateUserTokenPreference({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+    preferences: [
+      {
+        currency: Currency.EUR,
+        chain: Chain.OPTIMISM,
+        token: OptimismToken.USDC
+      }
+    ]
+  });
+})();
 ```
 
 ## Other Services Available

@@ -42,26 +42,28 @@ This method returns a crypto address to which user needs to transfer crypto asse
 ```typescript
 import getunblockSDK, { Chain } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-// SDK API call example
-const result = await sdk.offramp.getUserOfframpAddress({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-  chain: Chain.POLYGON
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  // SDK API call example
+  const result = await sdk.offramp.getUserOfframpAddress({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+    chain: Chain.POLYGON
+  });
+})();
 ```
 
 ###### Javascript
@@ -70,26 +72,28 @@ const result = await sdk.offramp.getUserOfframpAddress({
 const getunblockSDK = require("@getunblock/sdk").default;
 const { Chain } = require("@getunblock/sdk"); 
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-const loginResult = await sdk.auth.login({
-  authenticationMethod: AuthenticationMethod.SIWE,
-  message: "[Generated SIWE message]*",
-  signature: "[Generated SIWE signature]*",
-});
-// * more info at https://docs.getunblock.com/docs/unblocker
-
-// SDK API call example
-const result = await sdk.offramp.getUserOfframpAddress({
-  unblockSessionId: loginResult.unblockSessionId,
-  userUuid: loginResult.userUuid,
-  chain: Chain.POLYGON
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  // SDK API call example
+  const result = await sdk.offramp.getUserOfframpAddress({
+    unblockSessionId: loginResult.unblockSessionId,
+    userUuid: loginResult.userUuid,
+    chain: Chain.POLYGON
+  });
+})();
 ```
 
 ## Other Services Available

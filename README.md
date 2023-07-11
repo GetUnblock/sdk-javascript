@@ -16,18 +16,23 @@ npm i @getunblock/sdk
 ```typescript
 import getunblockSDK, { Currency } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.exchangeRates.getExchangeRate({
+    baseCurrency: Currency.USD,
+    targetCurrency: Currency.EURO,
+  });
 
-// SDK API call example
-const result = await sdk.exchangeRates.getExchangeRate({
-  baseCurrency: Currency.USD,
-  targetCurrency: Currency.EURO,
-});
+  console.log(result);
+})();
+
 ```
 
 ### JavaScript
@@ -36,18 +41,22 @@ const result = await sdk.exchangeRates.getExchangeRate({
 const getunblockSDK = require("@getunblock/sdk").default;
 const { Currency } = require("@getunblock/sdk");
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.exchangeRates.getExchangeRate({
+    baseCurrency: Currency.USD,
+    targetCurrency: Currency.EURO,
+  });
 
-// SDK API call example
-const result = await sdk.exchangeRates.getExchangeRate({
-  baseCurrency: Currency.USD,
-  targetCurrency: Currency.EURO,
-});
+  console.log(result);
+})();
 ```
 
 ## List of Services Available

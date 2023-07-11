@@ -108,26 +108,28 @@ This method allows to create a company, which can have authorised users take act
 ```typescript
 import getunblockSDK, { Country } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.company.createCompany({
-  name: "Unblock",
-  type: CompanyType.LIMITED_LIABILITY,
-  registeredAddress: "P.Sherman, 42 Wallaby Way, Sydney",
-  city: "London",
-  country: Country.UnitedKingdom,
-  registrationNumber: 123,
-  contactName: "Jane Doe",
-  phone: "0118 999 881 999 119 725 3",
-  email: "jane.doe@getunblock.com",
-  targetAddress: "0xFaFe15f71861609464a4ACada29a92c5bC01637a",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.company.createCompany({
+    name: "Unblock",
+    type: CompanyType.LIMITED_LIABILITY,
+    registeredAddress: "P.Sherman, 42 Wallaby Way, Sydney",
+    city: "London",
+    country: Country.UnitedKingdom,
+    registrationNumber: 123,
+    contactName: "Jane Doe",
+    phone: "0118 999 881 999 119 725 3",
+    email: "jane.doe@getunblock.com",
+    targetAddress: "0xFaFe15f71861609464a4ACada29a92c5bC01637a",
+  });
+})();
 ```
 
 ###### Javascript
@@ -136,26 +138,28 @@ const result = await sdk.company.createCompany({
 const getunblockSDK = require("@getunblock/sdk").default;
 const { Country } = require("@getunblock/sdk");
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.company.createCompany({
-  name: "Unblock",
-  type: CompanyType.LIMITED_LIABILITY,
-  registeredAddress: "P.Sherman, 42 Wallaby Way, Sydney",
-  city: "London",
-  country: Country.UnitedKingdom,
-  registrationNumber: 123,
-  contactName: "Jane Doe",
-  phone: "0118 999 881 999 119 725 3",
-  email: "jane.doe@getunblock.com",
-  targetAddress: "0xFaFe15f71861609464a4ACada29a92c5bC01637a",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.company.createCompany({
+    name: "Unblock",
+    type: CompanyType.LIMITED_LIABILITY,
+    registeredAddress: "P.Sherman, 42 Wallaby Way, Sydney",
+    city: "London",
+    country: Country.UnitedKingdom,
+    registrationNumber: 123,
+    contactName: "Jane Doe",
+    phone: "0118 999 881 999 119 725 3",
+    email: "jane.doe@getunblock.com",
+    targetAddress: "0xFaFe15f71861609464a4ACada29a92c5bC01637a",
+  });
+})();
 ```
 
 #### updateCompany
@@ -173,27 +177,29 @@ This method allows to update associated company's data.
 ```typescript
 import getunblockSDK, { CompanyType, Country } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.company.updateCompany({
-  companyUuid: "6c0ace64-a187-4f46-bf53-069a4a178f00",
-  name: "Unblock",
-  type: CompanyType.LIMITED_LIABILITY,
-  registeredAddress: "P.Sherman, 42 Wallaby Way, Sydney",
-  city: "London",
-  country: Country.UnitedKingdom,
-  registrationNumber: 123,
-  contactName: "Jane Doe",
-  phone: "0118 999 881 999 119 725 3",
-  email: "jane.doe@getunblock.com",
-  targetAddress: "0xFaFe15f71861609464a4ACada29a92c5bC01637a",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.company.updateCompany({
+    companyUuid: "6c0ace64-a187-4f46-bf53-069a4a178f00",
+    name: "Unblock",
+    type: CompanyType.LIMITED_LIABILITY,
+    registeredAddress: "P.Sherman, 42 Wallaby Way, Sydney",
+    city: "London",
+    country: Country.UnitedKingdom,
+    registrationNumber: 123,
+    contactName: "Jane Doe",
+    phone: "0118 999 881 999 119 725 3",
+    email: "jane.doe@getunblock.com",
+    targetAddress: "0xFaFe15f71861609464a4ACada29a92c5bC01637a",
+  });
+})();
 ```
 
 ###### Javascript
@@ -202,27 +208,29 @@ const result = await sdk.company.updateCompany({
 const getunblockSDK = require("@getunblock/sdk").default;
 const { CompanyType, Country } = require("@getunblock/sdk");
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.company.updateCompany({
-  companyUuid: "6c0ace64-a187-4f46-bf53-069a4a178f00",
-  name: "Unblock",
-  type: CompanyType.LIMITED_LIABILITY,
-  registeredAddress: "P.Sherman, 42 Wallaby Way, Sydney",
-  city: "London",
-  country: Country.UnitedKingdom,
-  registrationNumber: 123,
-  contactName: "Jane Doe",
-  phone: "0118 999 881 999 119 725 3",
-  email: "jane.doe@getunblock.com",
-  targetAddress: "0xFaFe15f71861609464a4ACada29a92c5bC01637a",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.company.updateCompany({
+    companyUuid: "6c0ace64-a187-4f46-bf53-069a4a178f00",
+    name: "Unblock",
+    type: CompanyType.LIMITED_LIABILITY,
+    registeredAddress: "P.Sherman, 42 Wallaby Way, Sydney",
+    city: "London",
+    country: Country.UnitedKingdom,
+    registrationNumber: 123,
+    contactName: "Jane Doe",
+    phone: "0118 999 881 999 119 725 3",
+    email: "jane.doe@getunblock.com",
+    targetAddress: "0xFaFe15f71861609464a4ACada29a92c5bC01637a",
+  });
+})();
 ```
 
 #### addUserToCompany
@@ -240,19 +248,21 @@ This method allows to add a user to the given company.
 ```typescript
 import getunblockSDK, { UserCompanyRole } from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.company.addUserToCompany({
-  companyUuid: "6c0ace64-a187-4f46-bf53-069a4a178f00",
-  userUuid: "5594401c-0072-4df2-be9c-d491c0754c21",
-  role: UserCompanyRole.ADMINISTARTOR,
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.company.addUserToCompany({
+    companyUuid: "6c0ace64-a187-4f46-bf53-069a4a178f00",
+    userUuid: "5594401c-0072-4df2-be9c-d491c0754c21",
+    role: UserCompanyRole.ADMINISTARTOR,
+  });
+})();
 ```
 
 ###### Javascript
@@ -261,19 +271,21 @@ const result = await sdk.company.addUserToCompany({
 const getunblockSDK = require("@getunblock/sdk").default;
 const { UserCompanyRole } = require("@getunblock/sdk");
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.company.addUserToCompany({
-  companyUuid: "6c0ace64-a187-4f46-bf53-069a4a178f00",
-  userUuid: "5594401c-0072-4df2-be9c-d491c0754c21",
-  role: UserCompanyRole.ADMINISTARTOR,
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.company.addUserToCompany({
+    companyUuid: "6c0ace64-a187-4f46-bf53-069a4a178f00",
+    userUuid: "5594401c-0072-4df2-be9c-d491c0754c21",
+    role: UserCompanyRole.ADMINISTARTOR,
+  });
+})();
 ```
 
 #### removeUserFromCompany
@@ -291,18 +303,20 @@ This method allows to remove a user from the given company.
 ```typescript
 import getunblockSDK from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.company.removeUserFromCompany({
-  companyUuid: "6c0ace64-a187-4f46-bf53-069a4a178f00",
-  companyUserUuid: "5594401c-0072-4df2-be9c-d491c0754c21",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.company.removeUserFromCompany({
+    companyUuid: "6c0ace64-a187-4f46-bf53-069a4a178f00",
+    companyUserUuid: "5594401c-0072-4df2-be9c-d491c0754c21",
+  });
+})();
 ```
 
 ###### Javascript
@@ -310,18 +324,20 @@ const result = await sdk.company.removeUserFromCompany({
 ```javascript
 const getunblockSDK = require("@getunblock/sdk").default;
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.company.removeUserFromCompany({
-  companyUuid: "6c0ace64-a187-4f46-bf53-069a4a178f00",
-  companyUserUuid: "5594401c-0072-4df2-be9c-d491c0754c21",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.company.removeUserFromCompany({
+    companyUuid: "6c0ace64-a187-4f46-bf53-069a4a178f00",
+    companyUserUuid: "5594401c-0072-4df2-be9c-d491c0754c21",
+  });
+})();
 ```
 
 ## Other Services Available

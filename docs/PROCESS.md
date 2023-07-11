@@ -52,17 +52,19 @@ This method returns the status of an onramp process.
 ```typescript
 import getunblockSDK from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.process.getOnrampProcessStatus({
-  processUuid: "[target process uuid]",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.process.getOnrampProcessStatus({
+    processUuid: "[target process uuid]",
+  });
+})();
 ```
 
 ###### Javascript
@@ -70,17 +72,19 @@ const result = await sdk.process.getOnrampProcessStatus({
 ```javascript
 const getunblockSDK = require("@getunblock/sdk").default;
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.process.getOnrampProcessStatus({
-  processUuid: "[target process uuid]",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.process.getOnrampProcessStatus({
+    processUuid: "[target process uuid]",
+  });
+})();
 ```
 
 #### getOfframpProcessStatus
@@ -98,17 +102,19 @@ This method returns the status of an offramp process.
 ```typescript
 import getunblockSDK from "@getunblock/sdk";
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.process.getOfframpProcessStatus({
-  processUuid: "[target process uuid]",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.process.getOfframpProcessStatus({
+    processUuid: "[target process uuid]",
+  });
+})();
 ```
 
 ###### Javascript
@@ -116,17 +122,19 @@ const result = await sdk.process.getOfframpProcessStatus({
 ```javascript
 const getunblockSDK = require("@getunblock/sdk").default;
 
-// setup SDK
-const sdk = getunblockSDK({
-  apiKey:
-    "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
-  prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-});
-
-// SDK API call example
-const result = await sdk.process.getOfframpProcessStatus({
-  processUuid: "[target process uuid]",
-});
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const result = await sdk.process.getOfframpProcessStatus({
+    processUuid: "[target process uuid]",
+  });
+})();
 ```
 
 ## Other Services Available
