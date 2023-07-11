@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { ErrorHandler } from '../ErrorHandler';
 import { SdkSettings } from '../definitions';
 import { ProcessStatus } from '../enums/ProcessStatus';
+import { UserStatus } from '../enums/UserStatus';
 import {
   CreateUserRequest,
   CreateUserResponse,
@@ -9,7 +10,6 @@ import {
   GetUserRampTransactionsResponse,
   GetUserStatusRequest,
   GetUserStatusResponse,
-  UserStatus,
 } from './definitions';
 
 export interface IUserService {

@@ -1,6 +1,7 @@
 import { UserSessionData } from '../definitions';
 import Country from '../enums/Country';
 import { ProcessStatus } from '../enums/ProcessStatus';
+import { UserStatus } from '../enums/UserStatus';
 
 export type CreateUserRequest = {
   firstName: string;
@@ -9,16 +10,6 @@ export type CreateUserRequest = {
   targetAddress: string;
   country: Country;
 };
-
-export enum UserStatus {
-  CREATED = 'CREATED',
-  KYC_NEEDED = 'KYC_NEEDED',
-  PENDING_KYC_DATA = 'PENDING_KYC_DATA',
-  KYC_PENDING = 'KYC_PENDING',
-  SOFT_KYC_FAILED = 'SOFT_KYC_FAILED',
-  HARD_KYC_FAILED = 'HARD_KYC_FAILED',
-  FULL_USER = 'FULL_USER',
-}
 
 export type CreateUserResponse = {
   message: string;
@@ -33,11 +24,6 @@ export type GetUserStatusResponse = {
 };
 
 export type GetUserRampTransactionsRequest = UserSessionData;
-
-export enum ProcessDirection {
-  ONRAMP = 'ONRAMP',
-  OFFRAMP = 'OFFRAMP',
-}
 
 export type RampTransactionProcess = {
   uuid: string;

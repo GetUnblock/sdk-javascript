@@ -1,11 +1,15 @@
 import { AxiosResponse } from 'axios';
 import { BaseService } from '../BaseService';
 import { ErrorHandler } from '../ErrorHandler';
-import { UserSessionData } from '../definitions';
 import {
-  NewRemoteUserBankAccount,
-  RemoteUserBankAccountRequest,
-  RemoteUserBankAccountResponse,
+  ChangeMainUserRemoteBankAccountRequest,
+  CreateRemoteUserBankAccountRequest,
+  CreateRemoteUserBankAccountResponse,
+  GetAllRemoteBankAccountsRequest,
+  GetAllRemoteBankAccountsResponse,
+  GetRemoteBankAccountByUuidRequest,
+  GetRemoteBankAccountByUuidResponse,
+  RemoteUserBankAccount,
   UnblockCreateRemoteUserBankAccount,
   UnblockEurAccountDetails,
   UnblockGbpAccountDetails,
@@ -14,30 +18,32 @@ import {
 
 export interface IRemoteBankAccountService {
   createRemoteUserBankAccount(
-    dto: RemoteUserBankAccountRequest,
-  ): Promise<RemoteUserBankAccountResponse>;
+    dto: CreateRemoteUserBankAccountRequest,
+  ): Promise<CreateRemoteUserBankAccountResponse>;
 
-  getAllRemoteBankAccounts(dto: UserSessionData): Promise<RemoteUserBankAccountResponse[]>;
+  getAllRemoteBankAccounts(
+    dto: GetAllRemoteBankAccountsRequest,
+  ): Promise<GetAllRemoteBankAccountsResponse[]>;
 
-  changeMainUserRemoteBankAccount(dto: UserSessionData & { accountUuid: string }): Promise<void>;
+  changeMainUserRemoteBankAccount(dto: ChangeMainUserRemoteBankAccountRequest): Promise<void>;
 
   getRemoteBankAccountByUuid(
-    dto: UserSessionData & { accountUuid: string },
-  ): Promise<RemoteUserBankAccountResponse>;
+    dto: GetRemoteBankAccountByUuidRequest,
+  ): Promise<GetRemoteBankAccountByUuidResponse>;
 }
 
 export class RemoteBankAccountService extends BaseService implements IRemoteBankAccountService {
   /**
    * Creates a remote user bank account.
    *
-   * @param {RemoteUserBankAccountRequest} dto - An object containing user uuid, session id and account information.
+   * @param {CreateRemoteUserBankAccountRequest} dto - An object containing user uuid, session id and account information.
    * @returns {Promise<RemoteUserBankAccountResponse>} A promise that resolves to a response object containing the new bank account details.
    *
    * @throws {Error} Will throw an error if the API request fails or if an unexpected error occurs.
    */
   async createRemoteUserBankAccount(
-    dto: RemoteUserBankAccountRequest,
-  ): Promise<RemoteUserBankAccountResponse> {
+    dto: CreateRemoteUserBankAccountRequest,
+  ): Promise<CreateRemoteUserBankAccountResponse> {
     const { apiKey } = this.props;
     let accountDetails: UnblockGbpAccountDetails | UnblockEurAccountDetails;
 
@@ -81,8 +87,9 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
         body,
         config,
       );
-      const newRemoteBankAccount: NewRemoteUserBankAccount =
-        this.mapToRemoteUserBankAccountResponse([response.data])[0];
+      const newRemoteBankAccount: RemoteUserBankAccount = this.mapToRemoteUserBankAccountResponse([
+        response.data,
+      ])[0];
 
       return newRemoteBankAccount;
     } catch (error) {
@@ -93,12 +100,14 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
   /**
    * Retrieve all remote bank accounts for the user
    *
-   * @param {UserSessionData} dto - An object containing user session data
-   * @returns {Promise<RemoteUserBankAccountResponse[]>} - Returns a promise that resolves to an array of remote bank account responses if the retrieval was successful
+   * @param {GetAllRemoteBankAccountsRequest} dto - An object containing user session data
+   * @returns {Promise<GetAllRemoteBankAccountsResponse[]>} - Returns a promise that resolves to an array of remote bank account responses if the retrieval was successful
    *
    * @throws Will throw an error if the Axios request fails, either due to an API error or an unexpected error.
    */
-  async getAllRemoteBankAccounts(dto: UserSessionData): Promise<RemoteUserBankAccountResponse[]> {
+  async getAllRemoteBankAccounts(
+    dto: GetAllRemoteBankAccountsRequest,
+  ): Promise<GetAllRemoteBankAccountsResponse[]> {
     const { apiKey } = this.props;
     const path = `/user/${dto.userUuid}/bank-account/remote`;
     const config = {
@@ -114,7 +123,7 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
         path,
         config,
       );
-      const remoteUserBankAccounts: RemoteUserBankAccountResponse[] =
+      const remoteUserBankAccounts: GetAllRemoteBankAccountsResponse[] =
         this.mapToRemoteUserBankAccountResponse(response.data);
       return remoteUserBankAccounts;
     } catch (error) {
@@ -125,13 +134,13 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
   /**
    * Change the user's main remote bank account
    *
-   * @param {UserSessionData & { accountUuid: string }} dto - An object containing user session data and the UUID of the account to be changed
+   * @param {ChangeMainUserRemoteBankAccountRequest} dto - An object containing user session data and the UUID of the account to be changed
    * @returns {Promise<void>} - Returns a promise that resolves to void if the change was successful
    *
    * @throws Will throw an error if the Axios request fails, either due to an API error or an unexpected error.
    */
   async changeMainUserRemoteBankAccount(
-    dto: UserSessionData & { accountUuid: string },
+    dto: ChangeMainUserRemoteBankAccountRequest,
   ): Promise<void> {
     const { apiKey } = this.props;
     const path = `/user/${dto.userUuid}/bank-account/remote`;
@@ -160,14 +169,14 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
   /**
    * Retrieve a remote bank account for the user by account UUID
    *
-   * @param {UserSessionData & { accountUuid: string }} dto - An object containing user session data and the UUID of the account to be retrieved
-   * @returns {Promise<RemoteUserBankAccountResponse>} - Returns a promise that resolves to a remote bank account response if the retrieval was successful
+   * @param {GetRemoteBankAccountByUuidRequest} dto - An object containing user session data and the UUID of the account to be retrieved
+   * @returns {Promise<GetRemoteBankAccountByUuidResponse>} - Returns a promise that resolves to a remote bank account response if the retrieval was successful
    *
    * @throws Will throw an error if the Axios request fails, either due to an API error or an unexpected error.
    */
   async getRemoteBankAccountByUuid(
-    dto: UserSessionData & { accountUuid: string },
-  ): Promise<RemoteUserBankAccountResponse> {
+    dto: GetRemoteBankAccountByUuidRequest,
+  ): Promise<GetRemoteBankAccountByUuidResponse> {
     const { apiKey } = this.props;
     const path = `/user/${dto.userUuid}/bank-account/remote/${dto.accountUuid}`;
     const config = {
@@ -183,7 +192,7 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
         path,
         config,
       );
-      const remoteUserBankAccounts: RemoteUserBankAccountResponse =
+      const remoteUserBankAccounts: GetRemoteBankAccountByUuidResponse =
         this.mapToRemoteUserBankAccountResponse([response.data])[0];
       return remoteUserBankAccounts;
     } catch (error) {
@@ -193,7 +202,7 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
 
   private mapToRemoteUserBankAccountResponse(
     input: UnblockRemoteUserBankAccount[],
-  ): NewRemoteUserBankAccount[] {
+  ): RemoteUserBankAccount[] {
     return input.map((item) => ({
       firstName: item.first_name,
       lastName: item.last_name,

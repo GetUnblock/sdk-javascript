@@ -5,12 +5,21 @@ import { ProcessDirection } from '../enums/ProcessDirection';
 /**
  * Request for Get Transaction Fee Estimation
  */
-export type TransactionFeeEstRequest = ApiTransactionFeeEstReqParams;
+export type TransactionFeeEstRequest = {
+  paymentMethod: PaymentMethods;
+  direction: ProcessDirection;
+  inputCurrency: Currency;
+  outputCurrency: Currency;
+  amount: number;
+};
 
 /**
  * Response for Get Transaction Fee Estimation
  */
-export type TransactionFeeEstResponse = ApiTransactionFeeEstResponse;
+export type TransactionFeeEstResponse = {
+  percentageFee: number;
+  totalAmount: number;
+};
 
 /**
  * Query Params for GU API Get Transaction Fee Estimation
