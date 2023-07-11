@@ -20,11 +20,6 @@ jobs:
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "Github Actions"
-      - name: Create branch for alpha deploy
-        run: |
-          PACKAGE_VERSION="$(cut -c 2- <<<'${{github.ref_name}}')"
-          git fetch --unshallow
-          git checkout -b "stable-${PACKAGE_VERSION}"
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -32,9 +27,6 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
       - run: npm run build
-      - run: |
-          PACKAGE_VERSION="$(cut -c 2- <<<'${{github.ref_name}}')"
-          npm version "${PACKAGE_VERSION}"
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
