@@ -30,14 +30,14 @@ export type TokenPreferenceOptimism = {
   token: OptimismToken;
 };
 
-/** Optimism token preference */
+/** Mainnet token preference */
 export type TokenPreferenceMainnet = {
   currency: Currency;
   chain: Chain.MAINNET;
   token: MainnetToken;
 };
 
-/** Optimism token preference */
+/** Arbitrum token preference */
 export type TokenPreferenceArbitrum = {
   currency: Currency;
   chain: Chain.ARBITRUM;

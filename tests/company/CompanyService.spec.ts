@@ -100,7 +100,6 @@ describe('CompanyService', () => {
       const result = await service.createCompany({
         ...companyDetails,
         ...targetAddress,
-        companyUuid: uuid,
       });
 
       // Assert
@@ -116,14 +115,14 @@ describe('CompanyService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
 
       const service = new CompanyService(props);
 
       // Act
       try {
-        await service.createCompany({ ...companyDetails, ...targetAddress, companyUuid: uuid });
+        await service.createCompany({ ...companyDetails, ...targetAddress });
       } catch (error) {
         resultedError = error;
       }
@@ -140,14 +139,14 @@ describe('CompanyService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
 
       const service = new CompanyService(props);
 
       // Act
       try {
-        await service.createCompany({ ...companyDetails, ...targetAddress, companyUuid: uuid });
+        await service.createCompany({ ...companyDetails, ...targetAddress });
       } catch (error) {
         resultedError = error;
       }
@@ -222,7 +221,7 @@ describe('CompanyService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'patch').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
       const service = new CompanyService(props);
 
@@ -245,7 +244,7 @@ describe('CompanyService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'patch').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
 
       const service = new CompanyService(props);
@@ -319,7 +318,7 @@ describe('CompanyService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
 
       const service = new CompanyService(props);
@@ -347,7 +346,7 @@ describe('CompanyService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
 
       const service = new CompanyService(props);
@@ -416,7 +415,7 @@ describe('CompanyService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'delete').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
 
       const service = new CompanyService(props);
@@ -443,7 +442,7 @@ describe('CompanyService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'delete').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
       const service = new CompanyService(props);
 

@@ -46,14 +46,14 @@ export type CompanyDetails = {
   industrySectorValue?: string;
 };
 
-/**  * The target Ethereum address tpe */
+/**  * The target Ethereum address type */
 export type TargetAddress = {
   /** Must be a valid Ethereum address */
   targetAddress: string;
 };
 
 /** Request dto */
-export type CreateCompanyRequest = CompanyDetails & TargetAddress & { companyUuid: string };
+export type CreateCompanyRequest = CompanyDetails & TargetAddress;
 
 /** Request dto*/
 export type UpdateCompanyRequest = CompanyDetails & { companyUuid: string };

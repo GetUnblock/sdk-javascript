@@ -1,10 +1,11 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { DateTime } from 'luxon';
-import { SdkSettings } from '../../src/definitions';
+import { SdkSettings, UserSessionData } from '../../src/definitions';
 import Country from '../../src/enums/Country';
 import { KycService } from '../../src/kyc/KycService';
 import {
+  ApplicantData,
   CreateKYCApplicantRequest,
   DocumentType,
   GetAccessTokenForUserApplicantRequest,
@@ -13,8 +14,10 @@ import {
   GetRequiredKycInformationResponse,
   GetUploadedKycDocumentsForUserRequest,
   GetUploadedKycDocumentsForUserResponse,
+  OnboardingResponse,
   SourceOfFundsType,
   StartKycVerificationRequest,
+  UploadDocumentData,
   UploadKycDocumentRequest,
   UploadKycDocumentResponse,
 } from '../../src/kyc/definitions';
@@ -123,7 +126,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       const service = new KycService(props);
       let resultedError;
 
@@ -156,7 +159,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
 
       const service = new KycService(props);
       let resultedError;
@@ -228,7 +231,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       const service = new KycService(props);
       let resultedError;
 
@@ -254,7 +257,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
 
       const service = new KycService(props);
       let resultedError;
@@ -335,7 +338,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       const service = new KycService(props);
       let resultedError;
 
@@ -366,7 +369,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
 
       const service = new KycService(props);
       let resultedError;
@@ -474,7 +477,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       const service = new KycService(props);
       let resultedError;
 
@@ -500,7 +503,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
 
       const service = new KycService(props);
       let resultedError;
@@ -564,7 +567,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       const service = new KycService(props);
       let resultedError;
 
@@ -590,7 +593,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
 
       const service = new KycService(props);
       let resultedError;
@@ -678,7 +681,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       const service = new KycService(props);
       let resultedError;
 
@@ -704,7 +707,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
 
       const service = new KycService(props);
       let resultedError;
@@ -719,6 +722,259 @@ describe('KycService', () => {
       // Assert
       expect(resultedError).toBeInstanceOf(Error);
       expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
+  });
+
+  describe('onboarding', () => {
+    // Happy
+    it('should call createKycApplicant, uploadKycDocument and startKycVerification methods and return expected response', async () => {
+      // Arrange
+      const userSessionData: UserSessionData = {
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
+      };
+
+      const applicantData: ApplicantData = {
+        address: faker.address.streetAddress(true),
+        city: faker.address.city(),
+        country: faker.address.countryCode('alpha-2') as Country,
+        dateOfBirth: faker.datatype.datetime(),
+        postcode: faker.address.zipCode(),
+        sourceOfFunds: getRandomSourceOfFundsType() as SourceOfFundsType,
+        sourceOfFundsDescription: faker.lorem.sentence(),
+      };
+
+      const createApplicantDto: CreateKYCApplicantRequest = {
+        ...applicantData,
+        ...userSessionData,
+      };
+
+      const uploadDocumentData: UploadDocumentData = {
+        content: faker.datatype.string(),
+        country: faker.helpers.arrayElement(Object.values(Country)),
+        documentType: getRandomDocumentType(),
+        filename: faker.system.commonFileName('jpg'),
+        documentSubType: getRandomDocumentSubType(),
+      };
+
+      const uploadKycDocumentDto: UploadKycDocumentRequest = {
+        ...uploadDocumentData,
+        ...userSessionData,
+      };
+
+      const startKycVerificationDto: StartKycVerificationRequest = {
+        ...userSessionData,
+      };
+
+      const uploadUuid = faker.datatype.uuid();
+
+      const service = new KycService(props);
+      jest.spyOn(service, 'createKYCApplicant').mockResolvedValueOnce({
+        created: true,
+      });
+
+      jest.spyOn(service, 'uploadKycDocument').mockResolvedValueOnce({
+        uploadUuid: uploadUuid,
+      });
+
+      jest.spyOn(service, 'startKycVerification').mockResolvedValueOnce({
+        started: true,
+      });
+
+      const expectedResponse: OnboardingResponse = {
+        applicantCreated: true,
+        uploadUuid: uploadUuid,
+        verificationStarted: true,
+      };
+      // Act
+      const result = await service.onboarding({
+        sessionData: userSessionData,
+        applicantData: applicantData,
+        documentData: uploadDocumentData,
+      });
+      // Assert
+      expect(service.createKYCApplicant).toBeCalledTimes(1);
+      expect(service.createKYCApplicant).toBeCalledWith(createApplicantDto);
+      expect(service.uploadKycDocument).toBeCalledTimes(1);
+      expect(service.uploadKycDocument).toBeCalledWith(uploadKycDocumentDto);
+      expect(service.startKycVerification).toBeCalledTimes(1);
+      expect(service.startKycVerification).toBeCalledWith(startKycVerificationDto);
+      expect(result).toEqual(expectedResponse);
+    });
+
+    it('should throw error if createKYCApplicant throws an error', async () => {
+      // Arrange
+      const userSessionData: UserSessionData = {
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
+      };
+
+      const applicantData: ApplicantData = {
+        address: faker.address.streetAddress(true),
+        city: faker.address.city(),
+        country: faker.address.countryCode('alpha-2') as Country,
+        dateOfBirth: faker.datatype.datetime(),
+        postcode: faker.address.zipCode(),
+        sourceOfFunds: getRandomSourceOfFundsType() as SourceOfFundsType,
+        sourceOfFundsDescription: faker.lorem.sentence(),
+      };
+
+      const uploadDocumentData: UploadDocumentData = {
+        content: faker.datatype.string(),
+        country: faker.helpers.arrayElement(Object.values(Country)),
+        documentType: getRandomDocumentType(),
+        filename: faker.system.commonFileName('jpg'),
+        documentSubType: getRandomDocumentSubType(),
+      };
+
+      const uploadUuid = faker.datatype.uuid();
+
+      const service = new KycService(props);
+      jest
+        .spyOn(service, 'createKYCApplicant')
+        .mockRejectedValueOnce(faker.helpers.arrayElement([randomError, axiosError]));
+
+      jest.spyOn(service, 'uploadKycDocument').mockResolvedValueOnce({
+        uploadUuid: uploadUuid,
+      });
+
+      jest.spyOn(service, 'startKycVerification').mockResolvedValueOnce({
+        started: true,
+      });
+
+      let resultedError;
+      // Act
+      try {
+        await service.onboarding({
+          sessionData: userSessionData,
+          applicantData: applicantData,
+          documentData: uploadDocumentData,
+        });
+      } catch (error) {
+        resultedError = error;
+      }
+
+      // Assert
+      expect(service.createKYCApplicant).toBeCalledTimes(1);
+      expect(service.uploadKycDocument).not.toBeCalled();
+      expect(service.startKycVerification).not.toBeCalled();
+      expect(resultedError).toBeInstanceOf(Error);
+    });
+
+    it('should throw error if uploadKycDocument throws an error', async () => {
+      // Arrange
+      const userSessionData: UserSessionData = {
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
+      };
+
+      const applicantData: ApplicantData = {
+        address: faker.address.streetAddress(true),
+        city: faker.address.city(),
+        country: faker.address.countryCode('alpha-2') as Country,
+        dateOfBirth: faker.datatype.datetime(),
+        postcode: faker.address.zipCode(),
+        sourceOfFunds: getRandomSourceOfFundsType() as SourceOfFundsType,
+        sourceOfFundsDescription: faker.lorem.sentence(),
+      };
+
+      const uploadDocumentData: UploadDocumentData = {
+        content: faker.datatype.string(),
+        country: faker.helpers.arrayElement(Object.values(Country)),
+        documentType: getRandomDocumentType(),
+        filename: faker.system.commonFileName('jpg'),
+        documentSubType: getRandomDocumentSubType(),
+      };
+
+      const service = new KycService(props);
+      jest.spyOn(service, 'createKYCApplicant').mockResolvedValueOnce({
+        created: true,
+      });
+
+      jest
+        .spyOn(service, 'uploadKycDocument')
+        .mockRejectedValueOnce(faker.helpers.arrayElement([randomError, axiosError]));
+
+      jest.spyOn(service, 'startKycVerification').mockResolvedValueOnce({
+        started: true,
+      });
+
+      let resultedError;
+      // Act
+      try {
+        await service.onboarding({
+          sessionData: userSessionData,
+          applicantData: applicantData,
+          documentData: uploadDocumentData,
+        });
+      } catch (error) {
+        resultedError = error;
+      }
+
+      // Assert
+      expect(service.createKYCApplicant).toBeCalledTimes(1);
+      expect(service.uploadKycDocument).toBeCalledTimes(1);
+      expect(service.startKycVerification).not.toBeCalled();
+      expect(resultedError).toBeInstanceOf(Error);
+    });
+
+    it('should throw error if startKycVerification throws an error', async () => {
+      // Arrange
+      const userSessionData: UserSessionData = {
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
+      };
+
+      const applicantData: ApplicantData = {
+        address: faker.address.streetAddress(true),
+        city: faker.address.city(),
+        country: faker.address.countryCode('alpha-2') as Country,
+        dateOfBirth: faker.datatype.datetime(),
+        postcode: faker.address.zipCode(),
+        sourceOfFunds: getRandomSourceOfFundsType() as SourceOfFundsType,
+        sourceOfFundsDescription: faker.lorem.sentence(),
+      };
+
+      const uploadDocumentData: UploadDocumentData = {
+        content: faker.datatype.string(),
+        country: faker.helpers.arrayElement(Object.values(Country)),
+        documentType: getRandomDocumentType(),
+        filename: faker.system.commonFileName('jpg'),
+        documentSubType: getRandomDocumentSubType(),
+      };
+
+      const uploadUuid = faker.datatype.uuid();
+
+      const service = new KycService(props);
+      jest.spyOn(service, 'createKYCApplicant').mockResolvedValueOnce({
+        created: true,
+      });
+
+      jest.spyOn(service, 'uploadKycDocument').mockResolvedValueOnce({
+        uploadUuid: uploadUuid,
+      });
+
+      jest
+        .spyOn(service, 'startKycVerification')
+        .mockRejectedValueOnce(faker.helpers.arrayElement([randomError, axiosError]));
+
+      let resultedError;
+      // Act
+      try {
+        await service.onboarding({
+          sessionData: userSessionData,
+          applicantData: applicantData,
+          documentData: uploadDocumentData,
+        });
+      } catch (error) {
+        resultedError = error;
+      }
+
+      // Assert
+      expect(service.createKYCApplicant).toBeCalledTimes(1);
+      expect(service.uploadKycDocument).toBeCalledTimes(1);
+      expect(service.startKycVerification).toBeCalledTimes(1);
+      expect(resultedError).toBeInstanceOf(Error);
     });
   });
 });

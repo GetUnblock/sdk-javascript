@@ -1,3 +1,4 @@
+/** SDK Initialization parameters */
 export type SdkProps = {
   apiKey: string;
   prod: boolean;
