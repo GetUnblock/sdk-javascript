@@ -1,5 +1,12 @@
 import { AuthenticationMethod } from '../enums/AuthenticationMethod';
 
+// Interfaces
+export interface IEthereumProviderSigner {
+  getAddress(): Promise<string>;
+  signMessage(message: string): Promise<string>;
+}
+
+// Requests
 /** Request dto */
 export type SiweLoginRequest = {
   authenticationMethod: AuthenticationMethod.SIWE;
@@ -22,6 +29,15 @@ export type SessionRequest = {
   code: string;
 };
 
+export type WalletSiweLoginRequest = {
+  providerSigner: IEthereumProviderSigner;
+  chainId: string;
+  signingUrl: string;
+};
+
+export type GenerateSiweLoginMessageRequest = WalletSiweLoginRequest;
+
+// Responses
 /** Response dto */
 export type SiweLoginResponse = {
   userUuid: string;
@@ -42,4 +58,13 @@ export type LoginResponse = {
 /** Response dto */
 export type SessionResponse = {
   sessionId: string;
+};
+
+/** Response dto */
+export type WalletSiweLoginResponse = SiweLoginResponse;
+
+/** Response dto */
+export type GenerateSiweLoginMessageResponse = {
+  message: string;
+  signature: string;
 };

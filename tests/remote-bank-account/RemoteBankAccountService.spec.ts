@@ -242,7 +242,7 @@ describe('RemoteBankAccountService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
 
       const service = new RemoteBankAccountService(props);
@@ -265,7 +265,7 @@ describe('RemoteBankAccountService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
 
       const service = new RemoteBankAccountService(props);
@@ -433,7 +433,7 @@ describe('RemoteBankAccountService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
 
       const service = new RemoteBankAccountService(props);
@@ -456,7 +456,7 @@ describe('RemoteBankAccountService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
 
       const service = new RemoteBankAccountService(props);
@@ -520,7 +520,7 @@ describe('RemoteBankAccountService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'patch').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
 
       const service = new RemoteBankAccountService(props);
@@ -543,7 +543,7 @@ describe('RemoteBankAccountService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'patch').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
 
       const service = new RemoteBankAccountService(props);
@@ -647,7 +647,7 @@ describe('RemoteBankAccountService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
 
       const service = new RemoteBankAccountService(props);
@@ -670,7 +670,7 @@ describe('RemoteBankAccountService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
 
       const service = new RemoteBankAccountService(props);

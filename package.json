@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist", "docs"
+    "dist",
+    "docs"
   ],
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
@@ -25,7 +26,8 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^1.4.0",
-    "luxon": "^3.3.0"
+    "luxon": "^3.3.0",
+    "siwe": "^2.1.4"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",

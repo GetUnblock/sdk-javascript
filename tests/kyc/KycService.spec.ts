@@ -126,7 +126,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       const service = new KycService(props);
       let resultedError;
 
@@ -159,7 +159,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
 
       const service = new KycService(props);
       let resultedError;
@@ -231,7 +231,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       const service = new KycService(props);
       let resultedError;
 
@@ -257,7 +257,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
 
       const service = new KycService(props);
       let resultedError;
@@ -338,7 +338,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       const service = new KycService(props);
       let resultedError;
 
@@ -369,7 +369,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
 
       const service = new KycService(props);
       let resultedError;
@@ -477,7 +477,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       const service = new KycService(props);
       let resultedError;
 
@@ -503,7 +503,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
 
       const service = new KycService(props);
       let resultedError;
@@ -567,7 +567,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       const service = new KycService(props);
       let resultedError;
 
@@ -593,7 +593,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
 
       const service = new KycService(props);
       let resultedError;
@@ -681,7 +681,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error': ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       const service = new KycService(props);
       let resultedError;
 
@@ -707,7 +707,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error': ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
 
       const service = new KycService(props);
       let resultedError;
