@@ -1,4 +1,8 @@
-# GetUnblock SDK - EXCHANGE RATES Service
+---
+title: System Development Kit - Javascript - EXCHANGE RATES Service
+excerpt: Reference page for the Exchange Rates Service Interface
+category: 64aebfcf6c645e002384ccdc
+---
 
 ## Interface
 
@@ -14,8 +18,8 @@ interface IExchangeRatesService {
 
 | Field Name | Type |
 | ---------- | ---- |
-| baseCurrency | [Currency](/docs/COMMON_TYPES.md#Currency) |
-| targetCurrency | [Currency](/docs/COMMON_TYPES.md#Currency) |
+| baseCurrency | [Currency](COMMON_TYPES.md#Currency) |
+| targetCurrency | [Currency](COMMON_TYPES.md#Currency) |
 
 #### <span id="ExchangeRatesServiceResponse"></span>ExchangeRatesServiceResponse
 
@@ -80,15 +84,15 @@ const { Currency } = require("@getunblock/sdk");
 
 ## Other Services Available
 
-* [auth](/docs/AUTH.md)
-* [company](/docs/COMPANY.md)
-* [kyc](/docs/KYC.md)
-* [offramp](/docs/OFFRAMP.md)
-* [process](/docs/PROCESS.md)
-* [remoteBankAccount](/docs/REMOTE_BANK_ACCOUNT.md)
-* [tokenPreferences](/docs/TOKEN_PREFERENCES.md)
-* [transactionFee](/docs/TRANSACTION_FEE.md)
-* [unblockBankAccount](/docs/UNBLOCK_BANK_ACCOUNT.md)
-* [user](/docs/USER.md)
+* [auth](AUTH.md)
+* [company](COMPANY.md)
+* [kyc](KYC.md)
+* [offramp](OFFRAMP.md)
+* [process](PROCESS.md)
+* [remoteBankAccount](REMOTE_BANK_ACCOUNT.md)
+* [tokenPreferences](TOKEN_PREFERENCES.md)
+* [transactionFee](TRANSACTION_FEE.md)
+* [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
+* [user](USER.md)
 
-[Back to README](/README.md)
+[Back to README](../README.md)

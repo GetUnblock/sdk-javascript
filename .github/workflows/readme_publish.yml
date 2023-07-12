@@ -4,7 +4,7 @@ name: Sync `documentation` directory to ReadMe
 on:
   push:
     branches:
-      - main
+      - feat/publish-docs-at-readme
 
 jobs:
   sync:
@@ -19,4 +19,4 @@ jobs:
         # Docs: https://docs.github.com/actions/using-workflows/workflow-syntax-for-github-actions#example-using-versioned-actions
         uses: readmeio/rdme@v8
         with:
-          rdme: docs ./ --key=${{ secrets.README_API_KEY }} --version=1.0  
+          rdme: docs ./ --key=${{ secrets.README_API_KEY }} --version=1.0

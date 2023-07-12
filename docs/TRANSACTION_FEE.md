@@ -1,4 +1,8 @@
-# GetUnblock SDK - TRANSACTION FEE Service
+---
+title: System Development Kit - Javascript - TRANSACTION FEE Service
+excerpt: Reference page for the Transaction Fee Service Interface
+category: 64aebfcf6c645e002384ccdc
+---
 
 ## Interface
 
@@ -14,10 +18,10 @@ interface ITransactionFeeService {
 
 | Field Name | Type |
 | ---------- | ---- |
-| paymentMethod | [PaymentMethods](/docs/COMMON_TYPES.md#PaymentMethods) |
-| direction | [ProcessDirection](/docs/COMMON_TYPES.md#ProcessDirection) |
-| inputCurrency | [Currency](/docs/COMMON_TYPES.md#Currency) |
-| outputCurrency | [Currency](/docs/COMMON_TYPES.md#Currency) |
+| paymentMethod | [PaymentMethods](COMMON_TYPES.md#PaymentMethods) |
+| direction | [ProcessDirection](COMMON_TYPES.md#ProcessDirection) |
+| inputCurrency | [Currency](COMMON_TYPES.md#Currency) |
+| outputCurrency | [Currency](COMMON_TYPES.md#Currency) |
 | amount | number |
 
 #### <span id="TransactionFeeEstResponse"></span>TransactionFeeEstResponse
@@ -90,15 +94,15 @@ const { Currency, PaymentMethods, ProcessDirection } = require("@getunblock/sdk"
 
 ## Other Services Available
 
-* [auth](/docs/AUTH.md)
-* [company](/docs/COMPANY.md)
-* [exchangeRates](/docs/EXCHANGE_RATES.md)
-* [kyc](/docs/KYC.md)
-* [offramp](/docs/OFFRAMP.md)
-* [process](/docs/PROCESS.md)
-* [remoteBankAccount](/docs/REMOTE_BANK_ACCOUNT.md)
-* [tokenPreferences](/docs/TOKEN_PREFERENCES.md)
-* [unblockBankAccount](/docs/UNBLOCK_BANK_ACCOUNT.md)
-* [user](/docs/USER.md)
+* [auth](AUTH.md)
+* [company](COMPANY.md)
+* [exchangeRates](EXCHANGE_RATES.md)
+* [kyc](KYC.md)
+* [offramp](OFFRAMP.md)
+* [process](PROCESS.md)
+* [remoteBankAccount](REMOTE_BANK_ACCOUNT.md)
+* [tokenPreferences](TOKEN_PREFERENCES.md)
+* [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
+* [user](USER.md)
 
-[Back to README](/README.md)
+[Back to README](../README.md)

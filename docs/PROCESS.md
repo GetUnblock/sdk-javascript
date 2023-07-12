@@ -1,4 +1,8 @@
-# GetUnblock SDK - PROCESS Service
+---
+title: System Development Kit - Javascript - PROCESS Service
+excerpt: Reference page for the Process Service Interface
+category: 64aebfcf6c645e002384ccdc
+---
 
 ## Interface
 
@@ -27,13 +31,13 @@ interface IProcessService {
 
 | Field Name | Type |
 | ---------- | ---- |
-| status | [ProcessStatus](/docs/COMMON_TYPES.md#Processstatus) |
+| status | [ProcessStatus](COMMON_TYPES.md#Processstatus) |
 
 #### <span id="GetOfframpProcessStatusResponse"></span>GetOfframpProcessStatusResponse
 
 | Field Name | Type |
 | ---------- | ---- |
-| status | [ProcessStatus](/docs/COMMON_TYPES.md#Processstatus) |
+| status | [ProcessStatus](COMMON_TYPES.md#Processstatus) |
 
 ### Service Methods
 
@@ -139,15 +143,15 @@ const getunblockSDK = require("@getunblock/sdk").default;
 
 ## Other Services Available
 
-* [auth](/docs/AUTH.md)
-* [company](/docs/COMPANY.md)
-* [exchangeRates](/docs/EXCHANGE_RATES.md)
-* [kyc](/docs/KYC.md)
-* [offramp](/docs/OFFRAMP.md)
-* [remoteBankAccount](/docs/REMOTE_BANK_ACCOUNT.md)
-* [tokenPreferences](/docs/TOKEN_PREFERENCES.md)
-* [transactionFee](/docs/TRANSACTION_FEE.md)
-* [unblockBankAccount](/docs/UNBLOCK_BANK_ACCOUNT.md)
-* [user](/docs/USER.md)
+* [auth](AUTH.md)
+* [company](COMPANY.md)
+* [exchangeRates](EXCHANGE_RATES.md)
+* [kyc](KYC.md)
+* [offramp](OFFRAMP.md)
+* [remoteBankAccount](REMOTE_BANK_ACCOUNT.md)
+* [tokenPreferences](TOKEN_PREFERENCES.md)
+* [transactionFee](TRANSACTION_FEE.md)
+* [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
+* [user](USER.md)
 
-[Back to README](/README.md)
+[Back to README](../README.md)

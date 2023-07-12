@@ -1,4 +1,8 @@
-# GetUnblock SDK - AUTH Service
+---
+title: System Development Kit - Javascript - AUTH Service
+excerpt: Reference page for the Auth Service Interface
+category: 64aebfcf6c645e002384ccdc
+---
 
 ## Interface
 
@@ -229,15 +233,15 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
 
 ## Other Services Available
 
-* [company](/docs/COMPANY.md)
-* [exchangeRates](/docs/EXCHANGE_RATES.md)
-* [kyc](/docs/KYC.md)
-* [offramp](/docs/OFFRAMP.md)
-* [process](/docs/PROCESS.md)
-* [remoteBankAccount](/docs/REMOTE_BANK_ACCOUNT.md)
-* [tokenPreferences](/docs/TOKEN_PREFERENCES.md)
-* [transactionFee](/docs/TRANSACTION_FEE.md)
-* [unblockBankAccount](/docs/UNBLOCK_BANK_ACCOUNT.md)
-* [user](/docs/USER.md)
+* [company](COMPANY.md)
+* [exchangeRates](EXCHANGE_RATES.md)
+* [kyc](KYC.md)
+* [offramp](OFFRAMP.md)
+* [process](PROCESS.md)
+* [remoteBankAccount](REMOTE_BANK_ACCOUNT.md)
+* [tokenPreferences](TOKEN_PREFERENCES.md)
+* [transactionFee](TRANSACTION_FEE.md)
+* [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
+* [user](USER.md)
 
-[Back to README](/README.md)
+[Back to README](../README.md)
