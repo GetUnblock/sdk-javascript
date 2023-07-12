@@ -1,23 +1,72 @@
+import { AxiosResponse } from 'axios';
+import { SiweMessage, generateNonce } from 'siwe';
 import { BaseService } from '../BaseService';
-import { ErrorHandler } from '../ErrorHandler';
+import { ErrorHandler, SiweSigningError } from '../ErrorHandler';
 import { AuthenticationMethod } from '../enums/AuthenticationMethod';
 import {
   EmailLoginRequest,
+  GenerateSiweLoginMessageRequest,
+  GenerateSiweLoginMessageResponse,
   LoginRequest,
   LoginResponse,
   SessionRequest,
   SessionResponse,
   SiweLoginRequest,
+  SiweLoginResponse,
+  WalletSiweLoginRequest,
+  WalletSiweLoginResponse,
 } from './definitions';
 
-import { AxiosResponse } from 'axios';
-
 export interface IAuthService {
+  generateSiweLoginMessage(
+    params: GenerateSiweLoginMessageRequest,
+  ): Promise<GenerateSiweLoginMessageResponse>;
+  walletSiweLogin(params: WalletSiweLoginRequest): Promise<WalletSiweLoginResponse>;
+  createSiweMessage(address: string, statement: string, domain: string, chainId: number): string;
   login(data: LoginRequest): Promise<LoginResponse>;
   emailSession(data: SessionRequest): Promise<SessionResponse>;
 }
 
 export class AuthService extends BaseService implements IAuthService {
+  async generateSiweLoginMessage(
+    params: GenerateSiweLoginMessageRequest,
+  ): Promise<GenerateSiweLoginMessageResponse> {
+    try {
+      const { providerSigner, signingUrl, chainId } = params;
+
+      const walletAddress = await providerSigner.getAddress();
+      const message = this.createSiweMessage(
+        walletAddress,
+        'Sign in with Ethereum',
+        signingUrl,
+        Number(chainId),
+      );
+
+      // request signMessage on Metamask
+      const signature = await providerSigner.signMessage(message);
+
+      return {
+        message,
+        signature,
+      };
+    } catch (e) {
+      ErrorHandler.handle(new SiweSigningError(e as Error));
+    }
+  }
+
+  async walletSiweLogin(params: WalletSiweLoginRequest): Promise<WalletSiweLoginResponse> {
+    const signedMessage = await this.generateSiweLoginMessage(params);
+    const loginResult = await this.authenticateSiwe({
+      ...signedMessage,
+      authenticationMethod: AuthenticationMethod.SIWE,
+    });
+
+    return {
+      userUuid: loginResult.userUuid,
+      unblockSessionId: (loginResult as SiweLoginResponse).unblockSessionId,
+    };
+  }
+
   login(credentials: LoginRequest): Promise<LoginResponse> {
     switch (credentials.authenticationMethod) {
       case AuthenticationMethod.SIWE:
@@ -123,5 +172,22 @@ export class AuthService extends BaseService implements IAuthService {
     } catch (error) {
       ErrorHandler.handle(error);
     }
+  }
+
+  createSiweMessage(address: string, statement: string, domain: string, chainId: number): string {
+    const domainUrl = new URL(domain);
+    const SESSION_DURATION_MS = 1000 * 60 * 60 * 4;
+    const expirationDate = new Date(Date.now() + SESSION_DURATION_MS);
+    const message = new SiweMessage({
+      domain: domainUrl.hostname,
+      address: address,
+      statement: statement,
+      uri: `${domain}/auth/login`,
+      version: '1',
+      chainId: chainId,
+      nonce: generateNonce(),
+      expirationTime: expirationDate.toISOString(),
+    });
+    return message.prepareMessage();
   }
 }
