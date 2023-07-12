@@ -7,7 +7,7 @@ on:
 
 jobs:
   publish-rc-from-release:
-    if: github.event.pull_request.draft == false && startsWith(github.ref_name, 'release')
+    if: github.event.pull_request.draft == false && ${{ startsWith(github.ref_name, 'release/') }}
     runs-on: ubuntu-latest
     environment: PROD
     strategy:
@@ -45,7 +45,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   publish-rc-from-hotfix:
-    if: github.event.pull_request.draft == false && startsWith(github.ref_name, 'hotfix')
+    if: github.event.pull_request.draft == false && ${{ startsWith(github.ref_name, 'hotfix/') }}
     runs-on: ubuntu-latest
     environment: PROD
     strategy:
