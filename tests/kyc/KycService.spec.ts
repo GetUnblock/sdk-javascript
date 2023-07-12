@@ -14,6 +14,7 @@ import {
   GetRequiredKycInformationResponse,
   GetUploadedKycDocumentsForUserRequest,
   GetUploadedKycDocumentsForUserResponse,
+  InitSumsubSdkResponse,
   OnboardingResponse,
   SourceOfFundsType,
   StartKycVerificationRequest,
@@ -974,6 +975,153 @@ describe('KycService', () => {
       expect(service.createKYCApplicant).toBeCalledTimes(1);
       expect(service.uploadKycDocument).toBeCalledTimes(1);
       expect(service.startKycVerification).toBeCalledTimes(1);
+      expect(resultedError).toBeInstanceOf(Error);
+    });
+  });
+
+  describe('initSumsubSdk', () => {
+    // Happy
+    it('should call createKycApplicant and getAccessTokenForUserApplicant methods and return expected response', async () => {
+      // Arrange
+      const userSessionData: UserSessionData = {
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
+      };
+
+      const applicantData: ApplicantData = {
+        address: faker.address.streetAddress(true),
+        city: faker.address.city(),
+        country: faker.address.countryCode('alpha-2') as Country,
+        dateOfBirth: faker.datatype.datetime(),
+        postcode: faker.address.zipCode(),
+        sourceOfFunds: getRandomSourceOfFundsType() as SourceOfFundsType,
+        sourceOfFundsDescription: faker.lorem.sentence(),
+      };
+
+      const createApplicantDto: CreateKYCApplicantRequest = {
+        ...applicantData,
+        ...userSessionData,
+      };
+
+      const getAccessTokenForUserApplicantDto: GetAccessTokenForUserApplicantRequest = {
+        ...userSessionData,
+      };
+
+      const sumsubToken = faker.datatype.uuid();
+
+      const service = new KycService(props);
+      jest.spyOn(service, 'createKYCApplicant').mockResolvedValueOnce({
+        created: true,
+      });
+
+      jest.spyOn(service, 'getAccessTokenForUserApplicant').mockResolvedValueOnce({
+        token: sumsubToken,
+      });
+
+      const expectedResponse: InitSumsubSdkResponse = {
+        applicantCreated: true,
+        token: sumsubToken,
+      };
+      // Act
+      const result = await service.initSumsubSdk({
+        sessionData: userSessionData,
+        applicantData: applicantData,
+      });
+      // Assert
+      expect(service.createKYCApplicant).toBeCalledTimes(1);
+      expect(service.createKYCApplicant).toBeCalledWith(createApplicantDto);
+      expect(service.getAccessTokenForUserApplicant).toBeCalledTimes(1);
+      expect(service.getAccessTokenForUserApplicant).toBeCalledWith(
+        getAccessTokenForUserApplicantDto,
+      );
+      expect(result).toEqual(expectedResponse);
+    });
+
+    it('should throw error if createKYCApplicant throws an error', async () => {
+      // Arrange
+      const userSessionData: UserSessionData = {
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
+      };
+
+      const applicantData: ApplicantData = {
+        address: faker.address.streetAddress(true),
+        city: faker.address.city(),
+        country: faker.address.countryCode('alpha-2') as Country,
+        dateOfBirth: faker.datatype.datetime(),
+        postcode: faker.address.zipCode(),
+        sourceOfFunds: getRandomSourceOfFundsType() as SourceOfFundsType,
+        sourceOfFundsDescription: faker.lorem.sentence(),
+      };
+
+      const sumsubToken = faker.datatype.uuid();
+
+      const service = new KycService(props);
+      jest
+        .spyOn(service, 'createKYCApplicant')
+        .mockRejectedValueOnce(faker.helpers.arrayElement([randomError, axiosError]));
+
+      jest.spyOn(service, 'getAccessTokenForUserApplicant').mockResolvedValueOnce({
+        token: sumsubToken,
+      });
+
+      let resultedError;
+      // Act
+      try {
+        await service.initSumsubSdk({
+          sessionData: userSessionData,
+          applicantData: applicantData,
+        });
+      } catch (error) {
+        resultedError = error;
+      }
+
+      // Assert
+      expect(service.createKYCApplicant).toBeCalledTimes(1);
+      expect(service.getAccessTokenForUserApplicant).not.toBeCalled();
+      expect(resultedError).toBeInstanceOf(Error);
+    });
+
+    it('should throw error if getAccessTokenForUserApplicant throws an error', async () => {
+      // Arrange
+      const userSessionData: UserSessionData = {
+        userUuid: userUuid,
+        unblockSessionId: unblockSessionId,
+      };
+
+      const applicantData: ApplicantData = {
+        address: faker.address.streetAddress(true),
+        city: faker.address.city(),
+        country: faker.address.countryCode('alpha-2') as Country,
+        dateOfBirth: faker.datatype.datetime(),
+        postcode: faker.address.zipCode(),
+        sourceOfFunds: getRandomSourceOfFundsType() as SourceOfFundsType,
+        sourceOfFundsDescription: faker.lorem.sentence(),
+      };
+
+      const service = new KycService(props);
+      jest.spyOn(service, 'createKYCApplicant').mockResolvedValueOnce({
+        created: true,
+      });
+
+      jest
+        .spyOn(service, 'getAccessTokenForUserApplicant')
+        .mockRejectedValueOnce(faker.helpers.arrayElement([randomError, axiosError]));
+
+      let resultedError;
+      // Act
+      try {
+        await service.initSumsubSdk({
+          sessionData: userSessionData,
+          applicantData: applicantData,
+        });
+      } catch (error) {
+        resultedError = error;
+      }
+
+      // Assert
+      expect(service.createKYCApplicant).toBeCalledTimes(1);
+      expect(service.getAccessTokenForUserApplicant).toBeCalledTimes(1);
       expect(resultedError).toBeInstanceOf(Error);
     });
   });
