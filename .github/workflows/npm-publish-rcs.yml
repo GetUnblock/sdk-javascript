@@ -7,7 +7,7 @@ on:
 
 jobs:
   publish-rc-from-release:
-    if: github.event.pull_request.draft == false && ${{ startsWith(github.ref_name, 'release/') }}
+    if: github.event.pull_request.draft == false && startsWith(github.event.pull_request.head.ref, 'release/')
     runs-on: ubuntu-latest
     environment: PROD
     strategy:
@@ -22,7 +22,7 @@ jobs:
           git config --local user.name "Github Actions"
       - name: Create branch for rc deploy
         run: |
-          PACKAGE_VERSION="$(cut -c 10- <<<'${{github.ref_name}}')"
+          PACKAGE_VERSION="$(cut -c 10- <<<'${{github.event.pull_request.head.ref}}')"
           git fetch --unshallow
           git checkout -b "rc-${PACKAGE_VERSION}"
       - name: Get current time
@@ -39,13 +39,13 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: |
-          PACKAGE_VERSION="$(cut -c 10- <<<'${{github.ref_name}}')"
+          PACKAGE_VERSION="$(cut -c 10- <<<'${{github.event.pull_request.head.ref}}')"
           npm version "${PACKAGE_VERSION}-rc.${{ steps.current-time.outputs.formattedTime }}"
       - run: npm publish --tag rc --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   publish-rc-from-hotfix:
-    if: github.event.pull_request.draft == false && ${{ startsWith(github.ref_name, 'hotfix/') }}
+    if: github.event.pull_request.draft == false && startsWith(github.event.pull_request.head.ref, 'hotfix/')
     runs-on: ubuntu-latest
     environment: PROD
     strategy:
@@ -60,7 +60,7 @@ jobs:
           git config --local user.name "Github Actions"
       - name: Create branch for rc deploy
         run: |
-          PACKAGE_VERSION="$(cut -c 9- <<<'${{github.ref_name}}')"
+          PACKAGE_VERSION="$(cut -c 9- <<<'${{github.event.pull_request.head.ref}}')"
           git fetch --unshallow
           git checkout -b "rc-${PACKAGE_VERSION}"
       - name: Get current time
@@ -77,7 +77,7 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: |
-          PACKAGE_VERSION="$(cut -c 9- <<<'${{github.ref_name}}')"
+          PACKAGE_VERSION="$(cut -c 9- <<<'${{github.event.pull_request.head.ref}}')"
           npm version "${PACKAGE_VERSION}-rc.${{ steps.current-time.outputs.formattedTime }}"
       - run: npm publish --tag rc --access public
         env:
