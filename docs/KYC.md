@@ -1,4 +1,8 @@
-# GetUnblock SDK - KYC Service
+---
+title: Kyc Service
+excerpt: Reference page for the Kyc Service Interface
+category: 64aebfcf6c645e002384ccdc
+---
 
 ## Interface
 
@@ -44,7 +48,7 @@ type DocumentSubType = 'FRONT_SIDE' | 'BACK_SIDE'
 | address | string |
 | postcode | string |
 | city | string |
-| country | [Country](/docs/COMMON_TYPES.md#Country) |
+| country | [Country](COMMON_TYPES.md#Country) |
 | dateOfBirth | Date |
 | sourceOfFunds | [SourceOfFundsType](#SourceOfFundsType) |
 | sourceOfFundsDescription | string |
@@ -66,7 +70,7 @@ type DocumentSubType = 'FRONT_SIDE' | 'BACK_SIDE'
 | filename | string |
 | documentType | [DocumentType](#DocumentType) |
 | documentSubType? | [DocumentSubType](#DocumentSubType) |
-| country | [Country](/docs/COMMON_TYPES.md#Country) |
+| country | [Country](COMMON_TYPES.md#Country) |
 
 #### <span id="GetUploadedKycDocumentsForUserRequest"></span>GetUploadedKycDocumentsForUserRequest
 
@@ -115,7 +119,7 @@ type DocumentSubType = 'FRONT_SIDE' | 'BACK_SIDE'
 | documentType | [DocumentType](#DocumentType) |
 | documentSubType? | [DocumentSubType](#DocumentSubType) |
 | name | string |
-| country | [Country](/docs/COMMON_TYPES.md#Country) |
+| country | [Country](COMMON_TYPES.md#Country) |
 | status | string |
 | uploadErrors? | string |
 | verificationErrors? | string |
@@ -565,17 +569,19 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
 })();
 ```
 
-## Other Services Available
+<div class="CodeMirror-gutter-filler">
+<h3>Other Services Available</h3>
 
-* [auth](/docs/AUTH.md)
-* [company](/docs/COMPANY.md)
-* [exchangeRates](/docs/EXCHANGE_RATES.md)
-* [offramp](/docs/OFFRAMP.md)
-* [process](/docs/PROCESS.md)
-* [remoteBankAccount](/docs/REMOTE_BANK_ACCOUNT.md)
-* [tokenPreferences](/docs/TOKEN_PREFERENCES.md)
-* [transactionFee](/docs/TRANSACTION_FEE.md)
-* [unblockBankAccount](/docs/UNBLOCK_BANK_ACCOUNT.md)
-* [user](/docs/USER.md)
+* [auth](AUTH.md)
+* [company](COMPANY.md)
+* [exchangeRates](EXCHANGE_RATES.md)
+* [offramp](OFFRAMP.md)
+* [process](PROCESS.md)
+* [remoteBankAccount](REMOTE_BANK_ACCOUNT.md)
+* [tokenPreferences](TOKEN_PREFERENCES.md)
+* [transactionFee](TRANSACTION_FEE.md)
+* [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
+* [user](USER.md)
 
-[Back to README](/README.md)
+[Back to README](../README.md)
+</div>

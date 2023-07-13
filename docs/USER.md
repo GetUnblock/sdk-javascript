@@ -1,4 +1,8 @@
-# GetUnblock SDK - USER Service
+---
+title: User Service
+excerpt: Reference page for the User Service Interface
+category: 64aebfcf6c645e002384ccdc
+---
 
 ## Interface
 
@@ -33,7 +37,7 @@ enum UserStatus {
 | Field Name | Type |
 | ---------- | ---- |
 | uuid | string |
-| status | [ProcessStatus](/docs/COMMON_TYPES.md#Processstatus) |
+| status | [ProcessStatus](COMMON_TYPES.md#Processstatus) |
 | amount | number |
 | createdAt | string |
 | updatedAt | string |
@@ -53,7 +57,7 @@ enum UserStatus {
 | lastName | string |
 | email | string |
 | targetAddress | string |
-| country | [Country](/docs/COMMON_TYPES.md#Country) |
+| country | [Country](COMMON_TYPES.md#Country) |
 
 #### <span id="GetUserStatusRequest"></span>GetUserStatusRequest
 
@@ -285,17 +289,19 @@ const { Country } = require("@getunblock/sdk");
 })();
 ```
 
-## Other Services Available
+<div class="CodeMirror-gutter-filler">
+<h3>Other Services Available</h3>
 
-* [auth](/docs/AUTH.md)
-* [company](/docs/COMPANY.md)
-* [exchangeRates](/docs/EXCHANGE_RATES.md)
-* [kyc](/docs/KYC.md)
-* [offramp](/docs/OFFRAMP.md)
-* [process](/docs/PROCESS.md)
-* [remoteBankAccount](/docs/REMOTE_BANK_ACCOUNT.md)
-* [tokenPreferences](/docs/TOKEN_PREFERENCES.md)
-* [transactionFee](/docs/TRANSACTION_FEE.md)
-* [unblockBankAccount](/docs/UNBLOCK_BANK_ACCOUNT.md)
+* [auth](AUTH.md)
+* [company](COMPANY.md)
+* [exchangeRates](EXCHANGE_RATES.md)
+* [kyc](KYC.md)
+* [offramp](OFFRAMP.md)
+* [process](PROCESS.md)
+* [remoteBankAccount](REMOTE_BANK_ACCOUNT.md)
+* [tokenPreferences](TOKEN_PREFERENCES.md)
+* [transactionFee](TRANSACTION_FEE.md)
+* [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
 
-[Back to README](/README.md)
+[Back to README](../README.md)
+</div>
