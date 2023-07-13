@@ -1,5 +1,5 @@
 ---
-title: System Development Kit - Javascript - COMPANY Service
+title: Company Service
 excerpt: Reference page for the Company Service Interface
 category: 64aebfcf6c645e002384ccdc
 ---

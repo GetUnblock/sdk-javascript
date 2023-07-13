@@ -1,5 +1,5 @@
 ---
-title: System Development Kit - Javascript - UNBLOCK BANK ACCOUNT Service
+title: Unblock Bank Account Service
 excerpt: Reference page for the Unblock Bank Account Service Interface
 category: 64aebfcf6c645e002384ccdc
 ---

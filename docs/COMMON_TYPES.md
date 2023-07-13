@@ -1,5 +1,5 @@
 ---
-title: System Development Kit - Javascript - Common Types
+title: Common Types
 excerpt: Reference page with common types used across the SDK services interfaces
 category: 64aebfcf6c645e002384ccdc
 ---

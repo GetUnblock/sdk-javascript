@@ -1,5 +1,5 @@
 ---
-title: System Development Kit - Javascript - AUTH Service
+title: Auth Service
 excerpt: Reference page for the Auth Service Interface
 category: 64aebfcf6c645e002384ccdc
 ---

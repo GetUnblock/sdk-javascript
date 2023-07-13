@@ -1,6 +1,6 @@
 ---
-title: System Development Kit - Javascript - KYC Service
-excerpt: Reference page for the KYC Service Interface
+title: Kyc Service
+excerpt: Reference page for the Kyc Service Interface
 category: 64aebfcf6c645e002384ccdc
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: System Development Kit - Javascript - TOKEN PREFERENCES Service
+title: Token Preferences Service
 excerpt: Reference page for the Token Preferences Service Interface
 category: 64aebfcf6c645e002384ccdc
 ---

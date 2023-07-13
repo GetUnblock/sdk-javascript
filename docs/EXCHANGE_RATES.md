@@ -1,5 +1,5 @@
 ---
-title: System Development Kit - Javascript - EXCHANGE RATES Service
+title: Exchange Rates Service
 excerpt: Reference page for the Exchange Rates Service Interface
 category: 64aebfcf6c645e002384ccdc
 ---

@@ -1,5 +1,5 @@
 ---
-title: System Development Kit - Javascript - REMOTE BANK ACCOUNT Service
+title: Remote Bank Account Service
 excerpt: Reference page for the Remote Bank Account Service Interface
 category: 64aebfcf6c645e002384ccdc
 ---

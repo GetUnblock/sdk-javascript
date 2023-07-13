@@ -1,5 +1,5 @@
 ---
-title: System Development Kit - Javascript - PROCESS Service
+title: Process Service
 excerpt: Reference page for the Process Service Interface
 category: 64aebfcf6c645e002384ccdc
 ---

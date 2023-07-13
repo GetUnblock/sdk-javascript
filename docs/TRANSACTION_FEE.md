@@ -1,5 +1,5 @@
 ---
-title: System Development Kit - Javascript - TRANSACTION FEE Service
+title: Transaction Fee Service
 excerpt: Reference page for the Transaction Fee Service Interface
 category: 64aebfcf6c645e002384ccdc
 ---

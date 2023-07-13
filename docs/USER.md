@@ -1,5 +1,5 @@
 ---
-title: System Development Kit - Javascript - USER Service
+title: User Service
 excerpt: Reference page for the User Service Interface
 category: 64aebfcf6c645e002384ccdc
 ---
