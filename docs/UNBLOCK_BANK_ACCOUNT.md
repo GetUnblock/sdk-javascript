@@ -1,4 +1,8 @@
-# GetUnblock SDK - UNBLOCK BANK ACCOUNT Service
+---
+title: Unblock Bank Account Service
+excerpt: Reference page for the Unblock Bank Account Service Interface
+category: 64aebfcf6c645e002384ccdc
+---
 
 ## Interface
 
@@ -39,7 +43,7 @@ type GetUnblockBankAccountByIdResponse = UserBankAccount & UserBankAccountDetail
 | ---------- | ---- |
 | unblockSessionID | string |
 | userUuid | string |
-| currency | [Currency](/docs/COMMON_TYPES.md#Currency) |
+| currency | [Currency](COMMON_TYPES.md#Currency) |
 
 #### <span id="GetAllunblockUserBankAccountsRequest"></span>GetAllunblockUserBankAccountsRequest
 
@@ -54,7 +58,7 @@ type GetUnblockBankAccountByIdResponse = UserBankAccount & UserBankAccountDetail
 | ---------- | ---- |
 | unblockSessionID | string |
 | userUuid | string |
-| currency | [Currency](/docs/COMMON_TYPES.md#Currency) |
+| currency | [Currency](COMMON_TYPES.md#Currency) |
 | value | number |
 
 #### <span id="GetUnblockBankAccountByIdRequest"></span>GetUnblockBankAccountByIdRequest
@@ -69,7 +73,7 @@ type GetUnblockBankAccountByIdResponse = UserBankAccount & UserBankAccountDetail
 
 | Field Name | Type |
 | ---------- | ---- |
-| currency | [Currency](/docs/COMMON_TYPES.md#Currency) |
+| currency | [Currency](COMMON_TYPES.md#Currency) |
 | createdAt | string |
 | updatedAt | string |
 | uuid | string |
@@ -370,17 +374,19 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
 })();
 ```
 
-## Other Services Available
+<div class="CodeMirror-gutter-filler">
+<h3>Other Services Available</h3>
 
-* [auth](/docs/AUTH.md)
-* [company](/docs/COMPANY.md)
-* [exchangeRates](/docs/EXCHANGE_RATES.md)
-* [kyc](/docs/KYC.md)
-* [offramp](/docs/OFFRAMP.md)
-* [process](/docs/PROCESS.md)
-* [remoteBankAccount](/docs/REMOTE_BANK_ACCOUNT.md)
-* [tokenPreferences](/docs/TOKEN_PREFERENCES.md)
-* [transactionFee](/docs/TRANSACTION_FEE.md)
-* [user](/docs/USER.md)
+* [auth](AUTH.md)
+* [company](COMPANY.md)
+* [exchangeRates](EXCHANGE_RATES.md)
+* [kyc](KYC.md)
+* [offramp](OFFRAMP.md)
+* [process](PROCESS.md)
+* [remoteBankAccount](REMOTE_BANK_ACCOUNT.md)
+* [tokenPreferences](TOKEN_PREFERENCES.md)
+* [transactionFee](TRANSACTION_FEE.md)
+* [user](USER.md)
 
-[Back to README](/README.md)
+[Back to README](../README.md)
+</div>

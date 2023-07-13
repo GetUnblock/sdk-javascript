@@ -3,8 +3,8 @@ name: Sync `documentation` directory to ReadMe
 # Run workflow for every push to the `main` branch
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   sync:
@@ -19,4 +19,4 @@ jobs:
         # Docs: https://docs.github.com/actions/using-workflows/workflow-syntax-for-github-actions#example-using-versioned-actions
         uses: readmeio/rdme@v8
         with:
-          rdme: docs ./ --key=${{ secrets.README_API_KEY }} --version=1.0  
+          rdme: docs ./ --key=${{ secrets.README_API_KEY }} --version=1.0
