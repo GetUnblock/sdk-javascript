@@ -3,8 +3,8 @@ name: Sync `documentation` directory to ReadMe
 # Run workflow for every push to the `main` branch
 on:
   push:
-    branches:
-      - feat/publish-docs-at-readme
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   sync:
