@@ -100,7 +100,8 @@ const { Chain } = require("@getunblock/sdk");
 })();
 ```
 
-## Other Services Available
+<div class="CodeMirror-gutter-filler">
+<h3>Other Services Available</h3>
 
 * [auth](AUTH.md)
 * [company](COMPANY.md)
@@ -113,4 +114,5 @@ const { Chain } = require("@getunblock/sdk");
 * [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
 * [user](USER.md)
 
-[Back to README](README.md)
+[Back to README](../README.md)
+</div>

@@ -289,7 +289,8 @@ const { Country } = require("@getunblock/sdk");
 })();
 ```
 
-## Other Services Available
+<div class="CodeMirror-gutter-filler">
+<h3>Other Services Available</h3>
 
 * [auth](AUTH.md)
 * [company](COMPANY.md)
@@ -302,4 +303,5 @@ const { Country } = require("@getunblock/sdk");
 * [transactionFee](TRANSACTION_FEE.md)
 * [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
 
-[Back to README](README.md)
+[Back to README](../README.md)
+</div>

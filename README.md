@@ -60,7 +60,8 @@ const { Currency } = require("@getunblock/sdk");
 })();
 ```
 
-## List of Services Available
+<div class="CodeMirror-gutter-filler">
+<h3>List of Services Available</h3>
 
 * [auth](docs/AUTH.md)
 * [company](docs/COMPANY.md)
@@ -73,3 +74,5 @@ const { Currency } = require("@getunblock/sdk");
 * [transactionFee](docs/TRANSACTION_FEE.md)
 * [unblockBankAccount](docs/UNBLOCK_BANK_ACCOUNT.md)
 * [user](docs/USER.md)
+
+</div>
