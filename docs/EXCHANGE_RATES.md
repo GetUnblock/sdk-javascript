@@ -84,7 +84,7 @@ const { Currency } = require("@getunblock/sdk");
 
 ## Other Services Available
 
-* [auth](AUTH.md)
+* [auth](AUTH)
 * [company](COMPANY.md)
 * [kyc](KYC.md)
 * [offramp](OFFRAMP.md)

@@ -243,7 +243,7 @@ const { AuthenticationMethod, Currency, Chain, OptimismToken } = require("@getun
 
 ## Other Services Available
 
-* [auth](AUTH.md)
+* [auth](AUTH)
 * [company](COMPANY.md)
 * [exchangeRates](EXCHANGE_RATES.md)
 * [kyc](KYC.md)

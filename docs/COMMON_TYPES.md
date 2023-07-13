@@ -369,7 +369,7 @@ enum UserCompanyRole {
 
 ## List of Services Available
 
-* [auth](AUTH.md)
+* [auth](AUTH)
 * [company](COMPANY.md)
 * [exchangeRates](EXCHANGE_RATES.md)
 * [kyc](KYC.md)

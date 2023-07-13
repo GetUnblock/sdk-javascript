@@ -291,7 +291,7 @@ const { Country } = require("@getunblock/sdk");
 
 ## Other Services Available
 
-* [auth](AUTH.md)
+* [auth](AUTH)
 * [company](COMPANY.md)
 * [exchangeRates](EXCHANGE_RATES.md)
 * [kyc](KYC.md)

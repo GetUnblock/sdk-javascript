@@ -62,7 +62,7 @@ const { Currency } = require("@getunblock/sdk");
 
 ## List of Services Available
 
-* [auth](docs/AUTH.md)
+* [auth](docs/AUTH)
 * [company](docs/COMPANY.md)
 * [exchangeRates](docs/EXCHANGE_RATES.md)
 * [kyc](docs/KYC.md)
