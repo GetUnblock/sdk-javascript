@@ -231,7 +231,8 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
 })();
 ```
 
-## Other Services Available
+<div display="visibility:hidden">
+<h3>Other Services Available</h3>
 
 * [company](COMPANY.md)
 * [exchangeRates](EXCHANGE_RATES.md)
@@ -245,3 +246,4 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
 * [user](USER.md)
 
 [Back to README](README.md)
+</div>

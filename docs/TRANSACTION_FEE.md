@@ -94,7 +94,7 @@ const { Currency, PaymentMethods, ProcessDirection } = require("@getunblock/sdk"
 
 ## Other Services Available
 
-* [auth](AUTH)
+* [auth](AUTH.md)
 * [company](COMPANY.md)
 * [exchangeRates](EXCHANGE_RATES.md)
 * [kyc](KYC.md)

@@ -12,7 +12,7 @@
   "typescript.preferences.importModuleSpecifier": "relative",
   "markdownlint.config": {
     "MD033": {
-      "allowed_elements": ["a", "span", "div", "pre"],
+      "allowed_elements": ["a", "span", "div", "pre", "h1", "h2", "h3", "h4", "h5"],
     },
     "MD024": {
       "siblings_only": true

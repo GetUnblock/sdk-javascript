@@ -143,7 +143,7 @@ const getunblockSDK = require("@getunblock/sdk").default;
 
 ## Other Services Available
 
-* [auth](AUTH)
+* [auth](AUTH.md)
 * [company](COMPANY.md)
 * [exchangeRates](EXCHANGE_RATES.md)
 * [kyc](KYC.md)
