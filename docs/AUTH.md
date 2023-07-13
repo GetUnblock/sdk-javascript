@@ -231,7 +231,7 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
 })();
 ```
 
-<div display="visibility:hidden">
+<div class="CodeMirror-gutter-filler">
 <h3>Other Services Available</h3>
 
 * [company](COMPANY.md)
