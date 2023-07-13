@@ -582,4 +582,4 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
 * [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
 * [user](USER.md)
 
-[Back to README](../README.md)
+[Back to README](README.md)

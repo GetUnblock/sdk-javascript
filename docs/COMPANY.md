@@ -357,4 +357,4 @@ const getunblockSDK = require("@getunblock/sdk").default;
 * [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
 * [user](USER.md)
 
-[Back to README](../README.md)
+[Back to README](README.md)

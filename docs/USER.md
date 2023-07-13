@@ -302,4 +302,4 @@ const { Country } = require("@getunblock/sdk");
 * [transactionFee](TRANSACTION_FEE.md)
 * [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
 
-[Back to README](../README.md)
+[Back to README](README.md)

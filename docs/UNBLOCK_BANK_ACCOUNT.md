@@ -387,4 +387,4 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
 * [transactionFee](TRANSACTION_FEE.md)
 * [user](USER.md)
 
-[Back to README](../README.md)
+[Back to README](README.md)
