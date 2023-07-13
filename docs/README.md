@@ -1,3 +1,4 @@
 ---
-redirect: ../README.md
+layout: forward
+target: ../README.md
 ---
