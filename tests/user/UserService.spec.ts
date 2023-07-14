@@ -1,16 +1,15 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
-import { SdkSettings } from '../../src/definitions';
+import { SdkSettings } from '../../src/SdkSettings';
 import Country from '../../src/enums/Country';
 import { ProcessStatus } from '../../src/enums/ProcessStatus';
 import { UserStatus } from '../../src/enums/UserStatus';
+import { UserSessionDataNotSetError } from '../../src/errors';
 import { UserService } from '../../src/user/UserService';
 import {
   CreateUserRequest,
   CreateUserResponse,
-  GetUserRampTransactionsRequest,
   GetUserRampTransactionsResponse,
-  GetUserStatusRequest,
   GetUserStatusResponse,
   RampTransactionProcess,
 } from '../../src/user/definitions';
@@ -24,6 +23,7 @@ describe('UserService', () => {
   let props: SdkSettings;
   let axiosError: AxiosError;
   let randomError: unknown;
+  let userSessionDataNotSetError: UserSessionDataNotSetError;
   let userUuid: string;
   let unblockSessionId: string;
 
@@ -35,6 +35,7 @@ describe('UserService', () => {
     props = propsMock();
     axiosError = axiosErrorMock();
     randomError = randomErrorMock();
+    userSessionDataNotSetError = new UserSessionDataNotSetError();
     userUuid = faker.datatype.uuid();
     unblockSessionId = faker.datatype.uuid();
   });
@@ -44,6 +45,7 @@ describe('UserService', () => {
   });
 
   describe('createUser', () => {
+    // Happy
     it('Should call axios POST with expected headers, params and body and return an expected response', async () => {
       // Arrange
       const params: CreateUserRequest = {
@@ -106,6 +108,7 @@ describe('UserService', () => {
       expect(axiosClient.post).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
     });
 
+    // Sad
     it('Should throw expected error when an Axios Error Happens', async () => {
       // Arrange
       const params: CreateUserRequest = {
@@ -120,6 +123,12 @@ describe('UserService', () => {
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(axiosError);
 
       const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new UserService(props);
       let resultedError;
 
@@ -150,6 +159,11 @@ describe('UserService', () => {
 
       const expectedErrorMesage = `Unexpected error: ${randomError}`;
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new UserService(props);
       let resultedError;
 
@@ -167,13 +181,9 @@ describe('UserService', () => {
   });
 
   describe('getUserStatus', () => {
+    // Happy
     it('Should call axios GET with expected headers and params and return an expected response', async () => {
       // Arrange
-      const params: GetUserStatusRequest = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       const expectedResponse: GetUserStatusResponse = {
         status: faker.helpers.arrayElement(Object.values(UserStatus)),
       };
@@ -187,7 +197,7 @@ describe('UserService', () => {
         status: UserStatus;
       }>);
 
-      const expectedPath = `/user/${params.userUuid}/status`;
+      const expectedPath = `/user/${userUuid}/status`;
       const expectedConfig = {
         headers: {
           accept: 'application/json',
@@ -196,10 +206,15 @@ describe('UserService', () => {
         },
       };
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new UserService(props);
 
       // Act
-      const response = await service.getUserStatus(params);
+      const response = await service.getUserStatus();
 
       // Assert
       expect(response).toStrictEqual(expectedResponse);
@@ -207,23 +222,46 @@ describe('UserService', () => {
       expect(axiosClient.get).toHaveBeenLastCalledWith(expectedPath, expectedConfig);
     });
 
-    it('Should throw expected error when an Axios Error Happens', async () => {
+    // Sad
+    it('Should throw error if User Session Data is not set', async () => {
       // Arrange
-      const params: GetUserStatusRequest = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+
       const service = new UserService(props);
       let resultedError;
 
       // Act
       try {
-        await service.getUserStatus(params);
+        await service.getUserStatus();
+      } catch (e) {
+        resultedError = e;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
+
+    it('Should throw expected error when an Axios Error Happens', async () => {
+      // Arrange
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
+
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
+      const service = new UserService(props);
+      let resultedError;
+
+      // Act
+      try {
+        await service.getUserStatus();
       } catch (e) {
         resultedError = e;
       }
@@ -235,22 +273,22 @@ describe('UserService', () => {
 
     it('Should throw expected error when an Unexpected Error Happens', async () => {
       // Arrange
-      const params: GetUserStatusRequest = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
       const expectedErrorMesage = `Unexpected error: ${randomError}`;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
 
       const service = new UserService(props);
       let resultedError;
 
       // Act
       try {
-        await service.getUserStatus(params);
+        await service.getUserStatus();
       } catch (e) {
         resultedError = e;
       }
@@ -262,13 +300,9 @@ describe('UserService', () => {
   });
 
   describe('getUserRampTransactions', () => {
+    // Happy
     it('Should call axios GET with expected headers and params and return an expected response', async () => {
       // Arrange
-      const params: GetUserRampTransactionsRequest = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       const offrampProcesses: RampTransactionProcess[] = [];
       const onrampProcesses: RampTransactionProcess[] = [];
 
@@ -343,7 +377,7 @@ describe('UserService', () => {
         },
       } as AxiosResponse<AuxType>);
 
-      const expectedPath = `user/${params.userUuid}/process`;
+      const expectedPath = `user/${userUuid}/process`;
       const expectedConfig = {
         headers: {
           accept: 'application/json',
@@ -352,10 +386,15 @@ describe('UserService', () => {
         },
       };
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new UserService(props);
 
       // Act
-      const response = await service.getUserRampTransactions(params);
+      const response = await service.getUserRampTransactions();
 
       // Assert
       expect(response).toStrictEqual(expectedResponse);
@@ -363,23 +402,46 @@ describe('UserService', () => {
       expect(axiosClient.get).toHaveBeenLastCalledWith(expectedPath, expectedConfig);
     });
 
-    it('Should throw expected error when an Axios Error Happens', async () => {
+    // Sad
+    it('Should throw error if User Session Data is not set', async () => {
       // Arrange
-      const params: GetUserRampTransactionsRequest = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+
       const service = new UserService(props);
       let resultedError;
 
       // Act
       try {
-        await service.getUserRampTransactions(params);
+        await service.getUserRampTransactions();
+      } catch (e) {
+        resultedError = e;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
+
+    it('Should throw expected error when an Axios Error Happens', async () => {
+      // Arrange
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
+
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
+      const service = new UserService(props);
+      let resultedError;
+
+      // Act
+      try {
+        await service.getUserRampTransactions();
       } catch (e) {
         resultedError = e;
       }
@@ -391,22 +453,22 @@ describe('UserService', () => {
 
     it('Should throw expected error when an Unexpected Error Happens', async () => {
       // Arrange
-      const params: GetUserRampTransactionsRequest = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
       const expectedErrorMesage = `Unexpected error: ${randomError}`;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
 
       const service = new UserService(props);
       let resultedError;
 
       // Act
       try {
-        await service.getUserRampTransactions(params);
+        await service.getUserRampTransactions();
       } catch (e) {
         resultedError = e;
       }

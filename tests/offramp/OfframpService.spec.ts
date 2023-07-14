@@ -1,7 +1,8 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { SdkSettings, UserSessionData } from '../../src/definitions';
+import { SdkSettings } from '../../src/SdkSettings';
 import { Chain } from '../../src/enums/Chain';
+import { UserSessionDataNotSetError } from '../../src/errors';
 import { OfframpService } from '../../src/offramp/OfframpService';
 import {
   GetUserOfframpAddressResponse,
@@ -17,11 +18,11 @@ describe('OfframpService', () => {
   let props: SdkSettings;
   let axiosError: AxiosError;
   let randomError: unknown;
+  let userSessionDataNotSetError: UserSessionDataNotSetError;
 
   let userUuid: string;
   let unblockSessionId: string;
 
-  let userSessionData: UserSessionData;
   let chain: Chain;
 
   const message = 'User offramp address pulled';
@@ -37,14 +38,10 @@ describe('OfframpService', () => {
     props = propsMock();
     axiosError = axiosErrorMock();
     randomError = randomErrorMock();
+    userSessionDataNotSetError = new UserSessionDataNotSetError();
 
     userUuid = faker.datatype.uuid();
     unblockSessionId = faker.datatype.uuid();
-
-    userSessionData = {
-      userUuid: userUuid,
-      unblockSessionId: unblockSessionId,
-    };
 
     chain = faker.helpers.arrayElement(Object.values(Chain));
   });
@@ -61,7 +58,7 @@ describe('OfframpService', () => {
         { length: faker.datatype.number({ min: 1, max: 5 }) },
         addressMock,
       );
-      console.log(addresses);
+
       const expectedResult: GetUserOfframpAddressResponse = {
         message: message,
         addresses: addresses,
@@ -86,10 +83,15 @@ describe('OfframpService', () => {
         data: responseData,
       });
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new OfframpService(props);
 
       // Act
-      const result = await service.getUserOfframpAddress({ ...userSessionData, chain: chain });
+      const result = await service.getUserOfframpAddress({ chain: chain });
 
       // Assert
       expect(axiosClient.get).toBeCalledTimes(1);
@@ -98,6 +100,27 @@ describe('OfframpService', () => {
     });
 
     // Sad
+    it('Should throw error if User Session Data is not set', async () => {
+      // Arrange
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+
+      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      let resultedError;
+
+      const service = new OfframpService(props);
+
+      // Act
+      try {
+        await service.getUserOfframpAddress({ chain: chain });
+      } catch (error) {
+        resultedError = error;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
+
     it('should throw expected error when an Axios Error Happens', async () => {
       // Arrange
 
@@ -107,11 +130,16 @@ describe('OfframpService', () => {
       const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new OfframpService(props);
 
       // Act
       try {
-        await service.getUserOfframpAddress({ ...userSessionData, chain: chain });
+        await service.getUserOfframpAddress({ chain: chain });
       } catch (error) {
         resultedError = error;
       }
@@ -131,11 +159,16 @@ describe('OfframpService', () => {
       const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new OfframpService(props);
 
       // Act
       try {
-        await service.getUserOfframpAddress({ ...userSessionData, chain: chain });
+        await service.getUserOfframpAddress({ chain: chain });
       } catch (error) {
         resultedError = error;
       }

@@ -1,5 +1,3 @@
-import { UserSessionData } from '../definitions';
-
 export type UserBankAccount = {
   currency: string; // ISO-4217 currency code
   createdAt: string;
@@ -20,16 +18,13 @@ export type UserBankAccountDetails = {
 export type UserBankAccountFull = UserBankAccount & UserBankAccountDetails;
 
 /** Request dto */
-export type CreateUnblockUserBankAccountRequest = UserSessionData & { currency: string };
+export type CreateUnblockUserBankAccountRequest = { currency: string };
 
 /** Request dto */
-export type GetAllunblockUserBankAccountsRequest = UserSessionData;
+export type SimulateOnRampRequest = { currency: string; value: number };
 
 /** Request dto */
-export type SimulateOnRampRequest = UserSessionData & { currency: string; value: number };
-
-/** Request dto */
-export type GetUnblockBankAccountByIdRequest = UserSessionData & { accountUuid: string };
+export type GetUnblockBankAccountByIdRequest = { accountUuid: string };
 
 /** Response dto */
 export type CreateUnblockUserBankAccountResponse = UserBankAccount;

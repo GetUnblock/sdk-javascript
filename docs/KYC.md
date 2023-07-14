@@ -9,11 +9,11 @@ category: 64aebfcf6c645e002384ccdc
 ```typescript
 interface IKycService {
   createKYCApplicant(params: CreateKYCApplicantRequest): Promise<CreateKYCApplicantResponse>;
-  getAccessTokenForUserApplicant(params: GetAccessTokenForUserApplicantRequest): Promise<GetAccessTokenForUserApplicantResponse>;
+  getAccessTokenForUserApplicant(): Promise<GetAccessTokenForUserApplicantResponse>;
   uploadKycDocument(params: UploadKycDocumentRequest): Promise<UploadKycDocumentResponse>;
-  getUploadedKycDocumentsForUser(params: GetUploadedKycDocumentsForUserRequest): Promise<GetUploadedKycDocumentsForUserResponse[]>;
-  startKycVerification(params: StartKycVerificationRequest): Promise<StartKycVerificationResponse>;
-  getRequiredKycInformation(params: GetRequiredKycInformationRequest): Promise<GetRequiredKycInformationResponse[]>;
+  getUploadedKycDocumentsForUser(): Promise<GetUploadedKycDocumentsForUserResponse[]>;
+  startKycVerification(): Promise<StartKycVerificationResponse>;
+  getRequiredKycInformation(): Promise<GetRequiredKycInformationResponse[]>;
   onboarding(dto: OnboardingRequest): Promise<OnboardingResponse>;
   initSumsubSdk(dto: InitSumsubSdkRequest): Promise<InitSumsubSdkResponse>;
 }
@@ -67,8 +67,6 @@ type DocumentSubType = 'FRONT_SIDE' | 'BACK_SIDE'
 
 | Field Name | Type |
 | ---------- | ---- |
-| unblockSessionId | string |
-| userUuid | string |
 | address | string |
 | postcode | string |
 | city | string |
@@ -77,51 +75,20 @@ type DocumentSubType = 'FRONT_SIDE' | 'BACK_SIDE'
 | sourceOfFunds | [SourceOfFundsType](#SourceOfFundsType) |
 | sourceOfFundsDescription | string |
 
-#### <span id="GetAccessTokenForUserApplicantRequest"></span>GetAccessTokenForUserApplicantRequest
-
-| Field Name | Type |
-| ---------- | ---- |
-| userUuid | string |
-| unblockSessionId | string |
-
 #### <span id="UploadKycDocumentRequest"></span>UploadKycDocumentRequest
 
 | Field Name | Type |
 | ---------- | ---- |
-| userUuid | string |
-| unblockSessionId | string |
 | content | string |
 | filename | string |
 | documentType | [DocumentType](#DocumentType) |
 | documentSubType? | [DocumentSubType](#DocumentSubType) |
 | country | [Country](COMMON_TYPES.md#Country) |
 
-#### <span id="GetUploadedKycDocumentsForUserRequest"></span>GetUploadedKycDocumentsForUserRequest
-
-| Field Name | Type |
-| ---------- | ---- |
-| userUuid | string |
-| unblockSessionId | string |
-
-#### <span id="StartKycVerificationRequest"></span>StartKycVerificationRequest
-
-| Field Name | Type |
-| ---------- | ---- |
-| userUuid | string |
-| unblockSessionId | string |
-
-#### <span id="GetRequiredKycInformationRequest"></span>GetRequiredKycInformationRequest
-
-| Field Name | Type |
-| ---------- | ---- |
-| userUuid | string |
-| unblockSessionId | string |
-
 #### <span id="OnboardingRequest"></span>OnboardingRequest
 
 | Field Name | Type |
 | ---------- | ---- |
-| sessionData | [UserSessionData](COMMON_TYPES.md#UserSessionData) |
 | applicantData | [ApplicantData](#ApplicantData) |
 | documentData | [UploadDocumentData](#UploadDocumentData) |
 
@@ -129,7 +96,6 @@ type DocumentSubType = 'FRONT_SIDE' | 'BACK_SIDE'
 
 | Field Name | Type |
 | ---------- | ---- |
-| sessionData | [UserSessionData](COMMON_TYPES.md#UserSessionData) |
 | applicantData | [ApplicantData](#ApplicantData) |
 
 #### <span id="CreateKYCApplicantResponse"></span>CreateKYCApplicantResponse
@@ -220,16 +186,13 @@ import getunblockSDK, { AuthenticationMethod, Country } from "@getunblock/sdk";
   });
   
   // SDK API call example
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
   const result = await sdk.kyc.createKYCApplicant({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
     address: "[user address]",
     postcode: "[user postcode]",
     city: "[user city]",
@@ -255,8 +218,7 @@ const { AuthenticationMethod, Country } = require("@getunblock/sdk");
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
   
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
@@ -264,8 +226,6 @@ const { AuthenticationMethod, Country } = require("@getunblock/sdk");
   
   // SDK API call example
   const result = await sdk.kyc.createKYCApplicant({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
     address: "[user address]",
     postcode: "[user postcode]",
     city: "[user city]",
@@ -279,7 +239,7 @@ const { AuthenticationMethod, Country } = require("@getunblock/sdk");
 
 #### getAccessTokenForUserApplicant
 
-<div><pre>getAccessTokenForUserApplicant(params: <a href="#GetAccessTokenForUserApplicantRequest">GetAccessTokenForUserApplicantRequest</a>): Promise&#60;<a href="#GetAccessTokenForUserApplicantResponse">GetAccessTokenForUserApplicantResponse</a>&#62;</pre></div>
+<div><pre>getAccessTokenForUserApplicant(): Promise&#60;<a href="#GetAccessTokenForUserApplicantResponse">GetAccessTokenForUserApplicantResponse</a>&#62;</pre></div>
 
 ##### Overview
 
@@ -302,17 +262,13 @@ import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
   });
   
   // SDK API call example
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
-  const result = await sdk.kyc.getAccessTokenForUserApplicant({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
-  });
+  const result = await sdk.kyc.getAccessTokenForUserApplicant();
 })();
 ```
 
@@ -331,17 +287,13 @@ const { AuthenticationMethod } = require("@getunblock/sdk")
   });
   
   // SDK API call example
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
-  const result = await sdk.kyc.getAccessTokenForUserApplicant({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
-  });
+  const result = await sdk.kyc.getAccessTokenForUserApplicant();
 })();
 ```
 
@@ -369,21 +321,18 @@ import getunblockSDK, { AuthenticationMethod, Country } from "@getunblock/sdk";
   });
   
   // SDK API call example
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
   const result = await sdk.kyc.uploadKycDocument({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
     content: "[base64 image data]",
     filename: "[filename].[file_extension]",
     documentType: "['SELFIE' | 'PASSPORT' | 'DRIVERS' | 'ID_CARD' | 'RESIDENCE_PERMIT']",
-    documentSubType?: "['FRONT_SIDE' | 'BACK_SIDE']",
-    country: Country.Portugal,
+    documentSubType: "['FRONT_SIDE' | 'BACK_SIDE']",
+    country: Country.UnitedKingdom,
   });
 })();
 ```
@@ -403,28 +352,25 @@ const { AuthenticationMethod, Country } = require("@getunblock/sdk");
   });
   
   // SDK API call example
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
   const result = await sdk.kyc.uploadKycDocument({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
     content: "[base64 image data]",
     filename: "[filename].[file_extension]",
     documentType: "['SELFIE' | 'PASSPORT' | 'DRIVERS' | 'ID_CARD' | 'RESIDENCE_PERMIT']",
-    documentSubType?: "['FRONT_SIDE' | 'BACK_SIDE']",
-    country: Country.Portugal,
+    documentSubType: "['FRONT_SIDE' | 'BACK_SIDE']",
+    country: Country.UnitedKingdom,
   });
 })();
 ```
 
 #### getUploadedKycDocumentsForUser
 
-<div><pre>getUploadedKycDocumentsForUser(params: <a href="#GetUploadedKycDocumentsForUserRequest">GetUploadedKycDocumentsForUserRequest</a>): Promise&#60;<a href="#GetUploadedKycDocumentsForUserResponse">GetUploadedKycDocumentsForUserResponse</a>&#62;</pre></div>
+<div><pre>getUploadedKycDocumentsForUser(): Promise&#60;<a href="#GetUploadedKycDocumentsForUserResponse">GetUploadedKycDocumentsForUserResponse</a>&#62;</pre></div>
 
 ##### Overview
 
@@ -446,17 +392,13 @@ import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
   });
   
   // SDK API call example
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
-  const result = await sdk.kyc.getUploadedKycDocumentsForUser({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
-  });
+  const result = await sdk.kyc.getUploadedKycDocumentsForUser();
 })();
 ```
 
@@ -475,23 +417,19 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
   });
   
   // SDK API call example
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
-  const result = await sdk.kyc.getUploadedKycDocumentsForUser({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
-  });
+  const result = await sdk.kyc.getUploadedKycDocumentsForUser();
 })();
 ```
 
 #### startKycVerification
 
-<div><pre>startKycVerification(params: <a href="#StartKycVerificationRequest">StartKycVerificationRequest</a>): Promise&#60;<a href="#StartKycVerificationResponse">StartKycVerificationResponse</a>&#62;</pre></div>
+<div><pre>startKycVerification(): Promise&#60;<a href="#StartKycVerificationResponse">StartKycVerificationResponse</a>&#62;</pre></div>
 
 ##### Overview
 
@@ -513,17 +451,13 @@ import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
   });
   
   // SDK API call example
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
-  const result = await sdk.kyc.startKycVerification({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
-  });
+  const result = await sdk.kyc.startKycVerification();
 })();
 ```
 
@@ -542,23 +476,19 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
   });
   
   // SDK API call example
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
-  const result = await sdk.kyc.startKycVerification({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
-  });
+  const result = await sdk.kyc.startKycVerification();
 })();
 ```
 
 #### getRequiredKycInformation
 
-<div><pre>getRequiredKycInformation(params: <a href="#GetRequiredKycInformationRequest">GetRequiredKycInformationRequest</a>): Promise&#60;<a href="#GetRequiredKycInformationResponse">GetRequiredKycInformationResponse</a>&#62;</pre></div>
+<div><pre>getRequiredKycInformation(): Promise&#60;<a href="#GetRequiredKycInformationResponse">GetRequiredKycInformationResponse</a>&#62;</pre></div>
 
 ##### Overview
 
@@ -580,17 +510,13 @@ import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
   });
   
   // SDK API call example
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
-  const result = await sdk.kyc.getRequiredKycInformation({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
-  });
+  const result = await sdk.kyc.getRequiredKycInformation();
 })();
 ```
 
@@ -609,17 +535,13 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
   });
   
   // SDK API call example
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
-  const result = await sdk.kyc.getRequiredKycInformation({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
-  });
+  const result = await sdk.kyc.getRequiredKycInformation();
 })();
 ```
 
@@ -647,18 +569,13 @@ import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
   });
   
   // SDK API call example
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
   const result = await sdk.kyc.onboarding({
-    sessionData: {
-      unblockSessionId: loginResult.unblockSessionId,
-      userUuid: loginResult.userUuid,
-    },
     applicantData: {
       address: "[user address]",
       postcode: "[user postcode]",
@@ -694,18 +611,13 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
   });
   
   // SDK API call example
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
   const result = await sdk.kyc.onboarding({
-    sessionData: {
-      unblockSessionId: loginResult.unblockSessionId,
-      userUuid: loginResult.userUuid,
-    },
     applicantData: {
       address: "[user address]",
       postcode: "[user postcode]",
@@ -750,18 +662,13 @@ import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
   });
   
   // SDK API call example
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
   const result = await sdk.kyc.initSumsubSdk({
-    sessionData: {
-      unblockSessionId: loginResult.unblockSessionId,
-      userUuid: loginResult.userUuid,
-    },
     applicantData: {
       address: "[user address]",
       postcode: "[user postcode]",
@@ -790,18 +697,13 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
   });
   
   // SDK API call example
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
-  const result = await sdk.kyc.onboarding({
-    sessionData: {
-      unblockSessionId: loginResult.unblockSessionId,
-      userUuid: loginResult.userUuid,
-    },
+  const result = await sdk.kyc.initSumsubSdk({
     applicantData: {
       address: "[user address]",
       postcode: "[user postcode]",

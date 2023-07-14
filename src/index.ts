@@ -1,16 +1,11 @@
 import { SDK } from './SDK';
+import { SdkSettings } from './SdkSettings';
 import { ServiceFactory } from './ServiceFactory';
 import { SdkProps } from './definitions';
 
 const GetUnblock = (props: SdkProps): SDK => {
-  return new SDK(
-    new ServiceFactory({
-      ...props,
-      sandBoxUrl: 'https://sandbox.getunblock.com',
-      prodUrl: 'https://getunblock.com',
-      timeoutMs: 10000,
-    }),
-  );
+  const settings = new SdkSettings(props.apiKey, props.prod);
+  return new SDK(new ServiceFactory(settings));
 };
 
 // Types
@@ -44,7 +39,6 @@ export {
   CreateRemoteUserBankAccountResponse,
   EurAccountDetails,
   GbpAccountDetails,
-  GetAllRemoteBankAccountsRequest,
   GetAllRemoteBankAccountsResponse,
   GetRemoteBankAccountByUuidRequest,
   GetRemoteBankAccountByUuidResponse,
@@ -53,7 +47,6 @@ export {
 
 export {
   GetUserTokenPreferenceResponse,
-  GetUserTokenPreferencesRequest,
   TokenPreference,
   TokenPreferenceArbitrum,
   TokenPreferenceCelo,
@@ -69,7 +62,6 @@ export { TransactionFeeEstRequest, TransactionFeeEstResponse } from './transacti
 export {
   CreateUnblockUserBankAccountRequest,
   CreateUnblockUserBankAccountResponse,
-  GetAllunblockUserBankAccountsRequest,
   GetAllunblockUserBankAccountsResponse,
   GetUnblockBankAccountByIdRequest,
   GetUnblockBankAccountByIdResponse,
@@ -83,7 +75,6 @@ export {
 export * from './user/definitions';
 
 // Enums
-export * from './enums/AuthenticationMethod';
 export * from './enums/Chain';
 export * from './enums/CompanyType';
 export * from './enums/Country';

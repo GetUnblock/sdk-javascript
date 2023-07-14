@@ -1,11 +1,10 @@
 import { AxiosResponse } from 'axios';
 import { BaseService } from '../BaseService';
 import { ErrorHandler } from '../ErrorHandler';
-import { UserSessionData } from '../definitions';
+import { UserSessionDataNotSetError } from '../errors';
 import {
   GetUserTokenPreferenceResponse,
   GetUserTokenPreferenceResponseData,
-  GetUserTokenPreferencesRequest,
   UpdateUserTokenPreferenceRequestBody,
   UpdateUserTokenPreferencesRequest,
   UpdateUserTokenPreferencesResponse,
@@ -13,9 +12,7 @@ import {
 } from './definitions';
 
 export interface ITokenPreferenceService {
-  getUserTokenPreference(
-    dto: GetUserTokenPreferencesRequest,
-  ): Promise<GetUserTokenPreferenceResponse>;
+  getUserTokenPreference(): Promise<GetUserTokenPreferenceResponse>;
 
   updateUserTokenPreference(
     dto: UpdateUserTokenPreferencesRequest,
@@ -23,20 +20,23 @@ export interface ITokenPreferenceService {
 }
 
 export class TokenPreferenceService extends BaseService implements ITokenPreferenceService {
-  async getUserTokenPreference(dto: UserSessionData): Promise<GetUserTokenPreferenceResponse> {
+  async getUserTokenPreference(): Promise<GetUserTokenPreferenceResponse> {
     const { apiKey } = this.props;
-    const { userUuid, unblockSessionId } = dto;
-
-    const path = `/user/${userUuid}/token-preferences`;
-    const config = {
-      headers: {
-        accept: 'application/json',
-        Authorization: apiKey,
-        'unblock-session-id': unblockSessionId,
-      },
-    };
 
     try {
+      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+        throw new UserSessionDataNotSetError();
+      }
+
+      const path = `/user/${this.props.userSessionData.userUuid}/token-preferences`;
+      const config = {
+        headers: {
+          accept: 'application/json',
+          Authorization: apiKey,
+          'unblock-session-id': this.props.userSessionData.unblockSessionId,
+        },
+      };
+
       const response: AxiosResponse<GetUserTokenPreferenceResponseData> =
         await this.axiosClient.get(path, config);
       return response.data;
@@ -49,20 +49,23 @@ export class TokenPreferenceService extends BaseService implements ITokenPrefere
     dto: UpdateUserTokenPreferencesRequest,
   ): Promise<UpdateUserTokenPreferencesResponse> {
     const { apiKey } = this.props;
-    const { userUuid, unblockSessionId } = dto;
-
-    const path = `/user/${userUuid}/token-preferences`;
-    const body: UpdateUserTokenPreferenceRequestBody = dto.preferences;
-    const config = {
-      headers: {
-        'content-type': 'application/json',
-        accept: 'application/json',
-        Authorization: apiKey,
-        'unblock-session-id': unblockSessionId,
-      },
-    };
 
     try {
+      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+        throw new UserSessionDataNotSetError();
+      }
+
+      const path = `/user/${this.props.userSessionData.userUuid}/token-preferences`;
+      const body: UpdateUserTokenPreferenceRequestBody = dto.preferences;
+      const config = {
+        headers: {
+          'content-type': 'application/json',
+          accept: 'application/json',
+          Authorization: apiKey,
+          'unblock-session-id': this.props.userSessionData.unblockSessionId,
+        },
+      };
+
       const response: AxiosResponse<UpdateUserTokenPreferencesResponseData> =
         await this.axiosClient.patch(path, body, config);
       return response.data;

@@ -10,8 +10,6 @@ export type GlobalSettings = {
   timeoutMs: 10000;
 };
 
-export type SdkSettings = SdkProps & GlobalSettings;
-
 export type UserSessionData = {
   unblockSessionId: string;
   userUuid: string;

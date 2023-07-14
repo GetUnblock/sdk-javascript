@@ -1,7 +1,8 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import Country from 'src/enums/Country';
-import { SdkSettings, UserSessionData } from '../../src/definitions';
+import { SdkSettings } from '../../src/SdkSettings';
+import { InvalidAccountDetailsError, UserSessionDataNotSetError } from '../../src/errors';
 import { RemoteBankAccountService } from '../../src/remote-bank-account/RemoteBankAccountService';
 import {
   CreateRemoteUserBankAccountRequest,
@@ -21,6 +22,7 @@ describe('RemoteBankAccountService', () => {
   let props: SdkSettings;
   let axiosError: AxiosError;
   let randomError: unknown;
+  let userSessionDataNotSetError: UserSessionDataNotSetError;
 
   beforeAll(() => {
     axiosClient = mockedAxios.create();
@@ -30,6 +32,7 @@ describe('RemoteBankAccountService', () => {
     props = propsMock();
     axiosError = axiosErrorMock();
     randomError = randomErrorMock();
+    userSessionDataNotSetError = new UserSessionDataNotSetError();
   });
 
   afterEach(() => {
@@ -46,11 +49,6 @@ describe('RemoteBankAccountService', () => {
   const bankName = faker.company.name();
   const uuid = faker.datatype.uuid();
 
-  const userSessionData: UserSessionData = {
-    unblockSessionId: unblockSessionId,
-    userUuid: userUuid,
-  };
-
   const accountDetailsGbp = {
     currency: faker.finance.currencyCode(),
     accountNumber: faker.finance.account(),
@@ -63,8 +61,6 @@ describe('RemoteBankAccountService', () => {
   };
 
   const dtoGbp: CreateRemoteUserBankAccountRequest = {
-    userUuid: userUuid,
-    unblockSessionId: unblockSessionId,
     accountName: faker.finance.accountName(),
     accountCountry: faker.address.countryCode() as Country,
     beneficiaryCountry: faker.address.countryCode(),
@@ -73,8 +69,6 @@ describe('RemoteBankAccountService', () => {
   };
 
   const dtoEur: CreateRemoteUserBankAccountRequest = {
-    userUuid: userUuid,
-    unblockSessionId: unblockSessionId,
     accountName: faker.finance.accountName(),
     accountCountry: faker.address.countryCode() as Country,
     beneficiaryCountry: faker.address.countryCode(),
@@ -130,6 +124,11 @@ describe('RemoteBankAccountService', () => {
         data: '',
       } as AxiosResponse<any>);
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new RemoteBankAccountService(props);
 
       // Act
@@ -177,6 +176,11 @@ describe('RemoteBankAccountService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockResolvedValueOnce({
         data: responseData,
+      });
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
       });
 
       const service = new RemoteBankAccountService(props);
@@ -227,6 +231,11 @@ describe('RemoteBankAccountService', () => {
         data: responseData,
       });
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new RemoteBankAccountService(props);
 
       // Act
@@ -237,6 +246,28 @@ describe('RemoteBankAccountService', () => {
     });
 
     // Sad
+    it('Should throw error if User Session Data is not set', async () => {
+      // Arrange
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+
+      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      let resultedError;
+
+      const service = new RemoteBankAccountService(props);
+
+      // Act
+
+      try {
+        await service.createRemoteUserBankAccount(dtoEur);
+      } catch (error) {
+        resultedError = error;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
+
     it('should throw expected Axios error', async () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -244,6 +275,11 @@ describe('RemoteBankAccountService', () => {
 
       const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
 
       const service = new RemoteBankAccountService(props);
 
@@ -267,6 +303,11 @@ describe('RemoteBankAccountService', () => {
 
       const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
 
       const service = new RemoteBankAccountService(props);
 
@@ -295,8 +336,13 @@ describe('RemoteBankAccountService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockResolvedValueOnce('');
 
-      const expectedErrorMesage = 'Invalid account details';
+      const expectedErrorMesage = `Unexpected error: ${new InvalidAccountDetailsError()}`;
       let resultedError;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
 
       const service = new RemoteBankAccountService(props);
 
@@ -336,10 +382,15 @@ describe('RemoteBankAccountService', () => {
         data: [],
       } as AxiosResponse<any>);
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new RemoteBankAccountService(props);
 
       // Act
-      await service.getAllRemoteBankAccounts(userSessionData);
+      await service.getAllRemoteBankAccounts();
 
       // Assert
       expect(axiosClient.get).toBeCalledTimes(1);
@@ -420,14 +471,41 @@ describe('RemoteBankAccountService', () => {
 
       const service = new RemoteBankAccountService(props);
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       // Act
-      const result = await service.getAllRemoteBankAccounts(userSessionData);
+      const result = await service.getAllRemoteBankAccounts();
 
       // Assert
       expect(result).toStrictEqual(expectedResponse);
     });
 
     // Sad
+    it('Should throw error if User Session Data is not set', async () => {
+      // Arrange
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+
+      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      let resultedError;
+
+      const service = new RemoteBankAccountService(props);
+
+      // Act
+
+      try {
+        await service.getAllRemoteBankAccounts();
+      } catch (error) {
+        resultedError = error;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
+
     it('should throw expected Axios error', async () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -436,12 +514,17 @@ describe('RemoteBankAccountService', () => {
       const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new RemoteBankAccountService(props);
 
       // Act
 
       try {
-        await service.getAllRemoteBankAccounts(userSessionData);
+        await service.getAllRemoteBankAccounts();
       } catch (error) {
         resultedError = error;
       }
@@ -459,12 +542,17 @@ describe('RemoteBankAccountService', () => {
       const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new RemoteBankAccountService(props);
 
       // Act
 
       try {
-        await service.getAllRemoteBankAccounts(userSessionData);
+        await service.getAllRemoteBankAccounts();
       } catch (error) {
         resultedError = error;
       }
@@ -497,11 +585,15 @@ describe('RemoteBankAccountService', () => {
         status: 200,
       } as AxiosResponse<any>);
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new RemoteBankAccountService(props);
 
       // Act
       await service.changeMainUserRemoteBankAccount({
-        ...userSessionData,
         accountUuid: uuid,
       });
 
@@ -515,6 +607,28 @@ describe('RemoteBankAccountService', () => {
     });
 
     // Sad
+    it('Should throw error if User Session Data is not set', async () => {
+      // Arrange
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+
+      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      let resultedError;
+
+      const service = new RemoteBankAccountService(props);
+
+      // Act
+
+      try {
+        await service.changeMainUserRemoteBankAccount({ accountUuid: uuid });
+      } catch (error) {
+        resultedError = error;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
+
     it('should throw expected Axios error', async () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -523,12 +637,17 @@ describe('RemoteBankAccountService', () => {
       const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new RemoteBankAccountService(props);
 
       // Act
 
       try {
-        await service.changeMainUserRemoteBankAccount({ ...userSessionData, accountUuid: uuid });
+        await service.changeMainUserRemoteBankAccount({ accountUuid: uuid });
       } catch (error) {
         resultedError = error;
       }
@@ -546,12 +665,17 @@ describe('RemoteBankAccountService', () => {
       const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new RemoteBankAccountService(props);
 
       // Act
 
       try {
-        await service.changeMainUserRemoteBankAccount({ ...userSessionData, accountUuid: uuid });
+        await service.changeMainUserRemoteBankAccount({ accountUuid: uuid });
       } catch (error) {
         resultedError = error;
       }
@@ -581,10 +705,15 @@ describe('RemoteBankAccountService', () => {
         data: '',
       } as AxiosResponse<any>);
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new RemoteBankAccountService(props);
 
       // Act
-      await service.getRemoteBankAccountByUuid({ ...userSessionData, accountUuid: uuid });
+      await service.getRemoteBankAccountByUuid({ accountUuid: uuid });
 
       // Assert
       expect(axiosClient.get).toBeCalledTimes(1);
@@ -629,11 +758,15 @@ describe('RemoteBankAccountService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockResolvedValueOnce({ data: responseData });
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new RemoteBankAccountService(props);
 
       // Act
       const result = await service.getRemoteBankAccountByUuid({
-        ...userSessionData,
         accountUuid: uuid,
       });
 
@@ -642,6 +775,28 @@ describe('RemoteBankAccountService', () => {
     });
 
     // Sad
+    it('Should throw error if User Session Data is not set', async () => {
+      // Arrange
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+
+      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      let resultedError;
+
+      const service = new RemoteBankAccountService(props);
+
+      // Act
+
+      try {
+        await service.getRemoteBankAccountByUuid({ accountUuid: uuid });
+      } catch (error) {
+        resultedError = error;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
+
     it('should throw expected Axios error', async () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -650,12 +805,17 @@ describe('RemoteBankAccountService', () => {
       const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new RemoteBankAccountService(props);
 
       // Act
 
       try {
-        await service.getRemoteBankAccountByUuid({ ...userSessionData, accountUuid: uuid });
+        await service.getRemoteBankAccountByUuid({ accountUuid: uuid });
       } catch (error) {
         resultedError = error;
       }
@@ -673,12 +833,17 @@ describe('RemoteBankAccountService', () => {
       const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new RemoteBankAccountService(props);
 
       // Act
 
       try {
-        await service.getRemoteBankAccountByUuid({ ...userSessionData, accountUuid: uuid });
+        await service.getRemoteBankAccountByUuid({ accountUuid: uuid });
       } catch (error) {
         resultedError = error;
       }

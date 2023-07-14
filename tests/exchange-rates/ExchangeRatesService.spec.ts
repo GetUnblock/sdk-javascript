@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
-import { SdkSettings } from '../../src/definitions';
+import { SdkSettings } from '../../src/SdkSettings';
 import { Currency } from '../../src/enums/Currency';
 import { ExchangeRatesService } from '../../src/exchange-rates/ExchangeRatesService';
 import {

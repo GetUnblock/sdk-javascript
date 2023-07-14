@@ -1,10 +1,10 @@
 import { AxiosResponse } from 'axios';
 import { BaseService } from '../BaseService';
 import { ErrorHandler } from '../ErrorHandler';
+import { UserSessionDataNotSetError } from '../errors';
 import {
   CreateUnblockUserBankAccountRequest,
   CreateUnblockUserBankAccountResponse,
-  GetAllunblockUserBankAccountsRequest,
   GetAllunblockUserBankAccountsResponse,
   GetUnblockBankAccountByIdRequest,
   GetUnblockBankAccountByIdResponse,
@@ -19,9 +19,7 @@ export interface IUnblockBankAccountService {
     dto: CreateUnblockUserBankAccountRequest,
   ): Promise<CreateUnblockUserBankAccountResponse>;
 
-  getAllUnblockUserBankAccounts(
-    dto: GetAllunblockUserBankAccountsRequest,
-  ): Promise<GetAllunblockUserBankAccountsResponse>;
+  getAllUnblockUserBankAccounts(): Promise<GetAllunblockUserBankAccountsResponse>;
 
   simulateOnRamp(dto: SimulateOnRampRequest): Promise<SimulateOnRampResponse>;
 
@@ -36,10 +34,6 @@ export class UnblockBankAccountService extends BaseService implements IUnblockBa
    *
    * @param {CreateUnblockUserBankAccountRequest} dto - The request data transfer object. It should contain the user UUID, the session ID, and the currency details for the new account.
    *
-   * `userUuid`: UUID of the user for whom the bank account is being created.
-   *
-   * `unblockSessionId`: Session ID.
-   *
    * `currency`: ISO 4217 currency code.
    *
    * @returns {Promise<CreateUnblockUserBankAccountResponse>} A Promise that resolves to a response object containing the details of the created UnblockUser bank account.
@@ -50,17 +44,21 @@ export class UnblockBankAccountService extends BaseService implements IUnblockBa
     dto: CreateUnblockUserBankAccountRequest,
   ): Promise<CreateUnblockUserBankAccountResponse> {
     const { apiKey } = this.props;
-    const path = `/user/${dto.userUuid}/bank-account/unblock`;
-    const body = { currency: dto.currency };
-    const config = {
-      headers: {
-        'content-type': 'application/json',
-        accept: 'application/json',
-        Authorization: apiKey,
-        'unblock-session-id': dto.unblockSessionId,
-      },
-    };
     try {
+      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+        throw new UserSessionDataNotSetError();
+      }
+
+      const path = `/user/${this.props.userSessionData.userUuid}/bank-account/unblock`;
+      const body = { currency: dto.currency };
+      const config = {
+        headers: {
+          'content-type': 'application/json',
+          accept: 'application/json',
+          Authorization: apiKey,
+          'unblock-session-id': this.props.userSessionData.unblockSessionId,
+        },
+      };
       const response: AxiosResponse<UnblockUserBankAccount> = await this.axiosClient.post(
         path,
         body,
@@ -80,30 +78,26 @@ export class UnblockBankAccountService extends BaseService implements IUnblockBa
   /**
    * Fetches all Unblock User Bank Accounts from the API endpoint.
    *
-   * @param {GetAllunblockUserBankAccountsRequest} dto - The data transfer object (DTO) containing user information.
-   *
-   * `userUuid`: UUID of the user for whom the bank account is being created.
-   *
-   * `unblockSessionId`: Session ID.
-   *
    * @returns {Promise<GetAllunblockUserBankAccountsResponse[]>} - A promise that resolves to an array of user bank accounts.
    *
    * @throws Will throw an error if the Axios request fails, either due to an API error or an unexpected error.
    *
    */
-  async getAllUnblockUserBankAccounts(
-    dto: GetAllunblockUserBankAccountsRequest,
-  ): Promise<GetAllunblockUserBankAccountsResponse> {
+  async getAllUnblockUserBankAccounts(): Promise<GetAllunblockUserBankAccountsResponse> {
     const { apiKey } = this.props;
-    const path = `/user/${dto.userUuid}/bank-account/unblock`;
-    const config = {
-      headers: {
-        accept: 'application/json',
-        Authorization: apiKey,
-        'unblock-session-id': dto.unblockSessionId,
-      },
-    };
     try {
+      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+        throw new UserSessionDataNotSetError();
+      }
+
+      const path = `/user/${this.props.userSessionData.userUuid}/bank-account/unblock`;
+      const config = {
+        headers: {
+          accept: 'application/json',
+          Authorization: apiKey,
+          'unblock-session-id': this.props.userSessionData.unblockSessionId,
+        },
+      };
       const response: AxiosResponse<UnblockUserBankAccount[]> = await this.axiosClient.get(
         path,
         config,
@@ -124,17 +118,21 @@ export class UnblockBankAccountService extends BaseService implements IUnblockBa
 
   async simulateOnRamp(dto: SimulateOnRampRequest): Promise<SimulateOnRampResponse> {
     const { apiKey } = this.props;
-    const path = `/user/${dto.userUuid}/bank-account/unblock/test`;
-    const body = { currency: dto.currency, value: dto.value };
-    const config = {
-      headers: {
-        'content-type': 'application/json',
-        accept: 'application/json',
-        Authorization: apiKey,
-        'unblock-session-id': dto.unblockSessionId,
-      },
-    };
     try {
+      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+        throw new UserSessionDataNotSetError();
+      }
+
+      const path = `/user/${this.props.userSessionData.userUuid}/bank-account/unblock/test`;
+      const body = { currency: dto.currency, value: dto.value };
+      const config = {
+        headers: {
+          'content-type': 'application/json',
+          accept: 'application/json',
+          Authorization: apiKey,
+          'unblock-session-id': this.props.userSessionData.unblockSessionId,
+        },
+      };
       const response: AxiosResponse<{ message: string }> = await this.axiosClient.post(
         path,
         body,
@@ -150,15 +148,19 @@ export class UnblockBankAccountService extends BaseService implements IUnblockBa
     dto: GetUnblockBankAccountByIdRequest,
   ): Promise<GetUnblockBankAccountByIdResponse> {
     const { apiKey } = this.props;
-    const path = `/user/${dto.userUuid}/bank-account/unblock/${dto.accountUuid}`;
-    const config = {
-      headers: {
-        accept: 'application/json',
-        Authorization: apiKey,
-        'unblock-session-id': dto.unblockSessionId,
-      },
-    };
     try {
+      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+        throw new UserSessionDataNotSetError();
+      }
+
+      const path = `/user/${this.props.userSessionData.userUuid}/bank-account/unblock/${dto.accountUuid}`;
+      const config = {
+        headers: {
+          accept: 'application/json',
+          Authorization: apiKey,
+          'unblock-session-id': this.props.userSessionData.unblockSessionId,
+        },
+      };
       const response: AxiosResponse<UnblockUserBankAccountFull> = await this.axiosClient.get(
         path,
         config,

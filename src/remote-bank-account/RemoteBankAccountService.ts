@@ -1,11 +1,11 @@
 import { AxiosResponse } from 'axios';
 import { BaseService } from '../BaseService';
 import { ErrorHandler } from '../ErrorHandler';
+import { InvalidAccountDetailsError, UserSessionDataNotSetError } from '../errors';
 import {
   ChangeMainUserRemoteBankAccountRequest,
   CreateRemoteUserBankAccountRequest,
   CreateRemoteUserBankAccountResponse,
-  GetAllRemoteBankAccountsRequest,
   GetAllRemoteBankAccountsResponse,
   GetRemoteBankAccountByUuidRequest,
   GetRemoteBankAccountByUuidResponse,
@@ -21,9 +21,7 @@ export interface IRemoteBankAccountService {
     dto: CreateRemoteUserBankAccountRequest,
   ): Promise<CreateRemoteUserBankAccountResponse>;
 
-  getAllRemoteBankAccounts(
-    dto: GetAllRemoteBankAccountsRequest,
-  ): Promise<GetAllRemoteBankAccountsResponse[]>;
+  getAllRemoteBankAccounts(): Promise<GetAllRemoteBankAccountsResponse[]>;
 
   changeMainUserRemoteBankAccount(dto: ChangeMainUserRemoteBankAccountRequest): Promise<void>;
 
@@ -47,41 +45,45 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
     const { apiKey } = this.props;
     let accountDetails: UnblockGbpAccountDetails | UnblockEurAccountDetails;
 
-    if ('iban' in dto.accountDetails) {
-      accountDetails = {
-        currency: dto.accountDetails.currency,
-        iban: dto.accountDetails.iban,
-      };
-    } else if ('accountNumber' in dto.accountDetails && 'sortCode' in dto.accountDetails) {
-      accountDetails = {
-        currency: dto.accountDetails.currency,
-        account_number: dto.accountDetails.accountNumber,
-        sort_code: dto.accountDetails.sortCode,
-      };
-    } else {
-      throw new Error('Invalid account details');
-    }
-
-    const path = `/user/${dto.userUuid}/bank-account/remote`;
-
-    const body: UnblockCreateRemoteUserBankAccount = {
-      account_name: dto.accountName,
-      account_country: dto.accountCountry,
-      beneficiary_country: dto.beneficiaryCountry,
-      main_beneficiary: dto.mainBeneficiary,
-      account_details: accountDetails,
-    };
-
-    const config = {
-      headers: {
-        'content-type': 'application/json',
-        accept: 'application/json',
-        Authorization: apiKey,
-        'unblock-session-id': dto.unblockSessionId,
-      },
-    };
-
     try {
+      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+        throw new UserSessionDataNotSetError();
+      }
+
+      if ('iban' in dto.accountDetails) {
+        accountDetails = {
+          currency: dto.accountDetails.currency,
+          iban: dto.accountDetails.iban,
+        };
+      } else if ('accountNumber' in dto.accountDetails && 'sortCode' in dto.accountDetails) {
+        accountDetails = {
+          currency: dto.accountDetails.currency,
+          account_number: dto.accountDetails.accountNumber,
+          sort_code: dto.accountDetails.sortCode,
+        };
+      } else {
+        throw new InvalidAccountDetailsError();
+      }
+
+      const path = `/user/${this.props.userSessionData.userUuid}/bank-account/remote`;
+
+      const body: UnblockCreateRemoteUserBankAccount = {
+        account_name: dto.accountName,
+        account_country: dto.accountCountry,
+        beneficiary_country: dto.beneficiaryCountry,
+        main_beneficiary: dto.mainBeneficiary,
+        account_details: accountDetails,
+      };
+
+      const config = {
+        headers: {
+          'content-type': 'application/json',
+          accept: 'application/json',
+          Authorization: apiKey,
+          'unblock-session-id': this.props.userSessionData.unblockSessionId,
+        },
+      };
+
       const response: AxiosResponse<UnblockRemoteUserBankAccount> = await this.axiosClient.post(
         path,
         body,
@@ -105,20 +107,22 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
    *
    * @throws Will throw an error if the Axios request fails, either due to an API error or an unexpected error.
    */
-  async getAllRemoteBankAccounts(
-    dto: GetAllRemoteBankAccountsRequest,
-  ): Promise<GetAllRemoteBankAccountsResponse[]> {
+  async getAllRemoteBankAccounts(): Promise<GetAllRemoteBankAccountsResponse[]> {
     const { apiKey } = this.props;
-    const path = `/user/${dto.userUuid}/bank-account/remote`;
-    const config = {
-      headers: {
-        accept: 'application/json',
-        Authorization: apiKey,
-        'unblock-session-id': dto.unblockSessionId,
-      },
-    };
-
     try {
+      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+        throw new UserSessionDataNotSetError();
+      }
+
+      const path = `/user/${this.props.userSessionData.userUuid}/bank-account/remote`;
+      const config = {
+        headers: {
+          accept: 'application/json',
+          Authorization: apiKey,
+          'unblock-session-id': this.props.userSessionData.unblockSessionId,
+        },
+      };
+
       const response: AxiosResponse<UnblockRemoteUserBankAccount[]> = await this.axiosClient.get(
         path,
         config,
@@ -143,22 +147,26 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
     dto: ChangeMainUserRemoteBankAccountRequest,
   ): Promise<void> {
     const { apiKey } = this.props;
-    const path = `/user/${dto.userUuid}/bank-account/remote`;
-
-    const body: { account_uuid: string } = {
-      account_uuid: dto.accountUuid,
-    };
-
-    const config = {
-      headers: {
-        'content-type': 'application/json',
-        accept: 'application/json',
-        Authorization: apiKey,
-        'unblock-session-id': dto.unblockSessionId,
-      },
-    };
-
     try {
+      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+        throw new UserSessionDataNotSetError();
+      }
+
+      const path = `/user/${this.props.userSessionData.userUuid}/bank-account/remote`;
+
+      const body: { account_uuid: string } = {
+        account_uuid: dto.accountUuid,
+      };
+
+      const config = {
+        headers: {
+          'content-type': 'application/json',
+          accept: 'application/json',
+          Authorization: apiKey,
+          'unblock-session-id': this.props.userSessionData.unblockSessionId,
+        },
+      };
+
       await this.axiosClient.patch(path, body, config);
       return;
     } catch (error) {
@@ -178,16 +186,20 @@ export class RemoteBankAccountService extends BaseService implements IRemoteBank
     dto: GetRemoteBankAccountByUuidRequest,
   ): Promise<GetRemoteBankAccountByUuidResponse> {
     const { apiKey } = this.props;
-    const path = `/user/${dto.userUuid}/bank-account/remote/${dto.accountUuid}`;
-    const config = {
-      headers: {
-        accept: 'application/json',
-        Authorization: apiKey,
-        'unblock-session-id': dto.unblockSessionId,
-      },
-    };
-
     try {
+      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+        throw new UserSessionDataNotSetError();
+      }
+
+      const path = `/user/${this.props.userSessionData.userUuid}/bank-account/remote/${dto.accountUuid}`;
+      const config = {
+        headers: {
+          accept: 'application/json',
+          Authorization: apiKey,
+          'unblock-session-id': this.props.userSessionData.unblockSessionId,
+        },
+      };
+
       const response: AxiosResponse<UnblockRemoteUserBankAccount> = await this.axiosClient.get(
         path,
         config,

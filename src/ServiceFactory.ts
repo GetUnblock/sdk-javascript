@@ -1,6 +1,6 @@
+import { SdkSettings } from './SdkSettings';
 import { AuthService, IAuthService } from './auth/AuthService';
 import { CompanyService, ICompanyService } from './company/CompanyService';
-import { SdkSettings } from './definitions';
 import { ExchangeRatesService, IExchangeRatesService } from './exchange-rates/ExchangeRatesService';
 import { IKycService, KycService } from './kyc/KycService';
 import { IOfframpService, OfframpService } from './offramp/OfframpService';

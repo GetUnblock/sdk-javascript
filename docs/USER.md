@@ -9,8 +9,8 @@ category: 64aebfcf6c645e002384ccdc
 ```typescript
 interface IUserService {
   createUser(params: CreateUserRequest): Promise<CreateUserResponse>;
-  getUserStatus(params: GetUserStatusRequest): Promise<GetUserStatusResponse>;
-  getUserRampTransactions(params: GetUserRampTransactionsRequest): Promise<GetUserRampTransactionsResponse>;
+  getUserStatus(): Promise<GetUserStatusResponse>;
+  getUserRampTransactions(): Promise<GetUserRampTransactionsResponse>;
 }
 ```
 
@@ -58,20 +58,6 @@ enum UserStatus {
 | email | string |
 | targetAddress | string |
 | country | [Country](COMMON_TYPES.md#Country) |
-
-#### <span id="GetUserStatusRequest"></span>GetUserStatusRequest
-
-| Field Name | Type |
-| ---------- | ---- |
-| unblockSessionID | string |
-| userUuid | string |
-
-#### <span id="GetUserRampTransactionsRequest"></span>GetUserRampTransactionsRequest
-
-| Field Name | Type |
-| ---------- | ---- |
-| unblockSessionID | string |
-| userUuid | string |
 
 #### <span id="CreateUserResponse"></span>CreateUserResponse
 
@@ -157,7 +143,7 @@ const { Country } = require("@getunblock/sdk");
 
 #### getUserStatus
 
-<div><pre>getUserStatus(params: <a href="#GetUserStatusRequest">GetUserStatusRequest</a>): Promise&#60;<a href="#GetUserStatusResponse">GetUserStatusResponse</a>&#62;</pre></div>
+<div><pre>getUserStatus(): Promise&#60;<a href="#GetUserStatusResponse">GetUserStatusResponse</a>&#62;</pre></div>
 
 ##### Overview
 
@@ -178,18 +164,14 @@ import getunblockSDK, { Country } from "@getunblock/sdk";
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
   
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  const loginResult = await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
   // SDK API call example
-  const result = await sdk.user.getUserStatus({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
-  });
+  const result = await sdk.user.getUserStatus();
 })();
 ```
 
@@ -207,24 +189,20 @@ const { Country } = require("@getunblock/sdk");
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
   
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  const loginResult = await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
   // SDK API call example
-  const result = await sdk.user.getUserStatus({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
-  });
+  const result = await sdk.user.getUserStatus();
 })();
 ```
 
 #### getUserRampTransactions
 
-<div><pre>getUserRampTransactions(params: <a href="#GetUserRampTransactionsRequest">GetUserRampTransactionsRequest</a>): Promise&#60;<a href="#GetUserRampTransactionsResponse">GetUserRampTransactionsResponse</a>&#62;</pre></div>
+<div><pre>getUserRampTransactions(): Promise&#60;<a href="#GetUserRampTransactionsResponse">GetUserRampTransactionsResponse</a>&#62;</pre></div>
 
 ##### Overview
 
@@ -245,18 +223,14 @@ import getunblockSDK, { Country } from "@getunblock/sdk";
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
   
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  const loginResult = await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
   // SDK API call example
-  const result = await sdk.user.getUserRampTransactions({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
-  });
+  const result = await sdk.user.getUserRampTransactions();
 })();
 ```
 
@@ -274,18 +248,14 @@ const { Country } = require("@getunblock/sdk");
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
   
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  const loginResult = await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
   // SDK API call example
-  const result = await sdk.user.getUserRampTransactions({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
-  });
+  const result = await sdk.user.getUserRampTransactions();
 })();
 ```
 
