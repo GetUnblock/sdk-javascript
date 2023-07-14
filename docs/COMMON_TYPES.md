@@ -6,6 +6,13 @@ category: 64aebfcf6c645e002384ccdc
 
 ## Common Structures
 
+### <span id="UserSessionData"></span>UserSessionData
+
+| Field Name | Type |
+| ---------- | ---- |
+| userUuid | string |
+| unblockSessionId | string |
+
 ## Union Types
 
 ## Literal Types
