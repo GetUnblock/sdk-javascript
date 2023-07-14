@@ -14,6 +14,8 @@ interface IKycService {
   getUploadedKycDocumentsForUser(params: GetUploadedKycDocumentsForUserRequest): Promise<GetUploadedKycDocumentsForUserResponse[]>;
   startKycVerification(params: StartKycVerificationRequest): Promise<StartKycVerificationResponse>;
   getRequiredKycInformation(params: GetRequiredKycInformationRequest): Promise<GetRequiredKycInformationResponse[]>;
+  onboarding(dto: OnboardingRequest): Promise<OnboardingResponse>;
+  initSumsubSdk(dto: InitSumsubSdkRequest): Promise<InitSumsubSdkResponse>;
 }
 ```
 
@@ -38,6 +40,28 @@ type DocumentType = 'SELFIE' | 'PASSPORT' | 'DRIVERS' | 'ID_CARD' | 'RESIDENCE_P
 ```typescript
 type DocumentSubType = 'FRONT_SIDE' | 'BACK_SIDE'
 ```
+
+#### <span id="ApplicantData"></span>ApplicantData
+
+| Field Name | Type |
+| ---------- | ---- |
+| address | string |
+| postcode | string |
+| city | string |
+| country | [Country](COMMON_TYPES.md#Country) |
+| dateOfBirth | Date |
+| sourceOfFunds | [SourceOfFundsType](#SourceOfFundsType) |
+| sourceOfFundsDescription | string |
+
+#### <span id="UploadDocumentData"></span>UploadDocumentData
+
+| Field Name | Type |
+| ---------- | ---- |
+| content | string |
+| filename | string |
+| documentType | [DocumentType](#DocumentType) |
+| documentSubType? | [DocumentSubType](#DocumentSubType) |
+| country | [Country](COMMON_TYPES.md#Country) |
 
 #### <span id="CreateKYCApplicantRequest"></span>CreateKYCApplicantRequest
 
@@ -93,6 +117,21 @@ type DocumentSubType = 'FRONT_SIDE' | 'BACK_SIDE'
 | userUuid | string |
 | unblockSessionId | string |
 
+#### <span id="OnboardingRequest"></span>OnboardingRequest
+
+| Field Name | Type |
+| ---------- | ---- |
+| sessionData | [UserSessionData](COMMON_TYPES.md#UserSessionData) |
+| applicantData | [ApplicantData](#ApplicantData) |
+| documentData | [UploadDocumentData](#UploadDocumentData) |
+
+#### <span id="InitSumsubSdkRequest"></span>InitSumsubSdkRequest
+
+| Field Name | Type |
+| ---------- | ---- |
+| sessionData | [UserSessionData](COMMON_TYPES.md#UserSessionData) |
+| applicantData | [ApplicantData](#ApplicantData) |
+
 #### <span id="CreateKYCApplicantResponse"></span>CreateKYCApplicantResponse
 
 | Field Name | Type |
@@ -139,6 +178,21 @@ type DocumentSubType = 'FRONT_SIDE' | 'BACK_SIDE'
 | ---------- | ---- |
 | documentClass | string |
 | documentTypes | [DocumentType](#DocumentType)[] |
+
+#### <span id="OnboardingResponse"></span>OnboardingResponse
+
+| Field Name | Type |
+| ---------- | ---- |
+| applicantCreated | boolean |
+| uploadUuid | string |
+| verificationStarted | boolean |
+
+#### <span id="InitSumsubSdkResponse"></span>InitSumsubSdkResponse
+
+| Field Name | Type |
+| ---------- | ---- |
+| applicantCreated | boolean |
+| token | string |
 
 ### Service Methods
 
@@ -565,6 +619,198 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
   const result = await sdk.kyc.getRequiredKycInformation({
     unblockSessionId: loginResult.unblockSessionId,
     userUuid: loginResult.userUuid,
+  });
+})();
+```
+
+#### onboarding
+
+<div><pre>onboarding(params: <a href="#OnboardingRequest">OnboardingRequest</a>): Promise&#60;<a href="#OnboardingResponse">OnboardingResponse</a>&#62;</pre></div>
+
+##### Overview
+
+This is a KYC onboarding flow. It will create a new KYC applicant, upload documents and start kyc approval porcess in one call.
+
+##### Usage
+
+###### Typescript
+
+```typescript
+import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
+
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  const result = await sdk.kyc.onboarding({
+    sessionData: {
+      unblockSessionId: loginResult.unblockSessionId,
+      userUuid: loginResult.userUuid,
+    },
+    applicantData: {
+      address: "[user address]",
+      postcode: "[user postcode]",
+      city: "[user city]",
+      country: Country.UnitedStates,
+      dateOfBirth: new Date("[user birhday]"),
+      sourceOfFunds: "['SALARY' | 'BUSINESS_INCOME' | 'PENSION' | 'OTHER']",
+      sourceOfFundsDescription: "[Funds Description]",
+    },
+    documentData: {
+      content: "[base64 image data]",
+      filename: "[filename].[file_extension]",
+      documentType: "['SELFIE' | 'PASSPORT' | 'DRIVERS' | 'ID_CARD' | 'RESIDENCE_PERMIT']",
+      documentSubType?: "['FRONT_SIDE' | 'BACK_SIDE']",
+      country: Country.Portugal,
+    },
+  });
+})();
+```
+
+###### Javascript
+
+```javascript
+const getunblockSDK = require("@getunblock/sdk").default;
+const { AuthenticationMethod } = require("@getunblock/sdk");
+
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  const result = await sdk.kyc.onboarding({
+    sessionData: {
+      unblockSessionId: loginResult.unblockSessionId,
+      userUuid: loginResult.userUuid,
+    },
+    applicantData: {
+      address: "[user address]",
+      postcode: "[user postcode]",
+      city: "[user city]",
+      country: Country.UnitedStates,
+      dateOfBirth: new Date("[user birhday]"),
+      sourceOfFunds: "['SALARY' | 'BUSINESS_INCOME' | 'PENSION' | 'OTHER']",
+      sourceOfFundsDescription: "[Funds Description]",
+    },
+    documentData: {
+      content: "[base64 image data]",
+      filename: "[filename].[file_extension]",
+      documentType: "['SELFIE' | 'PASSPORT' | 'DRIVERS' | 'ID_CARD' | 'RESIDENCE_PERMIT']",
+      documentSubType?: "['FRONT_SIDE' | 'BACK_SIDE']",
+      country: Country.Portugal,
+    },
+  });
+})();
+```
+
+#### initSumsubSdk
+
+<div><pre>initSumsubSdk(params: <a href="#InitSumsubSdkRequest">InitSumsubSdkRequest</a>): Promise&#60;<a href="#InitSumsubSdkResponse">InitSumsubSdkResponse</a>&#62;</pre></div>
+
+##### Overview
+
+This is a generate SumSub SDK token flow. It will create a new KYC applicant and get a Sumsub SDK token porcess in one call.
+
+##### Usage
+
+###### Typescript
+
+```typescript
+import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
+
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  const result = await sdk.kyc.initSumsubSdk({
+    sessionData: {
+      unblockSessionId: loginResult.unblockSessionId,
+      userUuid: loginResult.userUuid,
+    },
+    applicantData: {
+      address: "[user address]",
+      postcode: "[user postcode]",
+      city: "[user city]",
+      country: Country.UnitedStates,
+      dateOfBirth: new Date("[user birhday]"),
+      sourceOfFunds: "['SALARY' | 'BUSINESS_INCOME' | 'PENSION' | 'OTHER']",
+      sourceOfFundsDescription: "[Funds Description]",
+    },
+  });
+})();
+```
+
+###### Javascript
+
+```javascript
+const getunblockSDK = require("@getunblock/sdk").default;
+const { AuthenticationMethod } = require("@getunblock/sdk");
+
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey:
+      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
+  });
+  
+  // SDK API call example
+  const loginResult = await sdk.auth.login({
+    authenticationMethod: AuthenticationMethod.SIWE,
+    message: "[Generated SIWE message]*",
+    signature: "[Generated SIWE signature]*",
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+  
+  const result = await sdk.kyc.onboarding({
+    sessionData: {
+      unblockSessionId: loginResult.unblockSessionId,
+      userUuid: loginResult.userUuid,
+    },
+    applicantData: {
+      address: "[user address]",
+      postcode: "[user postcode]",
+      city: "[user city]",
+      country: Country.UnitedStates,
+      dateOfBirth: new Date("[user birhday]"),
+      sourceOfFunds: "['SALARY' | 'BUSINESS_INCOME' | 'PENSION' | 'OTHER']",
+      sourceOfFundsDescription: "[Funds Description]",
+    },
   });
 })();
 ```
