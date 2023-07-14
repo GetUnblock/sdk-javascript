@@ -275,7 +275,7 @@ Will generate Siwe login message.
 
 ##### Overview
 
-Will generate Siwe login message and signature, then use it to login with SIWE. Returns user uuid and unblock session id.
+Will generate a Siwe login message that is required for login with SIWE.
 
 ##### Usage
 
@@ -390,7 +390,7 @@ const getunblockSDK = require("@getunblock/sdk").default;
 
 ##### Overview
 
-Will generate Siwe login message and signature, then use it to login with SIWE. Returns user uuid and unblock session id.
+Will generate a Siwe login message and signature then it logs in with SIWE. Returns user uuid and unblock session id.
 
 ##### Usage
 
