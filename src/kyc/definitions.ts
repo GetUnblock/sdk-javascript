@@ -1,4 +1,3 @@
-import { UserSessionData } from '../definitions';
 import Country from '../enums/Country';
 
 export type SourceOfFundsType = 'SALARY' | 'BUSINESS_INCOME' | 'PENSION' | 'OTHER';
@@ -14,15 +13,12 @@ export type ApplicantData = {
 };
 
 /** Request dto */
-export type CreateKYCApplicantRequest = UserSessionData & ApplicantData;
+export type CreateKYCApplicantRequest = ApplicantData;
 
 /** Response dto */
 export type CreateKYCApplicantResponse = {
   created: true;
 };
-
-/** Request dto */
-export type GetAccessTokenForUserApplicantRequest = UserSessionData;
 
 /** Response dto */
 export type GetAccessTokenForUserApplicantResponse = {
@@ -45,15 +41,12 @@ export type UploadDocumentData = {
 };
 
 /** Request dto */
-export type UploadKycDocumentRequest = UserSessionData & UploadDocumentData;
+export type UploadKycDocumentRequest = UploadDocumentData;
 
 /** Response dto */
 export type UploadKycDocumentResponse = {
   uploadUuid: string;
 };
-
-/** Request dto */
-export type GetUploadedKycDocumentsForUserRequest = UserSessionData;
 
 /** Response dto */
 export type GetUploadedKycDocumentsForUserResponse = {
@@ -70,16 +63,10 @@ export type GetUploadedKycDocumentsForUserResponse = {
   checkUuid: string;
 };
 
-/** Request dto */
-export type StartKycVerificationRequest = UserSessionData;
-
 /** Response dto */
 export type StartKycVerificationResponse = {
   started: true;
 };
-
-/** Request dto */
-export type GetRequiredKycInformationRequest = UserSessionData;
 
 /** Response dto */
 export type GetRequiredKycInformationResponse = {
@@ -89,7 +76,6 @@ export type GetRequiredKycInformationResponse = {
 
 /** Request dto */
 export type OnboardingRequest = {
-  sessionData: UserSessionData;
   applicantData: ApplicantData;
   documentData: UploadDocumentData;
 };
@@ -103,7 +89,6 @@ export type OnboardingResponse = {
 
 /** Request dto */
 export type InitSumsubSdkRequest = {
-  sessionData: UserSessionData;
   applicantData: ApplicantData;
 };
 

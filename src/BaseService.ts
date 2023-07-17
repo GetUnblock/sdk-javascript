@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { SdkSettings } from './definitions';
+import { SdkSettings } from './SdkSettings';
 
 export class BaseService {
   protected readonly axiosClient: AxiosInstance;

@@ -1,48 +1,49 @@
 import { AxiosResponse } from 'axios';
 import { SiweMessage, generateNonce } from 'siwe';
 import { BaseService } from '../BaseService';
-import { ErrorHandler, SiweSigningError } from '../ErrorHandler';
-import { AuthenticationMethod } from '../enums/AuthenticationMethod';
+import { ErrorHandler } from '../ErrorHandler';
+import { UserSessionData } from '../definitions';
+import { SiweSigningError, UserUuidNotSetError } from '../errors';
 import {
-  EmailLoginRequest,
-  GenerateSiweLoginMessageRequest,
-  GenerateSiweLoginMessageResponse,
-  LoginRequest,
-  LoginResponse,
-  SessionRequest,
-  SessionResponse,
+  AuthenticateWithEmailRequest,
+  AuthenticateWithEmailResponse,
+  AuthenticateWithSiweRequest,
+  CreateSiweMessageRequest,
+  GenerateSiweSiginedMessageResponse,
+  GenerateSiweSignedMessageRequest,
+  SetUnblockSessionByEmailCodeRequest,
   SiweLoginRequest,
-  SiweLoginResponse,
-  WalletSiweLoginRequest,
-  WalletSiweLoginResponse,
 } from './definitions';
 
 export interface IAuthService {
-  generateSiweLoginMessage(
-    params: GenerateSiweLoginMessageRequest,
-  ): Promise<GenerateSiweLoginMessageResponse>;
-  walletSiweLogin(params: WalletSiweLoginRequest): Promise<WalletSiweLoginResponse>;
-  createSiweMessage(address: string, statement: string, domain: string, chainId: number): string;
-  login(data: LoginRequest): Promise<LoginResponse>;
-  emailSession(data: SessionRequest): Promise<SessionResponse>;
+  generateSiweSignedMessage(
+    params: GenerateSiweSignedMessageRequest,
+  ): Promise<GenerateSiweSiginedMessageResponse>;
+  siweLogin(params: SiweLoginRequest): Promise<void>;
+  createSiweMessage(params: CreateSiweMessageRequest): string;
+  authenticateWithSiwe(params: AuthenticateWithSiweRequest): Promise<void>;
+  authenticateWithEmail(
+    params: AuthenticateWithEmailRequest,
+  ): Promise<AuthenticateWithEmailResponse>;
+  setUnblockSessionByEmailCode(params: SetUnblockSessionByEmailCodeRequest): Promise<void>;
 }
 
 export class AuthService extends BaseService implements IAuthService {
-  async generateSiweLoginMessage(
-    params: GenerateSiweLoginMessageRequest,
-  ): Promise<GenerateSiweLoginMessageResponse> {
+  async generateSiweSignedMessage(
+    params: GenerateSiweSignedMessageRequest,
+  ): Promise<GenerateSiweSiginedMessageResponse> {
     try {
       const { providerSigner, signingUrl, chainId } = params;
 
       const walletAddress = await providerSigner.getAddress();
-      const message = this.createSiweMessage(
+      const message = this.createSiweMessage({
         walletAddress,
-        'Sign in with Ethereum',
+        statement: 'Sign in with Ethereum',
         signingUrl,
-        Number(chainId),
-      );
+        chainId: Number(chainId),
+      });
 
-      // request signMessage on Metamask
+      // request signMessage on the given providerSigner
       const signature = await providerSigner.signMessage(message);
 
       return {
@@ -54,61 +55,49 @@ export class AuthService extends BaseService implements IAuthService {
     }
   }
 
-  async walletSiweLogin(params: WalletSiweLoginRequest): Promise<WalletSiweLoginResponse> {
-    const signedMessage = await this.generateSiweLoginMessage(params);
-    const loginResult = await this.authenticateSiwe({
+  async siweLogin(params: SiweLoginRequest): Promise<void> {
+    const signedMessage = await this.generateSiweSignedMessage(params);
+    await this.authenticateWithSiwe({
       ...signedMessage,
-      authenticationMethod: AuthenticationMethod.SIWE,
     });
-
-    return {
-      userUuid: loginResult.userUuid,
-      unblockSessionId: (loginResult as SiweLoginResponse).unblockSessionId,
-    };
   }
 
-  login(credentials: LoginRequest): Promise<LoginResponse> {
-    switch (credentials.authenticationMethod) {
-      case AuthenticationMethod.SIWE:
-        return this.authenticateSiwe(credentials);
-      case AuthenticationMethod.EMAIL:
-        return this.authenticateEmail(credentials);
-    }
-  }
-
-  async emailSession(credentials: SessionRequest): Promise<SessionResponse> {
-    const { userUuid, code } = credentials;
-    const { apiKey } = this.props;
-
-    const path = '/auth/login/session';
-    const params = {
-      user_uuid: userUuid,
-      code: code,
-    };
-
-    const config = {
-      params: params,
-      headers: {
-        accept: 'application/json',
-        Authorization: apiKey,
-      },
-    };
+  async setUnblockSessionByEmailCode(
+    requestParams: SetUnblockSessionByEmailCodeRequest,
+  ): Promise<void> {
     try {
+      if (!this.props.userSessionData?.userUuid) {
+        throw new UserUuidNotSetError('Have you initiated the email authentication first?');
+      }
+      const { emailCode: code } = requestParams;
+      const { apiKey } = this.props;
+
+      const path = '/auth/login/session';
+      const params = {
+        user_uuid: this.props.userSessionData.userUuid,
+        code: code,
+      };
+
+      const config = {
+        params,
+        headers: {
+          accept: 'application/json',
+          Authorization: apiKey,
+        },
+      };
       const response: AxiosResponse<{ session_id: string }> = await this.axiosClient.get(
         path,
         config,
       );
 
-      return {
-        sessionId: response.data.session_id,
-      };
+      this.props.userSessionData.unblockSessionId = response.data.session_id;
     } catch (error) {
       ErrorHandler.handle(error);
     }
   }
 
-  private async authenticateSiwe(credentials: SiweLoginRequest): Promise<LoginResponse> {
-    const { message, signature } = credentials;
+  async authenticateWithSiwe(params: AuthenticateWithSiweRequest): Promise<void> {
+    const { message, signature } = params;
     const { apiKey } = this.props;
 
     const path = '/auth/login';
@@ -131,18 +120,19 @@ export class AuthService extends BaseService implements IAuthService {
         unblock_session_id: string;
       }> = await this.axiosClient.post(path, body, config);
 
-      return {
-        authenticationMethod: AuthenticationMethod.SIWE,
-        userUuid: response.data.user_uuid,
+      this.props.setUserSessionData({
         unblockSessionId: response.data.unblock_session_id,
-      };
+        userUuid: response.data.user_uuid,
+      });
     } catch (error) {
       ErrorHandler.handle(error);
     }
   }
 
-  private async authenticateEmail(credentials: EmailLoginRequest): Promise<LoginResponse> {
-    const { userUuid } = credentials;
+  async authenticateWithEmail(
+    params: AuthenticateWithEmailRequest,
+  ): Promise<AuthenticateWithEmailResponse> {
+    const { userUuid } = params;
     const { apiKey } = this.props;
 
     const path = '/auth/login';
@@ -164,27 +154,27 @@ export class AuthService extends BaseService implements IAuthService {
         message: string;
       }> = await this.axiosClient.post(path, body, config);
 
+      this.props.setUserSessionData({ userUuid: response.data.user_uuid } as UserSessionData);
+
       return {
-        authenticationMethod: AuthenticationMethod.EMAIL,
         message: response.data.message,
-        userUuid: response.data.user_uuid,
       };
     } catch (error) {
       ErrorHandler.handle(error);
     }
   }
 
-  createSiweMessage(address: string, statement: string, domain: string, chainId: number): string {
-    const domainUrl = new URL(domain);
+  createSiweMessage(params: CreateSiweMessageRequest): string {
+    const domainUrl = new URL(params.signingUrl);
     const SESSION_DURATION_MS = 1000 * 60 * 60 * 4;
     const expirationDate = new Date(Date.now() + SESSION_DURATION_MS);
     const message = new SiweMessage({
       domain: domainUrl.hostname,
-      address: address,
-      statement: statement,
-      uri: `${domain}/auth/login`,
+      address: params.walletAddress,
+      statement: params.statement,
+      uri: `${params.signingUrl}/auth/login`,
       version: '1',
-      chainId: chainId,
+      chainId: params.chainId,
       nonce: generateNonce(),
       expirationTime: expirationDate.toISOString(),
     });

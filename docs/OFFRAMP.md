@@ -18,8 +18,6 @@ interface IOfframpService {
 
 | Field Name | Type |
 | ---------- | ---- |
-| unblockSessionID | string |
-| userUuid | string |
 | chain | [Chain](COMMON_TYPES.md#chain) |
 
 #### <span id="GetUserOfframpAddressResponse"></span>GetUserOfframpAddressResponse
@@ -54,8 +52,7 @@ import getunblockSDK, { Chain } from "@getunblock/sdk";
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
   
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
@@ -63,8 +60,6 @@ import getunblockSDK, { Chain } from "@getunblock/sdk";
   
   // SDK API call example
   const result = await sdk.offramp.getUserOfframpAddress({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
     chain: Chain.POLYGON
   });
 })();
@@ -84,8 +79,7 @@ const { Chain } = require("@getunblock/sdk");
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
   
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
@@ -93,8 +87,6 @@ const { Chain } = require("@getunblock/sdk");
   
   // SDK API call example
   const result = await sdk.offramp.getUserOfframpAddress({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
     chain: Chain.POLYGON
   });
 })();

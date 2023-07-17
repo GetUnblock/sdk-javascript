@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { SdkSettings, UserSessionData } from '../../src/definitions';
+import { SdkSettings } from '../../src/SdkSettings';
+import { UserSessionDataNotSetError } from '../../src/errors';
 import { TokenPreferenceService } from '../../src/token-preference/TokenPreferenceService';
 import {
   GetUserTokenPreferenceResponse,
@@ -22,11 +23,11 @@ describe('TokenPreferenceService', () => {
   let props: SdkSettings;
   let axiosError: AxiosError;
   let randomError: unknown;
+  let userSessionDataNotSetError: UserSessionDataNotSetError;
 
   let userUuid: string;
   let unblockSessionId: string;
 
-  let userSessionData: UserSessionData;
   let tokenPreferences: TokenPreference[];
 
   beforeAll(() => {
@@ -37,14 +38,10 @@ describe('TokenPreferenceService', () => {
     props = propsMock();
     axiosError = axiosErrorMock();
     randomError = randomErrorMock();
+    userSessionDataNotSetError = new UserSessionDataNotSetError();
 
     userUuid = faker.datatype.uuid();
     unblockSessionId = faker.datatype.uuid();
-
-    userSessionData = {
-      userUuid: userUuid,
-      unblockSessionId: unblockSessionId,
-    };
 
     tokenPreferences = tokenPreferencesMock();
   });
@@ -75,10 +72,15 @@ describe('TokenPreferenceService', () => {
         data: responseData,
       });
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new TokenPreferenceService(props);
 
       // Act
-      const result = await service.getUserTokenPreference({ ...userSessionData });
+      const result = await service.getUserTokenPreference();
 
       // Assert
       expect(axiosClient.get).toBeCalledTimes(1);
@@ -87,6 +89,27 @@ describe('TokenPreferenceService', () => {
     });
 
     // Sad
+    it('Should throw error if User Session Data is not set', async () => {
+      // Arrange
+
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+
+      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      let resultedError;
+
+      const service = new TokenPreferenceService(props);
+
+      // Act
+      try {
+        await service.getUserTokenPreference();
+      } catch (error) {
+        resultedError = error;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
     it('should throw expected error when an Axios Error Happens', async () => {
       // Arrange
 
@@ -96,11 +119,16 @@ describe('TokenPreferenceService', () => {
       const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new TokenPreferenceService(props);
 
       // Act
       try {
-        await service.getUserTokenPreference({ ...userSessionData });
+        await service.getUserTokenPreference();
       } catch (error) {
         resultedError = error;
       }
@@ -120,11 +148,16 @@ describe('TokenPreferenceService', () => {
       const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new TokenPreferenceService(props);
 
       // Act
       try {
-        await service.getUserTokenPreference({ ...userSessionData });
+        await service.getUserTokenPreference();
       } catch (error) {
         resultedError = error;
       }
@@ -140,7 +173,6 @@ describe('TokenPreferenceService', () => {
     it('should call axios patch method with expected params and return the expected response', async () => {
       // Arrange
       const dto: UpdateUserTokenPreferencesRequest = {
-        ...userSessionData,
         preferences: tokenPreferences,
       };
 
@@ -165,6 +197,11 @@ describe('TokenPreferenceService', () => {
         data: responseData,
       });
 
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new TokenPreferenceService(props);
 
       // Act
@@ -181,10 +218,32 @@ describe('TokenPreferenceService', () => {
     });
 
     // Sad
+    it('Should throw error if User Session Data is not set', async () => {
+      // Arrange
+      const dto: UpdateUserTokenPreferencesRequest = {
+        preferences: tokenPreferences,
+      };
+
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+
+      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      let resultedError;
+      const service = new TokenPreferenceService(props);
+
+      // Act
+      try {
+        await service.updateUserTokenPreference(dto);
+      } catch (error) {
+        resultedError = error;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
     it('should throw expected error when an Axios Error Happens', async () => {
       // Arrange
       const dto: UpdateUserTokenPreferencesRequest = {
-        ...userSessionData,
         preferences: tokenPreferences,
       };
 
@@ -193,6 +252,11 @@ describe('TokenPreferenceService', () => {
 
       const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       let resultedError;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
 
       const service = new TokenPreferenceService(props);
 
@@ -212,7 +276,6 @@ describe('TokenPreferenceService', () => {
     it('should throw expected error when an Unexpected Error Happens', async () => {
       // Arrange
       const dto: UpdateUserTokenPreferencesRequest = {
-        ...userSessionData,
         preferences: tokenPreferences,
       };
 
@@ -221,6 +284,11 @@ describe('TokenPreferenceService', () => {
 
       const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
 
       const service = new TokenPreferenceService(props);
 

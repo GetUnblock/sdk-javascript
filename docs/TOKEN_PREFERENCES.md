@@ -8,7 +8,7 @@ category: 64aebfcf6c645e002384ccdc
 
 ```typescript
 interface ITokenPreferenceService {
-  getUserTokenPreference(params: GetUserTokenPreferencesRequest): Promise<GetUserTokenPreferenceResponse>
+  getUserTokenPreference(): Promise<GetUserTokenPreferenceResponse>
   updateUserTokenPreference(params: UpdateUserTokenPreferencesRequest): Promise<UpdateUserTokenPreferencesResponse>;
 }
 ```
@@ -84,18 +84,17 @@ type TokenPreference =
 type GetUserTokenPreferenceResponse = TokenPreference[]
 ```
 
-#### <span id="GetUserTokenPreferencesRequest"></span>GetUserTokenPreferencesRequest
+#### <span id="UpdateUserTokenPreferencesRequest"></span>UpdateUserTokenPreferencesRequest
 
 | Field Name | Type |
 | ---------- | ---- |
-| unblockSessionID | string |
-| userUuid | string |
+| preferences | [TokenPreference](#TokenPreference)[] |
 
 ### Service Methods
 
 #### getUserTokenPreference
 
-<div><pre>getUserTokenPreference(params: <a href="#GetUserTokenPreferencesRequest">GetUserTokenPreferencesRequest</a>): Promise&#60;<a href="#GetUserTokenPreferenceResponse">GetUserTokenPreferenceResponse</a>&#62;</pre></div>
+<div><pre>getUserTokenPreference(): Promise&#60;<a href="#GetUserTokenPreferenceResponse">GetUserTokenPreferenceResponse</a>&#62;</pre></div>
 
 ##### Overview
 
@@ -116,18 +115,14 @@ import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
   
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
   // SDK API call example
-  const result = await sdk.tokenPreference.getUserTokenPreference({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
-  });
+  const result = await sdk.tokenPreference.getUserTokenPreference();
 })();
 ```
 
@@ -145,18 +140,14 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
   
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
   // SDK API call example
-  const result = await sdk.tokenPreference.getUserTokenPreference({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
-  });
+  const result = await sdk.tokenPreference.getUserTokenPreference();
 })();
 ```
 
@@ -183,8 +174,7 @@ import getunblockSDK, { AuthenticationMethod, Currency, OptimismToken, Chain } f
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
   
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
@@ -192,8 +182,6 @@ import getunblockSDK, { AuthenticationMethod, Currency, OptimismToken, Chain } f
   
   // SDK API call example
   const result = await sdk.tokenPreference.updateUserTokenPreference({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
     preferences: [
       {
         currency: Currency.EUR,
@@ -219,8 +207,7 @@ const { AuthenticationMethod, Currency, Chain, OptimismToken } = require("@getun
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
   
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
@@ -228,8 +215,6 @@ const { AuthenticationMethod, Currency, Chain, OptimismToken } = require("@getun
   
   // SDK API call example
   const result = await sdk.tokenPreference.updateUserTokenPreference({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
     preferences: [
       {
         currency: Currency.EUR,

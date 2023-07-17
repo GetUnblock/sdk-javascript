@@ -1,4 +1,3 @@
-import { UserSessionData } from '../definitions';
 import { Chain } from '../enums/Chain';
 import { Currency } from '../enums/Currency';
 import {
@@ -52,9 +51,6 @@ export type TokenPreference =
   | TokenPreferenceMainnet
   | TokenPreferenceArbitrum;
 
-/** Request dto */
-export type GetUserTokenPreferencesRequest = UserSessionData;
-
 /** Response dto */
 export type GetUserTokenPreferenceResponse = TokenPreference[];
 
@@ -62,7 +58,7 @@ export type GetUserTokenPreferenceResponse = TokenPreference[];
 export type GetUserTokenPreferenceResponseData = TokenPreference[];
 
 /** Request dto */
-export type UpdateUserTokenPreferencesRequest = UserSessionData & {
+export type UpdateUserTokenPreferencesRequest = {
   preferences: TokenPreference[];
 };
 

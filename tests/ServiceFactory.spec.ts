@@ -1,8 +1,7 @@
-import { faker } from '@faker-js/faker';
+import { SdkSettings } from '../src/SdkSettings';
 import { ServiceFactory } from '../src/ServiceFactory';
 import { AuthService } from '../src/auth/AuthService';
 import { CompanyService } from '../src/company/CompanyService';
-import { SdkSettings } from '../src/definitions';
 import { ExchangeRatesService } from '../src/exchange-rates/ExchangeRatesService';
 import { KycService } from '../src/kyc/KycService';
 import { OfframpService } from '../src/offramp/OfframpService';
@@ -11,17 +10,12 @@ import { RemoteBankAccountService } from '../src/remote-bank-account/RemoteBankA
 import { TokenPreferenceService } from '../src/token-preference/TokenPreferenceService';
 import { TransactionFeeService } from '../src/transaction-fee/TransactionFeeService';
 import { UnblockBankAccountService } from '../src/unblock-bank-account/UnblockBankAccountService';
+import { propsMock } from './mocks/props.mock';
 
 describe('ServiceFactory', () => {
   let props: SdkSettings;
   beforeEach(() => {
-    props = {
-      prodUrl: 'https://getunblock.com',
-      sandBoxUrl: 'https://sandbox.getunblock.com',
-      apiKey: `API-Key ${faker.datatype.string(64)}`,
-      prod: faker.datatype.boolean(),
-      timeoutMs: 10000,
-    };
+    props = propsMock();
   });
 
   it('Should create an AuthService instance', () => {

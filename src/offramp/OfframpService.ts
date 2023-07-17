@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { BaseService } from '../BaseService';
 import { ErrorHandler } from '../ErrorHandler';
+import { UserSessionDataNotSetError } from '../errors';
 import {
   GetUserOfframpAddressRequest,
   GetUserOfframpAddressResponse,
@@ -16,17 +17,22 @@ export class OfframpService extends BaseService implements IOfframpService {
     dto: GetUserOfframpAddressRequest,
   ): Promise<GetUserOfframpAddressResponse> {
     const { apiKey } = this.props;
-    const { userUuid, unblockSessionId, chain } = dto;
-    const path = `/user/${userUuid}/wallet/${chain}`;
 
-    const config = {
-      headers: {
-        accept: 'application/json',
-        Authorization: apiKey,
-        'unblock-session-id': unblockSessionId,
-      },
-    };
     try {
+      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+        throw new UserSessionDataNotSetError();
+      }
+
+      const { chain } = dto;
+      const path = `/user/${this.props.userSessionData.userUuid}/wallet/${chain}`;
+
+      const config = {
+        headers: {
+          accept: 'application/json',
+          Authorization: apiKey,
+          'unblock-session-id': this.props.userSessionData.unblockSessionId,
+        },
+      };
       const response: AxiosResponse<GetUserOfframpAddressResponseData> = await this.axiosClient.get(
         path,
         config,
