@@ -1,23 +1,20 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { DateTime } from 'luxon';
-import { SdkSettings, UserSessionData } from '../../src/definitions';
+import { SdkSettings } from '../../src/SdkSettings';
 import Country from '../../src/enums/Country';
+import { UserSessionDataNotSetError } from '../../src/errors';
 import { KycService } from '../../src/kyc/KycService';
 import {
   ApplicantData,
   CreateKYCApplicantRequest,
   DocumentType,
-  GetAccessTokenForUserApplicantRequest,
   GetAccessTokenForUserApplicantResponse,
-  GetRequiredKycInformationRequest,
   GetRequiredKycInformationResponse,
-  GetUploadedKycDocumentsForUserRequest,
   GetUploadedKycDocumentsForUserResponse,
   InitSumsubSdkResponse,
   OnboardingResponse,
   SourceOfFundsType,
-  StartKycVerificationRequest,
   UploadDocumentData,
   UploadKycDocumentRequest,
   UploadKycDocumentResponse,
@@ -37,6 +34,7 @@ describe('KycService', () => {
   let props: SdkSettings;
   let axiosError: AxiosError;
   let randomError: unknown;
+  let userSessionDataNotSetError: UserSessionDataNotSetError;
 
   let userUuid: string;
   let unblockSessionId: string;
@@ -49,6 +47,7 @@ describe('KycService', () => {
     props = propsMock();
     axiosError = axiosErrorMock();
     randomError = randomErrorMock();
+    userSessionDataNotSetError = new UserSessionDataNotSetError();
     userUuid = faker.datatype.uuid();
     unblockSessionId = faker.datatype.uuid();
   });
@@ -69,8 +68,6 @@ describe('KycService', () => {
         postcode: faker.address.zipCode(),
         sourceOfFunds: getRandomSourceOfFundsType() as SourceOfFundsType,
         sourceOfFundsDescription: faker.lorem.sentence(),
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -78,7 +75,7 @@ describe('KycService', () => {
         data: {},
       } as AxiosResponse);
 
-      const expectedPath = `/user/${createKYCApplicantParams.userUuid}/kyc/applicant`;
+      const expectedPath = `/user/${userUuid}/kyc/applicant`;
       const expectedBody = {
         address: createKYCApplicantParams.address,
         postcode: createKYCApplicantParams.postcode,
@@ -98,6 +95,12 @@ describe('KycService', () => {
           'unblock-session-id': unblockSessionId,
         },
       };
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new KycService(props);
       // Act
 
@@ -110,6 +113,37 @@ describe('KycService', () => {
     });
 
     // Sad
+    it('Should throw error if User Session Data is not set', async () => {
+      // Arrange
+      const createKYCApplicantParams: CreateKYCApplicantRequest = {
+        address: faker.address.streetAddress(true),
+        city: faker.address.city(),
+        country: faker.address.countryCode('alpha-2') as Country,
+        dateOfBirth: faker.datatype.datetime(),
+        postcode: faker.address.zipCode(),
+        sourceOfFunds: getRandomSourceOfFundsType() as SourceOfFundsType,
+        sourceOfFundsDescription: faker.lorem.sentence(),
+      };
+
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+
+      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+
+      const service = new KycService(props);
+      let resultedError;
+
+      // Act
+      try {
+        await service.createKYCApplicant(createKYCApplicantParams);
+      } catch (e) {
+        resultedError = e;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
+
     it('Should throw expected error when an Axios Error Happens', async () => {
       // Arrange
       const createKYCApplicantParams: CreateKYCApplicantRequest = {
@@ -120,14 +154,18 @@ describe('KycService', () => {
         postcode: faker.address.zipCode(),
         sourceOfFunds: getRandomSourceOfFundsType() as SourceOfFundsType,
         sourceOfFundsDescription: faker.lorem.sentence(),
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(axiosError);
 
       const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new KycService(props);
       let resultedError;
 
@@ -153,14 +191,17 @@ describe('KycService', () => {
         postcode: faker.address.zipCode(),
         sourceOfFunds: getRandomSourceOfFundsType(),
         sourceOfFundsDescription: faker.lorem.sentence(),
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(randomError);
 
       const expectedErrorMesage = `Unexpected error: ${randomError}`;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
 
       const service = new KycService(props);
       let resultedError;
@@ -182,11 +223,6 @@ describe('KycService', () => {
     // Happy
     it('Should call axios GET with expected headers and params', async () => {
       // Arrange
-      const getAccessTokenForUserApplicantParams: GetAccessTokenForUserApplicantRequest = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       const expectedResponse: GetAccessTokenForUserApplicantResponse = {
         token: faker.datatype.hexadecimal({ length: 128 }),
       };
@@ -199,7 +235,7 @@ describe('KycService', () => {
         token: string;
       }>);
 
-      const expectedPath = `/user/${getAccessTokenForUserApplicantParams.userUuid}/kyc/applicant/token`;
+      const expectedPath = `/user/${userUuid}/kyc/applicant/token`;
 
       const expectedConfig = {
         headers: {
@@ -208,12 +244,16 @@ describe('KycService', () => {
           'unblock-session-id': unblockSessionId,
         },
       };
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new KycService(props);
       // Act
 
-      const response = await service.getAccessTokenForUserApplicant(
-        getAccessTokenForUserApplicantParams,
-      );
+      const response = await service.getAccessTokenForUserApplicant();
 
       // Assert
       expect(axiosClient.get).toHaveBeenCalledTimes(1);
@@ -222,23 +262,45 @@ describe('KycService', () => {
     });
 
     // Sad
-    it('Should throw expected error when an Axios Error Happens', async () => {
+    it('Should throw error if User Session Data is not set', async () => {
       // Arrange
-      const getAccessTokenForUserApplicantParams: GetAccessTokenForUserApplicantRequest = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+
       const service = new KycService(props);
       let resultedError;
 
       // Act
       try {
-        await service.getAccessTokenForUserApplicant(getAccessTokenForUserApplicantParams);
+        await service.getAccessTokenForUserApplicant();
+      } catch (e) {
+        resultedError = e;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
+
+    it('Should throw expected error when an Axios Error Happens', async () => {
+      // Arrange
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
+
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
+      const service = new KycService(props);
+      let resultedError;
+
+      // Act
+      try {
+        await service.getAccessTokenForUserApplicant();
       } catch (e) {
         resultedError = e;
       }
@@ -250,22 +312,22 @@ describe('KycService', () => {
 
     it('Should throw expected error when an Unexpected Error Happens', async () => {
       // Arrange
-      const getAccessTokenForUserApplicantParams: GetAccessTokenForUserApplicantRequest = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
       const expectedErrorMesage = `Unexpected error: ${randomError}`;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
 
       const service = new KycService(props);
       let resultedError;
 
       // Act
       try {
-        await service.getAccessTokenForUserApplicant(getAccessTokenForUserApplicantParams);
+        await service.getAccessTokenForUserApplicant();
       } catch (e) {
         resultedError = e;
       }
@@ -286,8 +348,6 @@ describe('KycService', () => {
         documentType: getRandomDocumentType(),
         filename: faker.system.commonFileName('jpg'),
         documentSubType: getRandomDocumentSubType(),
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
       };
 
       const expectedResponse: UploadKycDocumentResponse = { uploadUuid: faker.datatype.uuid() };
@@ -296,7 +356,7 @@ describe('KycService', () => {
         data: { upload_uuid: expectedResponse.uploadUuid },
       } as AxiosResponse<{ upload_uuid: string }>);
 
-      const expectedPath = `/user/${uploadKycDocumentParams.userUuid}/kyc/document`;
+      const expectedPath = `/user/${userUuid}/kyc/document`;
       const expectedBody = {
         content: uploadKycDocumentParams.content,
         filename: uploadKycDocumentParams.filename,
@@ -312,6 +372,12 @@ describe('KycService', () => {
           'unblock-session-id': unblockSessionId,
         },
       };
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new KycService(props);
       // Act
 
@@ -324,6 +390,35 @@ describe('KycService', () => {
     });
 
     // Sad
+    it('Should throw error if User Session Data is not set', async () => {
+      // Arrange
+      const uploadKycDocumentParams: UploadKycDocumentRequest = {
+        content: faker.datatype.string(),
+        country: faker.helpers.arrayElement(Object.values(Country)),
+        documentType: getRandomDocumentType(),
+        filename: faker.system.commonFileName('jpg'),
+        documentSubType: getRandomDocumentSubType(),
+      };
+
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+
+      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+
+      const service = new KycService(props);
+      let resultedError;
+
+      // Act
+      try {
+        await service.uploadKycDocument(uploadKycDocumentParams);
+      } catch (e) {
+        resultedError = e;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
+
     it('Should throw expected error when an Axios Error Happens', async () => {
       // Arrange
       const uploadKycDocumentParams: UploadKycDocumentRequest = {
@@ -332,14 +427,18 @@ describe('KycService', () => {
         documentType: getRandomDocumentType(),
         filename: faker.system.commonFileName('jpg'),
         documentSubType: getRandomDocumentSubType(),
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(axiosError);
 
       const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new KycService(props);
       let resultedError;
 
@@ -363,14 +462,17 @@ describe('KycService', () => {
         documentType: getRandomDocumentType(),
         filename: faker.system.commonFileName('jpg'),
         documentSubType: getRandomDocumentSubType(),
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(randomError);
 
       const expectedErrorMesage = `Unexpected error: ${randomError}`;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
 
       const service = new KycService(props);
       let resultedError;
@@ -392,11 +494,6 @@ describe('KycService', () => {
     // Happy
     it('Should call axios GET with expected headers and params', async () => {
       // Arrange
-      const getUploadedKycDocumentsForUserParams: GetUploadedKycDocumentsForUserRequest = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       const expectedResponse: GetUploadedKycDocumentsForUserResponse[] = [];
       for (let i = 0; i < faker.datatype.number(5); i++) {
         expectedResponse.push({
@@ -445,7 +542,7 @@ describe('KycService', () => {
         })),
       } as AxiosResponse<AuxResponse>);
 
-      const expectedPath = `/user/${getUploadedKycDocumentsForUserParams.userUuid}/kyc/document`;
+      const expectedPath = `/user/${userUuid}/kyc/document`;
 
       const expectedConfig = {
         headers: {
@@ -454,12 +551,16 @@ describe('KycService', () => {
           'unblock-session-id': unblockSessionId,
         },
       };
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new KycService(props);
 
       // Act
-      const response = await service.getUploadedKycDocumentsForUser(
-        getUploadedKycDocumentsForUserParams,
-      );
+      const response = await service.getUploadedKycDocumentsForUser();
 
       // Assert
       expect(axiosClient.get).toHaveBeenCalledTimes(1);
@@ -468,23 +569,51 @@ describe('KycService', () => {
     });
 
     // Sad
-    it('Should throw expected error when an Axios Error Happens', async () => {
+    it('Should throw error if User Session Data is not set', async () => {
       // Arrange
-      const getUploadedKycDocumentsForUserParams: GetUploadedKycDocumentsForUserRequest = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
+      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new KycService(props);
       let resultedError;
 
       // Act
       try {
-        await service.getUploadedKycDocumentsForUser(getUploadedKycDocumentsForUserParams);
+        await service.getUploadedKycDocumentsForUser();
+      } catch (e) {
+        resultedError = e;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
+
+    it('Should throw expected error when an Axios Error Happens', async () => {
+      // Arrange
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
+
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
+      const service = new KycService(props);
+      let resultedError;
+
+      // Act
+      try {
+        await service.getUploadedKycDocumentsForUser();
       } catch (e) {
         resultedError = e;
       }
@@ -496,22 +625,22 @@ describe('KycService', () => {
 
     it('Should throw expected error when an Unexpected Error Happens', async () => {
       // Arrange
-      const getUploadedKycDocumentsForUserParams: GetUploadedKycDocumentsForUserRequest = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
       const expectedErrorMesage = `Unexpected error: ${randomError}`;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
 
       const service = new KycService(props);
       let resultedError;
 
       // Act
       try {
-        await service.getUploadedKycDocumentsForUser(getUploadedKycDocumentsForUserParams);
+        await service.getUploadedKycDocumentsForUser();
       } catch (e) {
         resultedError = e;
       }
@@ -526,17 +655,12 @@ describe('KycService', () => {
     // Happy
     it('Should call axios POST with expected headers and body', async () => {
       // Arrange
-      const startKycVerificationParams: StartKycVerificationRequest = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockResolvedValue({
         data: {},
       } as AxiosResponse);
 
-      const expectedPath = `/user/${startKycVerificationParams.userUuid}/kyc/verification`;
+      const expectedPath = `/user/${userUuid}/kyc/verification`;
       const expectedBody = {};
       const expectedConfig = {
         headers: {
@@ -546,10 +670,16 @@ describe('KycService', () => {
           'unblock-session-id': unblockSessionId,
         },
       };
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new KycService(props);
       // Act
 
-      const response = await service.startKycVerification(startKycVerificationParams);
+      const response = await service.startKycVerification();
 
       // Assert
       expect(axiosClient.post).toHaveBeenCalledTimes(1);
@@ -558,23 +688,45 @@ describe('KycService', () => {
     });
 
     // Sad
-    it('Should throw expected error when an Axios Error Happens', async () => {
+    it('Should throw error if User Session Data is not set', async () => {
       // Arrange
-      const startKycVerificationParams: StartKycVerificationRequest = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+
       const service = new KycService(props);
       let resultedError;
 
       // Act
       try {
-        await service.startKycVerification(startKycVerificationParams);
+        await service.startKycVerification();
+      } catch (e) {
+        resultedError = e;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
+
+    it('Should throw expected error when an Axios Error Happens', async () => {
+      // Arrange
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+      jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(axiosError);
+
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
+      const service = new KycService(props);
+      let resultedError;
+
+      // Act
+      try {
+        await service.startKycVerification();
       } catch (e) {
         resultedError = e;
       }
@@ -586,22 +738,22 @@ describe('KycService', () => {
 
     it('Should throw expected error when an Unexpected Error Happens', async () => {
       // Arrange
-      const startKycVerificationParams: StartKycVerificationRequest = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(randomError);
 
       const expectedErrorMesage = `Unexpected error: ${randomError}`;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
 
       const service = new KycService(props);
       let resultedError;
 
       // Act
       try {
-        await service.startKycVerification(startKycVerificationParams);
+        await service.startKycVerification();
       } catch (e) {
         resultedError = e;
       }
@@ -616,11 +768,6 @@ describe('KycService', () => {
     // Happy
     it('Should call axios GET with expected headers and params', async () => {
       // Arrange
-      const getRequiredKycInformationParams: GetRequiredKycInformationRequest = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       const expectedResponse: GetRequiredKycInformationResponse[] = [];
       for (let i = 0; i < faker.datatype.number(5); i++) {
         const documentsTypes: DocumentType[] = [];
@@ -651,7 +798,7 @@ describe('KycService', () => {
         } as AuxResponse,
       } as AxiosResponse<AuxResponse>);
 
-      const expectedPath = `/user/${getRequiredKycInformationParams.userUuid}/kyc/verification`;
+      const expectedPath = `/user/${userUuid}/kyc/verification`;
 
       const expectedConfig = {
         headers: {
@@ -660,10 +807,16 @@ describe('KycService', () => {
           'unblock-session-id': unblockSessionId,
         },
       };
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
       const service = new KycService(props);
       // Act
 
-      const response = await service.getRequiredKycInformation(getRequiredKycInformationParams);
+      const response = await service.getRequiredKycInformation();
 
       // Assert
       expect(axiosClient.get).toHaveBeenCalledTimes(1);
@@ -672,23 +825,44 @@ describe('KycService', () => {
     });
 
     // Sad
-    it('Should throw expected error when an Axios Error Happens', async () => {
+    it('Should throw error if User Session Data is not set', async () => {
       // Arrange
-      const getRequiredKycInformationParams: GetRequiredKycInformationRequest = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
       const service = new KycService(props);
       let resultedError;
 
       // Act
       try {
-        await service.getRequiredKycInformation(getRequiredKycInformationParams);
+        await service.getRequiredKycInformation();
+      } catch (e) {
+        resultedError = e;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
+
+    it('Should throw expected error when an Axios Error Happens', async () => {
+      // Arrange
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
+
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
+
+      const service = new KycService(props);
+      let resultedError;
+
+      // Act
+      try {
+        await service.getRequiredKycInformation();
       } catch (e) {
         resultedError = e;
       }
@@ -700,22 +874,22 @@ describe('KycService', () => {
 
     it('Should throw expected error when an Unexpected Error Happens', async () => {
       // Arrange
-      const getRequiredKycInformationParams: GetRequiredKycInformationRequest = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
       const expectedErrorMesage = `Unexpected error: ${randomError}`;
+
+      props.setUserSessionData({
+        unblockSessionId,
+        userUuid,
+      });
 
       const service = new KycService(props);
       let resultedError;
 
       // Act
       try {
-        await service.getRequiredKycInformation(getRequiredKycInformationParams);
+        await service.getRequiredKycInformation();
       } catch (e) {
         resultedError = e;
       }
@@ -730,11 +904,6 @@ describe('KycService', () => {
     // Happy
     it('should call createKycApplicant, uploadKycDocument and startKycVerification methods and return expected response', async () => {
       // Arrange
-      const userSessionData: UserSessionData = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       const applicantData: ApplicantData = {
         address: faker.address.streetAddress(true),
         city: faker.address.city(),
@@ -747,7 +916,6 @@ describe('KycService', () => {
 
       const createApplicantDto: CreateKYCApplicantRequest = {
         ...applicantData,
-        ...userSessionData,
       };
 
       const uploadDocumentData: UploadDocumentData = {
@@ -760,13 +928,7 @@ describe('KycService', () => {
 
       const uploadKycDocumentDto: UploadKycDocumentRequest = {
         ...uploadDocumentData,
-        ...userSessionData,
       };
-
-      const startKycVerificationDto: StartKycVerificationRequest = {
-        ...userSessionData,
-      };
-
       const uploadUuid = faker.datatype.uuid();
 
       const service = new KycService(props);
@@ -789,7 +951,6 @@ describe('KycService', () => {
       };
       // Act
       const result = await service.onboarding({
-        sessionData: userSessionData,
         applicantData: applicantData,
         documentData: uploadDocumentData,
       });
@@ -799,17 +960,11 @@ describe('KycService', () => {
       expect(service.uploadKycDocument).toBeCalledTimes(1);
       expect(service.uploadKycDocument).toBeCalledWith(uploadKycDocumentDto);
       expect(service.startKycVerification).toBeCalledTimes(1);
-      expect(service.startKycVerification).toBeCalledWith(startKycVerificationDto);
       expect(result).toEqual(expectedResponse);
     });
 
     it('should throw error if createKYCApplicant throws an error', async () => {
       // Arrange
-      const userSessionData: UserSessionData = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       const applicantData: ApplicantData = {
         address: faker.address.streetAddress(true),
         city: faker.address.city(),
@@ -847,7 +1002,6 @@ describe('KycService', () => {
       // Act
       try {
         await service.onboarding({
-          sessionData: userSessionData,
           applicantData: applicantData,
           documentData: uploadDocumentData,
         });
@@ -864,11 +1018,6 @@ describe('KycService', () => {
 
     it('should throw error if uploadKycDocument throws an error', async () => {
       // Arrange
-      const userSessionData: UserSessionData = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       const applicantData: ApplicantData = {
         address: faker.address.streetAddress(true),
         city: faker.address.city(),
@@ -904,7 +1053,6 @@ describe('KycService', () => {
       // Act
       try {
         await service.onboarding({
-          sessionData: userSessionData,
           applicantData: applicantData,
           documentData: uploadDocumentData,
         });
@@ -921,11 +1069,6 @@ describe('KycService', () => {
 
     it('should throw error if startKycVerification throws an error', async () => {
       // Arrange
-      const userSessionData: UserSessionData = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       const applicantData: ApplicantData = {
         address: faker.address.streetAddress(true),
         city: faker.address.city(),
@@ -963,7 +1106,6 @@ describe('KycService', () => {
       // Act
       try {
         await service.onboarding({
-          sessionData: userSessionData,
           applicantData: applicantData,
           documentData: uploadDocumentData,
         });
@@ -983,11 +1125,6 @@ describe('KycService', () => {
     // Happy
     it('should call createKycApplicant and getAccessTokenForUserApplicant methods and return expected response', async () => {
       // Arrange
-      const userSessionData: UserSessionData = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       const applicantData: ApplicantData = {
         address: faker.address.streetAddress(true),
         city: faker.address.city(),
@@ -1000,11 +1137,6 @@ describe('KycService', () => {
 
       const createApplicantDto: CreateKYCApplicantRequest = {
         ...applicantData,
-        ...userSessionData,
-      };
-
-      const getAccessTokenForUserApplicantDto: GetAccessTokenForUserApplicantRequest = {
-        ...userSessionData,
       };
 
       const sumsubToken = faker.datatype.uuid();
@@ -1024,26 +1156,17 @@ describe('KycService', () => {
       };
       // Act
       const result = await service.initSumsubSdk({
-        sessionData: userSessionData,
         applicantData: applicantData,
       });
       // Assert
       expect(service.createKYCApplicant).toBeCalledTimes(1);
       expect(service.createKYCApplicant).toBeCalledWith(createApplicantDto);
       expect(service.getAccessTokenForUserApplicant).toBeCalledTimes(1);
-      expect(service.getAccessTokenForUserApplicant).toBeCalledWith(
-        getAccessTokenForUserApplicantDto,
-      );
       expect(result).toEqual(expectedResponse);
     });
 
     it('should throw error if createKYCApplicant throws an error', async () => {
       // Arrange
-      const userSessionData: UserSessionData = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       const applicantData: ApplicantData = {
         address: faker.address.streetAddress(true),
         city: faker.address.city(),
@@ -1069,7 +1192,6 @@ describe('KycService', () => {
       // Act
       try {
         await service.initSumsubSdk({
-          sessionData: userSessionData,
           applicantData: applicantData,
         });
       } catch (error) {
@@ -1084,11 +1206,6 @@ describe('KycService', () => {
 
     it('should throw error if getAccessTokenForUserApplicant throws an error', async () => {
       // Arrange
-      const userSessionData: UserSessionData = {
-        userUuid: userUuid,
-        unblockSessionId: unblockSessionId,
-      };
-
       const applicantData: ApplicantData = {
         address: faker.address.streetAddress(true),
         city: faker.address.city(),
@@ -1112,7 +1229,6 @@ describe('KycService', () => {
       // Act
       try {
         await service.initSumsubSdk({
-          sessionData: userSessionData,
           applicantData: applicantData,
         });
       } catch (error) {

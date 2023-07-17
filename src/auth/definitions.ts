@@ -1,5 +1,3 @@
-import { AuthenticationMethod } from '../enums/AuthenticationMethod';
-
 // Interfaces
 export interface IEthereumProviderSigner {
   getAddress(): Promise<string>;
@@ -8,63 +6,45 @@ export interface IEthereumProviderSigner {
 
 // Requests
 /** Request dto */
-export type SiweLoginRequest = {
-  authenticationMethod: AuthenticationMethod.SIWE;
+export type AuthenticateWithSiweRequest = {
   message: string;
   signature: string;
 };
 
 /** Request dto */
-export type EmailLoginRequest = {
-  authenticationMethod: AuthenticationMethod.EMAIL;
+export type AuthenticateWithEmailRequest = {
   userUuid: string;
 };
 
 /** Request dto */
-export type LoginRequest = SiweLoginRequest | EmailLoginRequest;
-
-/** Request dto */
-export type SessionRequest = {
-  userUuid: string;
-  code: string;
+export type SetUnblockSessionByEmailCodeRequest = {
+  emailCode: string;
 };
 
-export type WalletSiweLoginRequest = {
+export type CreateSiweMessageRequest = {
+  walletAddress: string;
+  statement: string;
+  signingUrl: string;
+  chainId: number;
+};
+
+export type SiweLoginRequest = {
   providerSigner: IEthereumProviderSigner;
   chainId: string;
   signingUrl: string;
 };
 
-export type GenerateSiweLoginMessageRequest = WalletSiweLoginRequest;
+export type GenerateSiweSignedMessageRequest = SiweLoginRequest;
 
 // Responses
-/** Response dto */
-export type SiweLoginResponse = {
-  userUuid: string;
-  unblockSessionId: string;
-};
 
 /** Response dto */
-export type EmailLoginResponse = {
+export type AuthenticateWithEmailResponse = {
   message: string;
-  userUuid: string;
 };
 
 /** Response dto */
-export type LoginResponse = {
-  authenticationMethod: AuthenticationMethod;
-} & (SiweLoginResponse | EmailLoginResponse);
-
-/** Response dto */
-export type SessionResponse = {
-  sessionId: string;
-};
-
-/** Response dto */
-export type WalletSiweLoginResponse = SiweLoginResponse;
-
-/** Response dto */
-export type GenerateSiweLoginMessageResponse = {
+export type GenerateSiweSiginedMessageResponse = {
   message: string;
   signature: string;
 };

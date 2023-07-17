@@ -1,4 +1,3 @@
-import { UserSessionData } from '../definitions';
 import Country from '../enums/Country';
 
 export type GbpAccountDetails = {
@@ -37,16 +36,13 @@ export type RemoteUserBankAccount = {
 };
 
 /** Request dto */
-export type CreateRemoteUserBankAccountRequest = UserSessionData & CreateRemoteUserBankAccount;
+export type CreateRemoteUserBankAccountRequest = CreateRemoteUserBankAccount;
 
 /** Request dto */
-export type GetAllRemoteBankAccountsRequest = UserSessionData;
+export type ChangeMainUserRemoteBankAccountRequest = { accountUuid: string };
 
 /** Request dto */
-export type ChangeMainUserRemoteBankAccountRequest = UserSessionData & { accountUuid: string };
-
-/** Request dto */
-export type GetRemoteBankAccountByUuidRequest = UserSessionData & { accountUuid: string };
+export type GetRemoteBankAccountByUuidRequest = { accountUuid: string };
 
 /** Response dto */
 export type CreateRemoteUserBankAccountResponse = RemoteUserBankAccount;

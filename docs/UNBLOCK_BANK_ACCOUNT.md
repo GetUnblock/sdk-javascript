@@ -9,7 +9,7 @@ category: 64aebfcf6c645e002384ccdc
 ```typescript
 interface IUnblockBankAccountService {
   createUnblockUserBankAccount(params: CreateUnblockUserBankAccountRequest): Promise<CreateUnblockUserBankAccountResponse>;
-  getAllUnblockUserBankAccounts(params: GetAllunblockUserBankAccountsRequest): Promise<GetAllunblockUserBankAccountsResponse>;
+  getAllUnblockUserBankAccounts(): Promise<GetAllunblockUserBankAccountsResponse>;
   simulateOnRamp(params: SimulateOnRampRequest): Promise<SimulateOnRampResponse>;
   getUnblockBankAccountById(params: GetUnblockBankAccountByIdRequest): Promise<GetUnblockBankAccountByIdResponse>;
 }
@@ -41,23 +41,12 @@ type GetUnblockBankAccountByIdResponse = UserBankAccount & UserBankAccountDetail
 
 | Field Name | Type |
 | ---------- | ---- |
-| unblockSessionID | string |
-| userUuid | string |
 | currency | [Currency](COMMON_TYPES.md#Currency) |
-
-#### <span id="GetAllunblockUserBankAccountsRequest"></span>GetAllunblockUserBankAccountsRequest
-
-| Field Name | Type |
-| ---------- | ---- |
-| unblockSessionID | string |
-| userUuid | string |
 
 #### <span id="SimulateOnRampRequest"></span>SimulateOnRampRequest
 
 | Field Name | Type |
 | ---------- | ---- |
-| unblockSessionID | string |
-| userUuid | string |
 | currency | [Currency](COMMON_TYPES.md#Currency) |
 | value | number |
 
@@ -65,8 +54,6 @@ type GetUnblockBankAccountByIdResponse = UserBankAccount & UserBankAccountDetail
 
 | Field Name | Type |
 | ---------- | ---- |
-| unblockSessionID | string |
-| userUuid | string |
 | accountUuid | string |
 
 #### <span id="UserBankAccount"></span>UserBankAccount
@@ -121,8 +108,7 @@ import getunblockSDK, { AuthenticationMethod, Currency } from "@getunblock/sdk";
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
   
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
@@ -130,8 +116,6 @@ import getunblockSDK, { AuthenticationMethod, Currency } from "@getunblock/sdk";
   
   // SDK API call example
   const result = await sdk.unblockBankAccount.createUnblockUserBankAccount({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
     currency: Currency.GBP
   });
 })();
@@ -151,8 +135,7 @@ const { AuthenticationMethod, Currency } = require("@getunblock/sdk");
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
   
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
@@ -160,8 +143,6 @@ const { AuthenticationMethod, Currency } = require("@getunblock/sdk");
   
   // SDK API call example
   const result = await sdk.unblockBankAccount.createUnblockUserBankAccount({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
     currency: Currency.GBP
   });
 })();
@@ -169,7 +150,7 @@ const { AuthenticationMethod, Currency } = require("@getunblock/sdk");
 
 #### getAllUnblockUserBankAccounts
 
-<div><pre>getAllUnblockUserBankAccounts(params: <a href="#GetAllunblockUserBankAccountsRequest">GetAllunblockUserBankAccountsRequest</a>): Promise&#60;<a href="#GetAllunblockUserBankAccountsResponse">GetAllunblockUserBankAccountsResponse</a>&#62;</pre></div>
+<div><pre>getAllUnblockUserBankAccounts(): Promise&#60;<a href="#GetAllunblockUserBankAccountsResponse">GetAllunblockUserBankAccountsResponse</a>&#62;</pre></div>
 
 ##### Overview
 
@@ -190,18 +171,14 @@ import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
   
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
   // SDK API call example
-  const result = await sdk.unblockBankAccount.getAllUnblockUserBankAccounts({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
-  });
+  const result = await sdk.unblockBankAccount.getAllUnblockUserBankAccounts();
 })();
 ```
 
@@ -219,18 +196,14 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
   
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
   
   // SDK API call example
-  const result = await sdk.unblockBankAccount.getAllRemoteBankAccounts({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
-  });
+  const result = await sdk.unblockBankAccount.getAllRemoteBankAccounts();
 })();
 ```
 
@@ -257,8 +230,7 @@ import getunblockSDK, { AuthenticationMethod, Currency } from "@getunblock/sdk";
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
   
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
@@ -266,8 +238,6 @@ import getunblockSDK, { AuthenticationMethod, Currency } from "@getunblock/sdk";
   
   // SDK API call example
   const result = await sdk.unblockBankAccount.simulateOnRamp({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
     currency: Currency.GBP,
     value: 1
   });
@@ -288,8 +258,7 @@ const { AuthenticationMethod, Currency } = require("@getunblock/sdk");
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
   
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
@@ -297,8 +266,6 @@ const { AuthenticationMethod, Currency } = require("@getunblock/sdk");
   
   // SDK API call example
   const result = await sdk.unblockBankAccount.simulateOnRamp({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
     currency: Currency.GBP,
     value: 1
   });
@@ -328,8 +295,7 @@ import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
   
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
@@ -337,8 +303,6 @@ import getunblockSDK, { AuthenticationMethod } from "@getunblock/sdk";
   
   // SDK API call example
   const result = await sdk.unblockBankAccount.getUnblockBankAccountById({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
     accountUuid: "b89b8075-e845-48a6-9b70-123c12e0aed0",
   });
 })();
@@ -358,8 +322,7 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
   
-  const loginResult = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
+  await sdk.auth.authenticateWithSiwe({    
     message: "[Generated SIWE message]*",
     signature: "[Generated SIWE signature]*",
   });
@@ -367,8 +330,6 @@ const { AuthenticationMethod } = require("@getunblock/sdk");
   
   // SDK API call example
   const result = await sdk.unblockBankAccount.getUnblockBankAccountById({
-    unblockSessionId: loginResult.unblockSessionId,
-    userUuid: loginResult.userUuid,
     accountUuid: "b89b8075-e845-48a6-9b70-123c12e0aed0",
   });
 })();

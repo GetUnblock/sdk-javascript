@@ -1,10 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { SdkSettings } from '../../src/definitions';
+import { SdkSettings } from '../../src/SdkSettings';
 
-export const propsMock = (): SdkSettings => ({
-  apiKey: `API-Key ${faker.datatype.string(64)}`,
-  prod: faker.datatype.boolean(),
-  sandBoxUrl: 'https://sandbox.getunblock.com',
-  prodUrl: 'https://getunblock.com',
-  timeoutMs: 10000,
-});
+export const propsMock = (): SdkSettings =>
+  new SdkSettings(`API-Key ${faker.datatype.string(64)}`, faker.datatype.boolean());

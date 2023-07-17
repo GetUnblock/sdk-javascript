@@ -3,22 +3,19 @@ import { DateTime } from 'luxon';
 import { BaseService } from '../BaseService';
 import { ErrorHandler } from '../ErrorHandler';
 import Country from '../enums/Country';
+import { UserSessionDataNotSetError } from '../errors';
 import {
   CreateKYCApplicantRequest,
   CreateKYCApplicantResponse,
   DocumentSubType,
   DocumentType,
-  GetAccessTokenForUserApplicantRequest,
   GetAccessTokenForUserApplicantResponse,
-  GetRequiredKycInformationRequest,
   GetRequiredKycInformationResponse,
-  GetUploadedKycDocumentsForUserRequest,
   GetUploadedKycDocumentsForUserResponse,
   InitSumsubSdkRequest,
   InitSumsubSdkResponse,
   OnboardingRequest,
   OnboardingResponse,
-  StartKycVerificationRequest,
   StartKycVerificationResponse,
   UploadKycDocumentRequest,
   UploadKycDocumentResponse,
@@ -29,25 +26,17 @@ export interface IKycService {
     createKYCApplicantParams: CreateKYCApplicantRequest,
   ): Promise<CreateKYCApplicantResponse>;
 
-  getAccessTokenForUserApplicant(
-    getAccessTokenForUserApplicantParams: GetAccessTokenForUserApplicantRequest,
-  ): Promise<GetAccessTokenForUserApplicantResponse>;
+  getAccessTokenForUserApplicant(): Promise<GetAccessTokenForUserApplicantResponse>;
 
   uploadKycDocument(
     uploadKycDocumentParams: UploadKycDocumentRequest,
   ): Promise<UploadKycDocumentResponse>;
 
-  getUploadedKycDocumentsForUser(
-    getUploadedKycDocumentsForUserParams: GetUploadedKycDocumentsForUserRequest,
-  ): Promise<GetUploadedKycDocumentsForUserResponse[]>;
+  getUploadedKycDocumentsForUser(): Promise<GetUploadedKycDocumentsForUserResponse[]>;
 
-  startKycVerification(
-    startKycVerificationParams: StartKycVerificationRequest,
-  ): Promise<StartKycVerificationResponse>;
+  startKycVerification(): Promise<StartKycVerificationResponse>;
 
-  getRequiredKycInformation(
-    getRequiredKycInformationParams: GetRequiredKycInformationRequest,
-  ): Promise<GetRequiredKycInformationResponse[]>;
+  getRequiredKycInformation(): Promise<GetRequiredKycInformationResponse[]>;
 
   onboarding(dto: OnboardingRequest): Promise<OnboardingResponse>;
 
@@ -60,29 +49,33 @@ export class KycService extends BaseService implements IKycService {
   ): Promise<CreateKYCApplicantResponse> {
     const { apiKey } = this.props;
 
-    const path = `/user/${createKYCApplicantParams.userUuid}/kyc/applicant`;
-    const body = {
-      address: createKYCApplicantParams.address,
-      postcode: createKYCApplicantParams.postcode,
-      city: createKYCApplicantParams.city,
-      country: createKYCApplicantParams.country,
-      date_of_birth: DateTime.fromJSDate(createKYCApplicantParams.dateOfBirth).toFormat(
-        'yyyy-MM-dd',
-      ),
-      source_of_funds: createKYCApplicantParams.sourceOfFunds,
-      source_of_funds_description: createKYCApplicantParams.sourceOfFundsDescription,
-    };
-
-    const config = {
-      headers: {
-        'content-type': 'application/json',
-        accept: 'application/json',
-        Authorization: apiKey,
-        'unblock-session-id': createKYCApplicantParams.unblockSessionId,
-      },
-    };
-
     try {
+      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+        throw new UserSessionDataNotSetError();
+      }
+
+      const path = `/user/${this.props.userSessionData.userUuid}/kyc/applicant`;
+      const body = {
+        address: createKYCApplicantParams.address,
+        postcode: createKYCApplicantParams.postcode,
+        city: createKYCApplicantParams.city,
+        country: createKYCApplicantParams.country,
+        date_of_birth: DateTime.fromJSDate(createKYCApplicantParams.dateOfBirth).toFormat(
+          'yyyy-MM-dd',
+        ),
+        source_of_funds: createKYCApplicantParams.sourceOfFunds,
+        source_of_funds_description: createKYCApplicantParams.sourceOfFundsDescription,
+      };
+
+      const config = {
+        headers: {
+          'content-type': 'application/json',
+          accept: 'application/json',
+          Authorization: apiKey,
+          'unblock-session-id': this.props.userSessionData.unblockSessionId,
+        },
+      };
+
       await this.axiosClient.put(path, body, config);
 
       return {
@@ -93,21 +86,23 @@ export class KycService extends BaseService implements IKycService {
     }
   }
 
-  async getAccessTokenForUserApplicant(
-    getAccessTokenForUserApplicantParams: GetAccessTokenForUserApplicantRequest,
-  ): Promise<GetAccessTokenForUserApplicantResponse> {
+  async getAccessTokenForUserApplicant(): Promise<GetAccessTokenForUserApplicantResponse> {
     const { apiKey } = this.props;
 
-    const path = `/user/${getAccessTokenForUserApplicantParams.userUuid}/kyc/applicant/token`;
-
-    const config = {
-      headers: {
-        accept: 'application/json',
-        Authorization: apiKey,
-        'unblock-session-id': getAccessTokenForUserApplicantParams.unblockSessionId,
-      },
-    };
     try {
+      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+        throw new UserSessionDataNotSetError();
+      }
+
+      const path = `/user/${this.props.userSessionData.userUuid}/kyc/applicant/token`;
+
+      const config = {
+        headers: {
+          accept: 'application/json',
+          Authorization: apiKey,
+          'unblock-session-id': this.props.userSessionData.unblockSessionId,
+        },
+      };
       const response: AxiosResponse<{
         token: string;
       }> = await this.axiosClient.get(path, config);
@@ -125,25 +120,29 @@ export class KycService extends BaseService implements IKycService {
   ): Promise<UploadKycDocumentResponse> {
     const { apiKey } = this.props;
 
-    const path = `/user/${uploadKycDocumentParams.userUuid}/kyc/document`;
-    const body = {
-      content: uploadKycDocumentParams.content,
-      filename: uploadKycDocumentParams.filename,
-      document_type: uploadKycDocumentParams.documentType,
-      document_subtype: uploadKycDocumentParams.documentSubType,
-      country: uploadKycDocumentParams.country,
-    };
-
-    const config = {
-      headers: {
-        'content-type': 'application/json',
-        accept: 'application/json',
-        Authorization: apiKey,
-        'unblock-session-id': uploadKycDocumentParams.unblockSessionId,
-      },
-    };
-
     try {
+      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+        throw new UserSessionDataNotSetError();
+      }
+
+      const path = `/user/${this.props.userSessionData.userUuid}/kyc/document`;
+      const body = {
+        content: uploadKycDocumentParams.content,
+        filename: uploadKycDocumentParams.filename,
+        document_type: uploadKycDocumentParams.documentType,
+        document_subtype: uploadKycDocumentParams.documentSubType,
+        country: uploadKycDocumentParams.country,
+      };
+
+      const config = {
+        headers: {
+          'content-type': 'application/json',
+          accept: 'application/json',
+          Authorization: apiKey,
+          'unblock-session-id': this.props.userSessionData.unblockSessionId,
+        },
+      };
+
       const response: AxiosResponse<{ upload_uuid: string }> = await this.axiosClient.put(
         path,
         body,
@@ -158,21 +157,23 @@ export class KycService extends BaseService implements IKycService {
     }
   }
 
-  async getUploadedKycDocumentsForUser(
-    getUploadedKycDocumentsForUserParams: GetUploadedKycDocumentsForUserRequest,
-  ): Promise<GetUploadedKycDocumentsForUserResponse[]> {
+  async getUploadedKycDocumentsForUser(): Promise<GetUploadedKycDocumentsForUserResponse[]> {
     const { apiKey } = this.props;
 
-    const path = `/user/${getUploadedKycDocumentsForUserParams.userUuid}/kyc/document`;
+    if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+      throw new UserSessionDataNotSetError();
+    }
 
-    const config = {
-      headers: {
-        accept: 'application/json',
-        Authorization: apiKey,
-        'unblock-session-id': getUploadedKycDocumentsForUserParams.unblockSessionId,
-      },
-    };
     try {
+      const path = `/user/${this.props.userSessionData.userUuid}/kyc/document`;
+
+      const config = {
+        headers: {
+          accept: 'application/json',
+          Authorization: apiKey,
+          'unblock-session-id': this.props.userSessionData.unblockSessionId,
+        },
+      };
       const response: AxiosResponse<
         {
           uuid: string;
@@ -207,23 +208,25 @@ export class KycService extends BaseService implements IKycService {
     }
   }
 
-  async startKycVerification(
-    startKycVerificationParams: StartKycVerificationRequest,
-  ): Promise<StartKycVerificationResponse> {
+  async startKycVerification(): Promise<StartKycVerificationResponse> {
     const { apiKey } = this.props;
 
-    const path = `/user/${startKycVerificationParams.userUuid}/kyc/verification`;
-
-    const config = {
-      headers: {
-        'content-type': 'application/json',
-        accept: 'application/json',
-        Authorization: apiKey,
-        'unblock-session-id': startKycVerificationParams.unblockSessionId,
-      },
-    };
-
     try {
+      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+        throw new UserSessionDataNotSetError();
+      }
+
+      const path = `/user/${this.props.userSessionData.userUuid}/kyc/verification`;
+
+      const config = {
+        headers: {
+          'content-type': 'application/json',
+          accept: 'application/json',
+          Authorization: apiKey,
+          'unblock-session-id': this.props.userSessionData.unblockSessionId,
+        },
+      };
+
       await this.axiosClient.post(path, {}, config);
 
       return {
@@ -234,21 +237,23 @@ export class KycService extends BaseService implements IKycService {
     }
   }
 
-  async getRequiredKycInformation(
-    getRequiredKycInformationParams: GetRequiredKycInformationRequest,
-  ): Promise<GetRequiredKycInformationResponse[]> {
+  async getRequiredKycInformation(): Promise<GetRequiredKycInformationResponse[]> {
     const { apiKey } = this.props;
 
-    const path = `/user/${getRequiredKycInformationParams.userUuid}/kyc/verification`;
-
-    const config = {
-      headers: {
-        accept: 'application/json',
-        Authorization: apiKey,
-        'unblock-session-id': getRequiredKycInformationParams.unblockSessionId,
-      },
-    };
     try {
+      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+        throw new UserSessionDataNotSetError();
+      }
+
+      const path = `/user/${this.props.userSessionData.userUuid}/kyc/verification`;
+
+      const config = {
+        headers: {
+          accept: 'application/json',
+          Authorization: apiKey,
+          'unblock-session-id': this.props.userSessionData.unblockSessionId,
+        },
+      };
       const response: AxiosResponse<{
         required_documents: {
           document_class: string;
@@ -266,19 +271,18 @@ export class KycService extends BaseService implements IKycService {
   }
 
   async onboarding(dto: OnboardingRequest): Promise<OnboardingResponse> {
-    const { sessionData, applicantData, documentData } = dto;
+    const { applicantData, documentData } = dto;
     try {
       const applicant: CreateKYCApplicantResponse = await this.createKYCApplicant({
-        ...sessionData,
         ...applicantData,
       });
+
       const upload: UploadKycDocumentResponse = await this.uploadKycDocument({
-        ...sessionData,
         ...documentData,
       });
-      const verification: StartKycVerificationResponse = await this.startKycVerification({
-        ...sessionData,
-      });
+
+      const verification: StartKycVerificationResponse = await this.startKycVerification();
+
       return {
         applicantCreated: applicant.created,
         uploadUuid: upload.uploadUuid,
@@ -290,16 +294,15 @@ export class KycService extends BaseService implements IKycService {
   }
 
   async initSumsubSdk(dto: InitSumsubSdkRequest): Promise<InitSumsubSdkResponse> {
-    const { sessionData, applicantData } = dto;
+    const { applicantData } = dto;
     try {
       const applicant: CreateKYCApplicantResponse = await this.createKYCApplicant({
-        ...sessionData,
         ...applicantData,
       });
+
       const sumsubSdk: GetAccessTokenForUserApplicantResponse =
-        await this.getAccessTokenForUserApplicant({
-          ...sessionData,
-        });
+        await this.getAccessTokenForUserApplicant();
+
       return {
         applicantCreated: applicant.created,
         token: sumsubSdk.token,

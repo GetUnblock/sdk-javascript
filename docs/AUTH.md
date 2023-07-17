@@ -8,11 +8,12 @@ category: 64aebfcf6c645e002384ccdc
 
 ```typescript
 interface IAuthService {
-  generateSiweLoginMessage(params: GenerateSiweLoginMessageRequest): Promise<GenerateSiweLoginMessageResponse>;
-  walletSiweLogin(params: WalletSiweLoginRequest): Promise<WalletSiweLoginResponse>;
-  createSiweMessage(address: string, statement: string, domain: string, chainId: number): string;
-  login(data: LoginRequest): Promise<LoginResponse>;
-  emailSession(data: SessionRequest): Promise<SessionResponse>;
+  generateSiweSignedMessage(params: GenerateSiweSignedMessageRequest): Promise<GenerateSiweSignedMessageResponse>;
+  siweLogin(params: SiweLoginRequest): Promise<void>;
+  createSiweMessage(params: CreateSiweMessageRequest): string;
+  authenticateWithSiwe(params: AuthenticateWithSiweRequest): Promise<void>;
+  authenticateWithEmail(params: AuthenticateWithEmailRequest): Promise<AuthenticateWithEmailResponse>;
+  setUnblockSessionByEmailCode(params: SetUnblockSessionByEmailCodeRequest): Promise<void>;
 }
 ```
 
@@ -29,89 +30,61 @@ interface IEthereumProviderSigner {
 }
 ```
 
-<span id="AuthenticationMethod"></span>
+_In theory you will be using a provider that extends [this class](https://github.com/ethers-io/ethers.js/blob/5a56fc36d7bd78ed155308ec7bd0283ece2f6dbd/src.ts/providers/abstract-provider.ts#L434) from ethers. You will be able to get a signer that extends [this class](https://github.com/ethers-io/ethers.js/blob/5a56fc36d7bd78ed155308ec7bd0283ece2f6dbd/src.ts/providers/abstract-signer.ts#L60)._
 
-```typescript
-enum AuthenticationMethod {
-  SIWE = 'SIWE',
-  EMAIL = 'EMAIL',
-}
-```
+#### <span id="GenerateSiweSignedMessageRequest"></span>GenerateSiweSignedMessageRequest
 
-#### <span id="LoginRequest"></span>LoginRequest
+| Field Name     | Type                                                |
+| -------------- | --------------------------------------------------- |
+| providerSigner | [IEthereumProviderSigner](#IEthereumProviderSigner) |
+| chainId        | string                                              |
+| signingUrl     | string                                              |
 
-- If authenticationMethod is `AuthenticationMethod.SIWE`
+#### <span id="SiweLoginRequest"></span>SiweLoginRequest
 
-| Field Name           | Type                                               |
-| -------------------- | -------------------------------------------------- |
-| authenticationMethod | [AuthenticationMethod](#AuthenticationMethod).SIWE |
-| message\*            | string                                             |
-| signature\*          | string                                             |
+| Field Name     | Type                                                |
+| -------------- | --------------------------------------------------- |
+| providerSigner | [IEthereumProviderSigner](#IEthereumProviderSigner) |
+| chainId        | string                                              |
+| signingUrl     | string                                              |
+
+#### <span id="CreateSiweMessageRequest"></span>CreateSiweMessageRequest
+
+| Field Name    | Type   |
+| ------------- | ------ |
+| walletAddress | string |
+| statement     | string |
+| chainId       | number |
+| signingUrl    | string |
+
+#### <span id="AuthenticateWithSiweRequest"></span>AuthenticateWithSiweRequest
+
+| Field Name  | Type   |
+| ----------- | ------ |
+| message\*   | string |
+| signature\* | string |
 
 \* to get a message and signature fields to use in a test case you can follow the following guide: <a href="https://docs.getunblock.com/docs/unblocker">https://docs.getunblock.com/docs/unblocker</a>
 
-- If authenticationMethod is `AuthenticationMethod.EMAIL`
-
-| Field Name           | Type                                                |
-| -------------------- | --------------------------------------------------- |
-| authenticationMethod | [AuthenticationMethod](#AuthenticationMethod).Email |
-| userUuid             | string                                              |
-
-#### <span id="SessionRequest"></span>SessionRequest
+#### <span id="AuthenticateWithEmailRequest"></span>AuthenticateWithEmailRequest
 
 | Field Name | Type   |
 | ---------- | ------ |
 | userUuid   | string |
-| code       | string |
 
-#### <span id="WalletSiweLoginRequest"></span>WalletSiweLoginRequest
-
-| Field Name     | Type                                                |
-| -------------- | --------------------------------------------------- |
-| providerSigner | [IEthereumProviderSigner](#IEthereumProviderSigner) |
-| chainId        | string                                              |
-| signingUrl     | string                                              |
-
-#### <span id="GenerateSiweLoginMessageRequest"></span>GenerateSiweLoginMessageRequest
-
-| Field Name     | Type                                                |
-| -------------- | --------------------------------------------------- |
-| providerSigner | [IEthereumProviderSigner](#IEthereumProviderSigner) |
-| chainId        | string                                              |
-| signingUrl     | string                                              |
-
-#### <span id="LoginResponse"></span>LoginResponse
-
-- If authenticationMethod is `AuthenticationMethod.SIWE`
-
-| Field Name           | Type                                               |
-| -------------------- | -------------------------------------------------- |
-| authenticationMethod | [AuthenticationMethod](#AuthenticationMethod).SIWE |
-| userUuid             | string                                             |
-| unblockSessionId     | string                                             |
-
-- If authenticationMethod is `AuthenticationMethod.EMAIL`
-
-| Field Name           | Type                                                |
-| -------------------- | --------------------------------------------------- |
-| authenticationMethod | [AuthenticationMethod](#AuthenticationMethod).Email |
-| message              | string                                              |
-| userUuid             | string                                              |
-
-#### <span id="SessionResponse"></span>SessionResponse
+#### <span id="SetUnblockSessionByEmailCodeRequest"></span>SetUnblockSessionByEmailCodeRequest
 
 | Field Name | Type   |
 | ---------- | ------ |
-| sessionId  | string |
+| code       | string |
 
-#### <span id="WalletSiweLoginResponse"></span>WalletSiweLoginResponse
+#### <span id="AuthenticateWithEmailResponse"></span>AuthenticateWithEmailResponse
 
-| Field Name       | Type   |
-| ---------------- | ------ |
-| userUuid         | string |
-| unblockSessionId | string |
+| Field Name | Type   |
+| ---------- | ------ |
+| message    | string |
 
-#### <span id="GenerateSiweLoginMessageResponse"></span>GenerateSiweLoginMessageResponse
+#### <span id="GenerateSiweSignedMessageResponse"></span>GenerateSiweSignedMessageResponse
 
 | Field Name | Type   |
 | ---------- | ------ |
@@ -120,116 +93,20 @@ enum AuthenticationMethod {
 
 ### Service Methods
 
-#### login
+#### authenticateWithSiwe
 
-<div><pre>login(params: <a href="#LoginRequest">LoginRequest</a>): Promise&#60;<a href="#LoginResponse">LoginResponse</a>&#62;</pre></div>
-
-##### Overview
-
-This method allows you to log in as a user using SIWE or our Email system. The SIWE system returns a Getunblock Session Id necessary for some of the functionalities provided by the SDK. The Email system will generate an email with a code that must be submitted using the emailSession method to get an unblock session id as well.
-
-##### Usage
-
-###### Typescript using `AuthenticationMethod.SIWE`
-
-```typescript
-import getunblockSDK, { AuthenticationMethod } from '@getunblock/sdk';
-
-(async () => {
-  // setup SDK
-  const sdk = getunblockSDK({
-    apiKey: 'API-Key [Some merchant Key]', // Key generated at the moment the merchant was created in getunblock system
-    prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
-  });
-
-  // SDK API call example
-  const result = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
-    message: '[Generated SIWE message]*',
-    signature: '[Generated SIWE signature]*',
-  });
-  // * more info at https://docs.getunblock.com/docs/unblocker
-})();
-```
-
-###### JavaScript using `AuthenticationMethod.SIWE`
-
-```javascript
-const getunblockSDK = require('@getunblock/sdk').default;
-const { AuthenticationMethod } = require('@getunblock/sdk');
-
-(async () => {
-  // setup SDK
-  const sdk = getunblockSDK({
-    apiKey: 'API-Key [Some merchant Key]', // Key generated at the moment the merchant was created in getunblock system
-    prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
-  });
-
-  // SDK API call example
-  const result = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.SIWE,
-    message: '[Generated SIWE message]*',
-    signature: '[Generated SIWE signature]*',
-  });
-  // * more info at https://docs.getunblock.com/docs/unblocker
-})();
-```
-
-###### Typescript using `AuthenticationMethod.EMAIL`
-
-```typescript
-import getunblockSDK, { AuthenticationMethod } from '@getunblock/sdk';
-
-(async () => {
-  // setup SDK
-  const sdk = getunblockSDK({
-    apiKey: 'API-Key [Some merchant Key]', // Key generated at the moment the merchant was created in getunblock system
-    prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
-  });
-
-  // SDK API call example
-  const result = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.EMAIL,
-    userUuid: '[user uuid value]',
-  });
-})();
-```
-
-###### JavaScript using `AuthenticationMethod.EMAIL`
-
-```javascript
-const getunblockSDK = require('@getunblock/sdk').default;
-const { AuthenticationMethod } = require('@getunblock/sdk');
-
-(async () => {
-  // setup SDK
-  const sdk = getunblockSDK({
-    apiKey: 'API-Key [Some merchant Key]', // Key generated at the moment the merchant was created in getunblock system
-    prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
-  });
-
-  // SDK API call example
-  const result = await sdk.auth.login({
-    authenticationMethod: AuthenticationMethod.EMAIL,
-    userUuid: '[an user uuid value]',
-  });
-})();
-```
-
-#### emailSession
-
-<div><pre>emailSession(params: <a href="#SessionRequest">SessionRequest</a>): Promise&#60;<a href="#SessionResponse">SessionResponse</a>&#62;</pre></div>
+<div><pre>authenticateWithSiwe(params: <a href="#AuthenticateWithSiweRequest">AuthenticateWithSiweRequest</a>): Promise&#60;void&#62;</pre></div>
 
 ##### Overview
 
-If the Email login system (`AuthenticationMethod.EMAIL`) is used you will need to get the Session Id using this method. You should use the received code in the received email.
+This method allows you to authenticate a user using the SIWE system. This will set in the SDK the data needed to execute all of the methods related to the user.
 
 ##### Usage
 
 ###### Typescript
 
 ```typescript
-import getunblockSDK, { AuthenticationMethod } from '@getunblock/sdk';
+import getunblockSDK from '@getunblock/sdk';
 
 (async () => {
   // setup SDK
@@ -239,8 +116,107 @@ import getunblockSDK, { AuthenticationMethod } from '@getunblock/sdk';
   });
 
   // SDK API call example
-  const result = await sdk.auth.emailSession({
+  const result = await sdk.auth.authenticateWithSiwe({
+    message: '[Generated SIWE message]*',
+    signature: '[Generated SIWE signature]*',
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+})();
+```
+
+###### JavaScript
+
+```javascript
+const getunblockSDK = require('@getunblock/sdk').default;
+
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey: 'API-Key [Some merchant Key]', // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
+  });
+
+  // SDK API call example
+  const result = await sdk.auth.authenticateWithSiwe({
+    message: '[Generated SIWE message]*',
+    signature: '[Generated SIWE signature]*',
+  });
+  // * more info at https://docs.getunblock.com/docs/unblocker
+})();
+```
+
+#### <span id="authenticateWithEmail"></span>authenticateWithEmail
+
+<div><pre>authenticateWithEmail(params: <a href="#AuthenticateWithEmailRequest">AuthenticateWithEmailRequest</a>): Promise&#60;<a href="#AuthenticateWithEmailResponse">AuthenticateWithEmailResponse</a>&#62;</pre></div>
+
+##### Overview
+
+This method allows you to start the email login process. An email with a code will be sent to the user's email. After the user submits that code in your GUI you should call the <a href="#setUnblockSessionByEmailCode">setUnblockSessionByEmailCode</a> method to finalize the login process.
+
+##### Usage
+
+###### Typescript
+
+```typescript
+import getunblockSDK from '@getunblock/sdk';
+
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey: 'API-Key [Some merchant Key]', // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
+  });
+
+  // SDK API call example
+  const result = await sdk.auth.authenticateWithEmail({
+    userUuid: '[user uuid value]',
+  });
+})();
+```
+
+###### JavaScript
+
+```javascript
+const getunblockSDK = require('@getunblock/sdk').default;
+
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey: 'API-Key [Some merchant Key]', // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
+  });
+
+  // SDK API call example
+  const result = await sdk.auth.authenticateWithEmail({
     userUuid: '[an user uuid value]',
+  });
+})();
+```
+
+#### <span id="setUnblockSessionByEmailCode"></span>setUnblockSessionByEmailCode
+
+<div><pre>setUnblockSessionByEmailCode(params: <a href="#SetUnblockSessionByEmailCodeRequest">SetUnblockSessionByEmailCodeRequest</a>): Promise&#60;void&#62;</pre></div>
+
+##### Overview
+
+After the user has submitted in your provided GUI the code generated by the <a href="#authenticateWithEmail">authenticateWithEmail</a> method, you should call this method to complete the Login by email process.
+
+##### Usage
+
+###### Typescript
+
+```typescript
+import getunblockSDK from '@getunblock/sdk';
+
+(async () => {
+  // setup SDK
+  const sdk = getunblockSDK({
+    apiKey: 'API-Key [Some merchant Key]', // Key generated at the moment the merchant was created in getunblock system
+    prod: false, // If true, Production environment will be used otherwise Sandbox will be used instead
+  });
+
+  // SDK API call example
+  const result = await sdk.auth.setUnblockSessionByEmailCode({
     code: '[The code received in the email]',
   });
 })();
@@ -250,7 +226,6 @@ import getunblockSDK, { AuthenticationMethod } from '@getunblock/sdk';
 
 ```javascript
 const getunblockSDK = require('@getunblock/sdk').default;
-const { AuthenticationMethod } = require('@getunblock/sdk');
 
 (async () => {
   // setup SDK
@@ -260,8 +235,7 @@ const { AuthenticationMethod } = require('@getunblock/sdk');
   });
 
   // SDK API call example
-  const result = await sdk.auth.emailSession({
-    userUuid: '[an user uuid value]',
+  const result = await sdk.auth.setUnblockSessionByEmailCode({
     code: '[The code received in the email]',
   });
 })();
@@ -269,13 +243,11 @@ const { AuthenticationMethod } = require('@getunblock/sdk');
 
 #### createSiweMessage
 
-Will generate Siwe login message.
-
-<div><pre>createSiweMessage(address: string, statement: string, domain: string, chainId: number): string</pre></div>
+<div><pre>createSiweMessage(params: <a href="#CreateSiweMessageRequest">CreateSiweMessageRequest</a>): string</pre></div>
 
 ##### Overview
 
-Will generate a Siwe login message that is required for login with SIWE.
+Will generate a message to be used in a Siwe authentication.
 
 ##### Usage
 
@@ -325,13 +297,13 @@ const getunblockSDK = require("@getunblock/sdk").default;
 })();
 ```
 
-#### generateSiweLoginMessage
+#### generateSiweSignedMessage
 
-<div><pre>generateSiweLoginMessage(params: <a href="#GenerateSiweLoginMessageRequest">GenerateSiweLoginMessageRequest</a>): Promise&#60;<a href="#GenerateSiweLoginMessageResponse">GenerateSiweLoginMessageResponse</a>&#62;</pre></div>
+<div><pre>generateSiweSignedMessage(params: <a href="#GenerateSiweSignedMessageRequest">GenerateSiweSignedMessageRequest</a>): Promise&#60;<a href="#GenerateSiweSignedMessageResponse">GenerateSiweSignedMessageResponse</a>&#62;</pre></div>
 
 ##### Overview
 
-Will generate Siwe Login message and signature. It requires a provider signer to sign the message.
+Will generate a object with message and signature. It requires a provider signer to sign the message.
 
 ##### Usage
 
@@ -351,7 +323,7 @@ import getunblockSDK from '@getunblock/sdk';
   const yourOwnProviderSigner = YouOwnProviderSignerFactory.get();
 
   // SDK API call example
-  const result = await sdk.auth.generateSiweLoginMessage({
+  const result = await sdk.auth.generateSiweSignedMessage({
     providerSigner: yourOwnProviderSigner,
     chainId: '8001',
     signingUrl: string,
@@ -376,7 +348,7 @@ const getunblockSDK = require("@getunblock/sdk").default;
   const yourOwnProviderSigner = YouOwnProviderSignerFactory.get();
 
   // SDK API call example
-  const result = await sdk.auth.generateSiweLoginMessage(
+  const result = await sdk.auth.generateSiweSignedMessage(
       providerSigner: yourOwnProviderSigner,
       chainId: '8001',
       signingUrl: string,
@@ -384,13 +356,13 @@ const getunblockSDK = require("@getunblock/sdk").default;
 })();
 ```
 
-#### walletSiweLogin
+#### siweLogin
 
-<div><pre>walletSiweLogin(params: <a href="#WalletSiweLoginRequest">WalletSiweLoginRequest</a>): Promise&#60;<a href="#WalletSiweLoginResponse">WalletSiweLoginResponse</a>&#62;</pre></div>
+<div><pre>siweLogin(params: <a href="#SiweLoginRequest">SiweLoginRequest</a>): Promise&#60;<a href="#SiweLoginResponse">SiweLoginResponse</a>&#62;</pre></div>
 
 ##### Overview
 
-Will generate a Siwe login message and signature then it logs in with SIWE. Returns user uuid and unblock session id.
+When providing a provider signer this method will do the entire login process made in one run.
 
 ##### Usage
 
@@ -410,7 +382,7 @@ import getunblockSDK from '@getunblock/sdk';
   const yourOwnProviderSigner = YouOwnProviderSignerFactory.get();
 
   // SDK API call example
-  const result = await sdk.auth.walletSiweLogin({
+  const result = await sdk.auth.siweLogin({
     providerSigner: yourOwnProviderSigner,
     chainId: '8001',
     signingUrl: string,
@@ -435,7 +407,7 @@ const getunblockSDK = require("@getunblock/sdk").default;
   const yourOwnProviderSigner = YouOwnProviderSignerFactory.get();
 
   // SDK API call example
-  const result = await sdk.auth.walletSiweLogin(
+  const result = await sdk.auth.siweLogin(
       providerSigner: yourOwnProviderSigner,
       chainId: '8001',
       signingUrl: string,
