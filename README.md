@@ -1,6 +1,7 @@
 ---
 title: System Development Kit - Javascript
 excerpt: GetUnblock SDK is a JS library for interacting with Unblock APIs
+category: 64aebfcf6c645e002384ccdc
 ---
 
 ## Installation
@@ -59,16 +60,19 @@ const { Currency } = require("@getunblock/sdk");
 })();
 ```
 
-## List of Services Available
+<div class="CodeMirror-gutter-filler">
+<h3>List of Services Available</h3>
 
-* [auth](/docs/AUTH.md)
-* [company](/docs/COMPANY.md)
-* [exchangeRates](/docs/EXCHANGE_RATES.md)
-* [kyc](/docs/KYC.md)
-* [offramp](/docs/OFFRAMP.md)
-* [process](/docs/PROCESS.md)
-* [remoteBankAccount](/docs/REMOTE_BANK_ACCOUNT.md)
-* [tokenPreferences](/docs/TOKEN_PREFERENCES.md)
-* [transactionFee](/docs/TRANSACTION_FEE.md)
-* [unblockBankAccount](/docs/UNBLOCK_BANK_ACCOUNT.md)
-* [user](/docs/USER.md)
+* [auth](docs/AUTH.md)
+* [company](docs/COMPANY.md)
+* [exchangeRates](docs/EXCHANGE_RATES.md)
+* [kyc](docs/KYC.md)
+* [offramp](docs/OFFRAMP.md)
+* [process](docs/PROCESS.md)
+* [remoteBankAccount](docs/REMOTE_BANK_ACCOUNT.md)
+* [tokenPreferences](docs/TOKEN_PREFERENCES.md)
+* [transactionFee](docs/TRANSACTION_FEE.md)
+* [unblockBankAccount](docs/UNBLOCK_BANK_ACCOUNT.md)
+* [user](docs/USER.md)
+
+</div>

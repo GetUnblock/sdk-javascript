@@ -14,6 +14,8 @@ import {
   GetRequiredKycInformationResponse,
   GetUploadedKycDocumentsForUserRequest,
   GetUploadedKycDocumentsForUserResponse,
+  InitSumsubSdkRequest,
+  InitSumsubSdkResponse,
   OnboardingRequest,
   OnboardingResponse,
   StartKycVerificationRequest,
@@ -48,6 +50,8 @@ export interface IKycService {
   ): Promise<GetRequiredKycInformationResponse[]>;
 
   onboarding(dto: OnboardingRequest): Promise<OnboardingResponse>;
+
+  initSumsubSdk(dto: InitSumsubSdkRequest): Promise<InitSumsubSdkResponse>;
 }
 
 export class KycService extends BaseService implements IKycService {
@@ -279,6 +283,26 @@ export class KycService extends BaseService implements IKycService {
         applicantCreated: applicant.created,
         uploadUuid: upload.uploadUuid,
         verificationStarted: verification.started,
+      };
+    } catch (error) {
+      ErrorHandler.handle(error);
+    }
+  }
+
+  async initSumsubSdk(dto: InitSumsubSdkRequest): Promise<InitSumsubSdkResponse> {
+    const { sessionData, applicantData } = dto;
+    try {
+      const applicant: CreateKYCApplicantResponse = await this.createKYCApplicant({
+        ...sessionData,
+        ...applicantData,
+      });
+      const sumsubSdk: GetAccessTokenForUserApplicantResponse =
+        await this.getAccessTokenForUserApplicant({
+          ...sessionData,
+        });
+      return {
+        applicantCreated: applicant.created,
+        token: sumsubSdk.token,
       };
     } catch (error) {
       ErrorHandler.handle(error);

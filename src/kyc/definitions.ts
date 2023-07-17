@@ -100,3 +100,14 @@ export type OnboardingResponse = {
   uploadUuid: string;
   verificationStarted: boolean;
 };
+
+/** Request dto */
+export type InitSumsubSdkRequest = {
+  sessionData: UserSessionData;
+  applicantData: ApplicantData;
+};
+
+export type InitSumsubSdkResponse = {
+  applicantCreated: boolean;
+  token: string;
+};

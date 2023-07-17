@@ -1,4 +1,8 @@
-# GetUnblock SDK - COMPANY Service
+---
+title: Company Service
+excerpt: Reference page for the Company Service Interface
+category: 64aebfcf6c645e002384ccdc
+---
 
 ## Interface
 
@@ -18,10 +22,10 @@ interface ICompanyService {
 | Field Name | Type |
 | ---------- | ---- |
 | name | string |
-| type | [CompanyType](/docs/COMMON_TYPES.md#CompanyType) |
+| type | [CompanyType](COMMON_TYPES.md#CompanyType) |
 | registeredAddress? | string |
 | city | string |
-| country | [Country](/docs/COMMON_TYPES.md#Country) |
+| country | [Country](COMMON_TYPES.md#Country) |
 | registrationNumber | string |
 | contactName | string |
 | phone | string |
@@ -36,10 +40,10 @@ interface ICompanyService {
 | Field Name | Type |
 | ---------- | ---- |
 | name | string |
-| type | [CompanyType](/docs/COMMON_TYPES.md#CompanyType) |
+| type | [CompanyType](COMMON_TYPES.md#CompanyType) |
 | registeredAddress? | string |
 | city | string |
-| country | [Country](/docs/COMMON_TYPES.md#Country) |
+| country | [Country](COMMON_TYPES.md#Country) |
 | registrationNumber | string |
 | contactName | string |
 | phone | string |
@@ -54,7 +58,7 @@ interface ICompanyService {
 | ---------- | ---- |
 | companyUuid | string |
 | userUuid | string |
-| role | [UserCompanyRole](/docs/COMMON_TYPES.md#UserCompanyRole) |
+| role | [UserCompanyRole](COMMON_TYPES.md#UserCompanyRole) |
 
 #### <span id="RemoveUserFromCompanyRequest"></span>RemoveUserFromCompanyRequest
 
@@ -340,17 +344,19 @@ const getunblockSDK = require("@getunblock/sdk").default;
 })();
 ```
 
-## Other Services Available
+<div class="CodeMirror-gutter-filler">
+<h3>Other Services Available</h3>
 
-* [auth](/docs/AUTH.md)
-* [exchangeRates](/docs/EXCHANGE_RATES.md)
-* [kyc](/docs/KYC.md)
-* [offramp](/docs/OFFRAMP.md)
-* [process](/docs/PROCESS.md)
-* [remoteBankAccount](/docs/REMOTE_BANK_ACCOUNT.md)
-* [tokenPreferences](/docs/TOKEN_PREFERENCES.md)
-* [transactionFee](/docs/TRANSACTION_FEE.md)
-* [unblockBankAccount](/docs/UNBLOCK_BANK_ACCOUNT.md)
-* [user](/docs/USER.md)
+* [auth](AUTH.md)
+* [exchangeRates](EXCHANGE_RATES.md)
+* [kyc](KYC.md)
+* [offramp](OFFRAMP.md)
+* [process](PROCESS.md)
+* [remoteBankAccount](REMOTE_BANK_ACCOUNT.md)
+* [tokenPreferences](TOKEN_PREFERENCES.md)
+* [transactionFee](TRANSACTION_FEE.md)
+* [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
+* [user](USER.md)
 
-[Back to README](/README.md)
+[Back to README](../README.md)
+</div>
