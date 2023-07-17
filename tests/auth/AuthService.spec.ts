@@ -1,13 +1,13 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
+import { SdkSettings } from '../../src/SdkSettings';
 import { AuthService } from '../../src/auth/AuthService';
 import {
-  GenerateSiweLoginMessageRequest,
-  LoginRequest,
-  SessionRequest,
+  AuthenticateWithEmailRequest,
+  AuthenticateWithSiweRequest,
+  GenerateSiweSignedMessageRequest,
+  SetUnblockSessionByEmailCodeRequest,
 } from '../../src/auth/definitions';
-import { SdkSettings } from '../../src/definitions';
-import { AuthenticationMethod } from '../../src/enums/AuthenticationMethod';
 import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
 import { propsMock } from '../mocks/props.mock';
 import { mockEthereumProviderSigner } from './AuthService.mock';
@@ -26,6 +26,10 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     props = propsMock();
+    props.setUserSessionData({
+      userUuid: faker.datatype.uuid(),
+      unblockSessionId: faker.datatype.uuid(),
+    });
     axiosError = axiosErrorMock();
     randomError = randomErrorMock();
   });
@@ -34,13 +38,11 @@ describe('AuthService', () => {
     jest.resetAllMocks();
   });
 
-  describe('login', () => {
+  describe('authenticateWithSiwe', () => {
     // Happy
     it('Should call axios POST with expected headers and body for SIWE authentication', async () => {
       // Arrange
-
-      const credentials: LoginRequest = {
-        authenticationMethod: AuthenticationMethod.SIWE,
+      const params: AuthenticateWithSiweRequest = {
         message: faker.lorem.sentence(),
         signature: faker.datatype.hexadecimal({ length: 128 }),
       };
@@ -54,15 +56,12 @@ describe('AuthService', () => {
           unblock_session_id: expectedUnblockSessionId,
           user_uuid: expectedUserUuid,
         },
-      } as AxiosResponse<{
-        user_uuid: string;
-        unblock_session_id: string;
-      }>);
+      } as AxiosResponse);
 
       const expectedPath = '/auth/login';
       const expectedBody = {
-        message: credentials.message,
-        signature: credentials.signature,
+        message: params.message,
+        signature: params.signature,
       };
       const expectedConfig = {
         headers: {
@@ -75,71 +74,19 @@ describe('AuthService', () => {
       const service = new AuthService(props);
 
       // Act
-      const response = await service.login(credentials);
+      await service.authenticateWithSiwe(params);
 
       // Assert
       expect(axiosClient.post).toHaveBeenCalledTimes(1);
       expect(axiosClient.post).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
-      expect(response).toStrictEqual({
-        authenticationMethod: AuthenticationMethod.SIWE,
-        userUuid: expectedUserUuid,
-        unblockSessionId: expectedUnblockSessionId,
-      });
-    });
-
-    it('Should call axios POST with expected headers and body for EMAIL authentication', async () => {
-      // Arrange
-
-      const credentials: LoginRequest = {
-        authenticationMethod: AuthenticationMethod.EMAIL,
-        userUuid: faker.datatype.uuid(),
-      };
-
-      const expectedMessage = faker.lorem.sentence();
-
-      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'post').mockResolvedValue({
-        data: {
-          message: expectedMessage,
-          user_uuid: credentials.userUuid,
-        },
-      } as AxiosResponse<{
-        user_uuid: string;
-        message: string;
-      }>);
-      const expectedPath = '/auth/login';
-      const expectedBody = {
-        user_uuid: credentials.userUuid,
-      };
-      const expectedConfig = {
-        headers: {
-          'content-type': 'application/json',
-          accept: 'application/json',
-          Authorization: props.apiKey,
-        },
-      };
-
-      const service = new AuthService(props);
-
-      // Act
-      const response = await service.login(credentials);
-
-      // Assert
-      expect(axiosClient.post).toHaveBeenCalledTimes(1);
-      expect(axiosClient.post).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
-      expect(response).toStrictEqual({
-        authenticationMethod: AuthenticationMethod.EMAIL,
-        message: expectedMessage,
-        userUuid: credentials.userUuid,
-      });
+      expect(props.userSessionData?.userUuid).toBe(expectedUserUuid);
+      expect(props.userSessionData?.unblockSessionId).toBe(expectedUnblockSessionId);
     });
 
     // Sad
     it('Should throw expected error when SIWE authentication has an Axios Error', async () => {
       // Arrange
-
-      const credentials: LoginRequest = {
-        authenticationMethod: AuthenticationMethod.SIWE,
+      const params: AuthenticateWithSiweRequest = {
         message: faker.lorem.sentence(),
         signature: faker.datatype.hexadecimal({ length: 128 }),
       };
@@ -153,7 +100,7 @@ describe('AuthService', () => {
 
       // Act
       try {
-        await service.login(credentials);
+        await service.authenticateWithSiwe(params);
       } catch (e) {
         resultedError = e;
       }
@@ -165,9 +112,7 @@ describe('AuthService', () => {
 
     it('Should throw expected error when SIWE authentication has an Unexpected Error', async () => {
       // Arrange
-
-      const credentials: LoginRequest = {
-        authenticationMethod: AuthenticationMethod.SIWE,
+      const params: AuthenticateWithSiweRequest = {
         message: faker.lorem.sentence(),
         signature: faker.datatype.hexadecimal({ length: 128 }),
       };
@@ -182,7 +127,7 @@ describe('AuthService', () => {
 
       // Act
       try {
-        await service.login(credentials);
+        await service.authenticateWithSiwe(params);
       } catch (error) {
         expectedError = error;
       }
@@ -191,12 +136,60 @@ describe('AuthService', () => {
       expect(expectedError).toBeInstanceOf(Error);
       expect((expectedError as Error).message).toBe(expectedErrorMesage);
     });
+  });
+
+  describe('authenticateWithEmail', () => {
+    // Happy
+
+    it('Should call axios POST with expected headers and body for EMAIL authentication', async () => {
+      // Arrange
+      const params: AuthenticateWithEmailRequest = {
+        userUuid: faker.datatype.uuid(),
+      };
+
+      const expectedMessage = faker.lorem.sentence();
+
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+      jest.spyOn(axiosClient, 'post').mockResolvedValue({
+        data: {
+          message: expectedMessage,
+          user_uuid: params.userUuid,
+        },
+      } as AxiosResponse<{
+        user_uuid: string;
+        message: string;
+      }>);
+      const expectedPath = '/auth/login';
+      const expectedBody = {
+        user_uuid: params.userUuid,
+      };
+      const expectedConfig = {
+        headers: {
+          'content-type': 'application/json',
+          accept: 'application/json',
+          Authorization: props.apiKey,
+        },
+      };
+
+      const service = new AuthService(props);
+
+      // Act
+      const response = await service.authenticateWithEmail(params);
+
+      // Assert
+      expect(axiosClient.post).toHaveBeenCalledTimes(1);
+      expect(axiosClient.post).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
+      expect(response).toStrictEqual({
+        message: expectedMessage,
+      });
+      expect(props.userSessionData?.userUuid).toBe(params.userUuid);
+    });
+
+    // Sad
 
     it('Should throw expected error when EMAIL authentication has an Axios Error', async () => {
       // Arrange
-
-      const credentials: LoginRequest = {
-        authenticationMethod: AuthenticationMethod.EMAIL,
+      const params: AuthenticateWithEmailRequest = {
         userUuid: faker.datatype.uuid(),
       };
 
@@ -209,7 +202,7 @@ describe('AuthService', () => {
 
       // Act
       try {
-        await service.login(credentials);
+        await service.authenticateWithEmail(params);
       } catch (e) {
         resultedError = e;
       }
@@ -221,9 +214,7 @@ describe('AuthService', () => {
 
     it('Should throw expected error when EMAIL authentication has an Unexpected Error', async () => {
       // Arrange
-
-      const credentials: LoginRequest = {
-        authenticationMethod: AuthenticationMethod.EMAIL,
+      const params: AuthenticateWithEmailRequest = {
         userUuid: faker.datatype.uuid(),
       };
 
@@ -236,7 +227,7 @@ describe('AuthService', () => {
 
       // Act
       try {
-        await service.login(credentials);
+        await service.authenticateWithEmail(params);
       } catch (e) {
         resultedError = e;
       }
@@ -247,14 +238,13 @@ describe('AuthService', () => {
     });
   });
 
-  describe('emailSession', () => {
+  describe('setUnblockSessionByEmailCode', () => {
     // Happy
     it('Should call axios GET with expected headers and parameters', async () => {
       // Arrange
 
-      const emailSessionParams: SessionRequest = {
-        code: faker.datatype.hexadecimal({ length: 256 }),
-        userUuid: faker.datatype.uuid(),
+      const emailSessionParams: SetUnblockSessionByEmailCodeRequest = {
+        emailCode: faker.datatype.hexadecimal({ length: 256 }),
       };
 
       const expectedUnblockSessionId = faker.datatype.uuid();
@@ -276,31 +266,27 @@ describe('AuthService', () => {
           Authorization: props.apiKey,
         },
         params: {
-          user_uuid: emailSessionParams.userUuid,
-          code: emailSessionParams.code,
+          user_uuid: props.userSessionData?.userUuid,
+          code: emailSessionParams.emailCode,
         },
       };
 
       const service = new AuthService(props);
 
       // Act
-      const response = await service.emailSession(emailSessionParams);
+      await service.setUnblockSessionByEmailCode(emailSessionParams);
 
       // Assert
       expect(axiosClient.get).toHaveBeenCalledTimes(1);
       expect(axiosClient.get).toHaveBeenLastCalledWith(expectedPath, expectedConfig);
-      expect(response).toStrictEqual({
-        sessionId: expectedUnblockSessionId,
-      });
+      expect(props.userSessionData?.unblockSessionId).toBe(expectedUnblockSessionId);
     });
 
     // Sad
     it('Should throw expected error when GET call in emailSession has an Axios Error', async () => {
       // Arrange
-
-      const emailSessionParams: SessionRequest = {
-        code: faker.datatype.hexadecimal({ length: 256 }),
-        userUuid: faker.datatype.uuid(),
+      const emailSessionParams: SetUnblockSessionByEmailCodeRequest = {
+        emailCode: faker.datatype.hexadecimal({ length: 256 }),
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -312,7 +298,7 @@ describe('AuthService', () => {
 
       // Act
       try {
-        await service.emailSession(emailSessionParams);
+        await service.setUnblockSessionByEmailCode(emailSessionParams);
       } catch (e) {
         resultedError = e;
       }
@@ -325,9 +311,8 @@ describe('AuthService', () => {
     it('Should throw expected error when GET call in emailSession has an Unexpected Error', async () => {
       // Arrange
 
-      const emailSessionParams: SessionRequest = {
-        code: faker.datatype.hexadecimal({ length: 256 }),
-        userUuid: faker.datatype.uuid(),
+      const emailSessionParams: SetUnblockSessionByEmailCodeRequest = {
+        emailCode: faker.datatype.hexadecimal({ length: 256 }),
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -339,7 +324,7 @@ describe('AuthService', () => {
 
       // Act
       try {
-        await service.emailSession(emailSessionParams);
+        await service.setUnblockSessionByEmailCode(emailSessionParams);
       } catch (e) {
         resultedError = e;
       }
@@ -357,7 +342,7 @@ describe('AuthService', () => {
       const fakeSignature = faker.datatype.hexadecimal({ length: 512 }).toUpperCase();
       const mockSigner = mockEthereumProviderSigner();
 
-      const params: GenerateSiweLoginMessageRequest = {
+      const params: GenerateSiweSignedMessageRequest = {
         chainId: '80001',
         signingUrl: 'https://sandbox.getunblock.com',
         providerSigner: mockSigner,
@@ -375,7 +360,7 @@ describe('AuthService', () => {
       }/auth/login\nVersion: 1\nChain ID: ${params.chainId}`;
 
       // Act
-      const result = await service.generateSiweLoginMessage(params);
+      const result = await service.generateSiweSignedMessage(params);
 
       // Assert
       expect(result.message.indexOf(expectedMessage)).toBe(0);
@@ -385,7 +370,7 @@ describe('AuthService', () => {
     it('Should throw an expected error when the provider signer throws an unexpected error when getting the wallet address', async () => {
       const mockSigner = mockEthereumProviderSigner();
 
-      const params: GenerateSiweLoginMessageRequest = {
+      const params: GenerateSiweSignedMessageRequest = {
         chainId: '80001',
         signingUrl: 'https://sandbox.getunblock.com',
         providerSigner: mockSigner,
@@ -407,7 +392,7 @@ describe('AuthService', () => {
 
       // Act
       try {
-        await service.generateSiweLoginMessage(params);
+        await service.generateSiweSignedMessage(params);
       } catch (e) {
         resultedError = e;
       }
@@ -421,7 +406,7 @@ describe('AuthService', () => {
       const walletAddress = '0xbEFcCcFC70d97884f70b41927f6D20C511F4A36C';
       const mockSigner = mockEthereumProviderSigner();
 
-      const params: GenerateSiweLoginMessageRequest = {
+      const params: GenerateSiweSignedMessageRequest = {
         chainId: '80001',
         signingUrl: 'https://sandbox.getunblock.com',
         providerSigner: mockSigner,
@@ -443,7 +428,7 @@ describe('AuthService', () => {
 
       // Act
       try {
-        await service.generateSiweLoginMessage(params);
+        await service.generateSiweSignedMessage(params);
       } catch (e) {
         resultedError = e;
       }

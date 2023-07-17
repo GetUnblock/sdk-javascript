@@ -1,10 +1,5 @@
 import { AxiosError } from 'axios';
-
-export class SiweSigningError extends Error {
-  constructor(public error: Error) {
-    super(error.message);
-  }
-}
+import { SiweSigningError } from './errors';
 
 export class ErrorHandler {
   static handle(error: unknown): never {

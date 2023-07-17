@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { SdkSettings } from '../../src/definitions';
+import { SdkSettings } from '../../src/SdkSettings';
 import { Currency } from '../../src/enums/Currency';
 import { PaymentMethods } from '../../src/enums/PaymentMethods';
 import { ProcessDirection } from '../../src/enums/ProcessDirection';

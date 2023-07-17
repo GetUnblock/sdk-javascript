@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { SdkSettings } from '../../src/definitions';
+import { SdkSettings } from '../../src/SdkSettings';
 import { ProcessStatus } from '../../src/enums/ProcessStatus';
 import { ProcessService } from '../../src/process/ProcessService';
 import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';

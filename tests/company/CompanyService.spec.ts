@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance } from 'axios';
+import { SdkSettings } from '../../src/SdkSettings';
 import { CompanyService } from '../../src/company/CompanyService';
 import {
   AddUserToCompanyApiRequestBody,
@@ -10,7 +11,6 @@ import {
   TargetAddress,
   UpdateCompanyApiRequestBody,
 } from '../../src/company/definitions';
-import { SdkSettings } from '../../src/definitions';
 import { UserCompanyRole } from '../../src/enums/UserCompanyRole';
 import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
 import { propsMock } from '../mocks/props.mock';

@@ -1,4 +1,3 @@
-import { UserSessionData } from '../definitions';
 import Country from '../enums/Country';
 import { ProcessStatus } from '../enums/ProcessStatus';
 import { UserStatus } from '../enums/UserStatus';
@@ -17,13 +16,9 @@ export type CreateUserResponse = {
   status: UserStatus;
 };
 
-export type GetUserStatusRequest = UserSessionData;
-
 export type GetUserStatusResponse = {
   status: UserStatus;
 };
-
-export type GetUserRampTransactionsRequest = UserSessionData;
 
 export type RampTransactionProcess = {
   uuid: string;

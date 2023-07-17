@@ -1,23 +1,20 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { ErrorHandler } from '../ErrorHandler';
-import { SdkSettings } from '../definitions';
+import { SdkSettings } from '../SdkSettings';
 import { ProcessStatus } from '../enums/ProcessStatus';
 import { UserStatus } from '../enums/UserStatus';
+import { UserSessionDataNotSetError } from '../errors';
 import {
   CreateUserRequest,
   CreateUserResponse,
-  GetUserRampTransactionsRequest,
   GetUserRampTransactionsResponse,
-  GetUserStatusRequest,
   GetUserStatusResponse,
 } from './definitions';
 
 export interface IUserService {
   createUser(params: CreateUserRequest): Promise<CreateUserResponse>;
-  getUserStatus(params: GetUserStatusRequest): Promise<GetUserStatusResponse>;
-  getUserRampTransactions(
-    params: GetUserRampTransactionsRequest,
-  ): Promise<GetUserRampTransactionsResponse>;
+  getUserStatus(): Promise<GetUserStatusResponse>;
+  getUserRampTransactions(): Promise<GetUserRampTransactionsResponse>;
 }
 
 export class UserService implements IUserService {
@@ -66,19 +63,23 @@ export class UserService implements IUserService {
     }
   }
 
-  async getUserStatus(params: GetUserStatusRequest): Promise<GetUserStatusResponse> {
+  async getUserStatus(): Promise<GetUserStatusResponse> {
     const { apiKey } = this.props;
 
-    const path = `/user/${params.userUuid}/status`;
-
-    const config = {
-      headers: {
-        accept: 'application/json',
-        Authorization: apiKey,
-        'unblock-session-id': params.unblockSessionId,
-      },
-    };
     try {
+      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+        throw new UserSessionDataNotSetError();
+      }
+
+      const path = `/user/${this.props.userSessionData.userUuid}/status`;
+
+      const config = {
+        headers: {
+          accept: 'application/json',
+          Authorization: apiKey,
+          'unblock-session-id': this.props.userSessionData.unblockSessionId,
+        },
+      };
       const response: AxiosResponse<{
         status: UserStatus;
       }> = await this.axiosClient.get(path, config);
@@ -91,22 +92,24 @@ export class UserService implements IUserService {
     }
   }
 
-  async getUserRampTransactions(
-    params: GetUserRampTransactionsRequest,
-  ): Promise<GetUserRampTransactionsResponse> {
+  async getUserRampTransactions(): Promise<GetUserRampTransactionsResponse> {
     const { apiKey } = this.props;
 
-    const path = `user/${params.userUuid}/process`;
-
-    const config = {
-      headers: {
-        accept: 'application/json',
-        Authorization: apiKey,
-        'unblock-session-id': params.unblockSessionId,
-      },
-    };
-
     try {
+      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+        throw new UserSessionDataNotSetError();
+      }
+
+      const path = `user/${this.props.userSessionData.userUuid}/process`;
+
+      const config = {
+        headers: {
+          accept: 'application/json',
+          Authorization: apiKey,
+          'unblock-session-id': this.props.userSessionData.unblockSessionId,
+        },
+      };
+
       const response: AxiosResponse<{
         message: string;
         processes: {

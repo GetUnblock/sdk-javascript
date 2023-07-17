@@ -1,8 +1,7 @@
-import { UserSessionData } from '../definitions';
 import { Chain } from '../enums/Chain';
 
 /** Request dto */
-export type GetUserOfframpAddressRequest = UserSessionData & { chain: Chain };
+export type GetUserOfframpAddressRequest = { chain: Chain };
 
 /** Response dto */
 export type GetUserOfframpAddressResponse = { message: string; addresses: string[] };
