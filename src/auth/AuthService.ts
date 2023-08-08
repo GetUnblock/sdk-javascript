@@ -72,21 +72,22 @@ export class AuthService extends BaseService implements IAuthService {
       const { emailCode: code } = requestParams;
       const { apiKey } = this.props;
 
-      const path = '/auth/login/session';
-      const params = {
+      const path = '/auth/otp';
+      const body = {
         user_uuid: this.props.userSessionData.userUuid,
         code: code,
       };
 
       const config = {
-        params,
         headers: {
           accept: 'application/json',
           Authorization: apiKey,
         },
       };
-      const response: AxiosResponse<{ session_id: string }> = await this.axiosClient.get(
+
+      const response: AxiosResponse<{ session_id: string }> = await this.axiosClient.post(
         path,
+        body,
         config,
       );
 

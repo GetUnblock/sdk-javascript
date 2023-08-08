@@ -240,7 +240,7 @@ describe('AuthService', () => {
 
   describe('setUnblockSessionByEmailCode', () => {
     // Happy
-    it('Should call axios GET with expected headers and parameters', async () => {
+    it('Should call axios POST with expected headers and body', async () => {
       // Arrange
 
       const emailSessionParams: SetUnblockSessionByEmailCodeRequest = {
@@ -250,7 +250,7 @@ describe('AuthService', () => {
       const expectedUnblockSessionId = faker.datatype.uuid();
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockResolvedValue({
+      jest.spyOn(axiosClient, 'post').mockResolvedValue({
         data: {
           session_id: expectedUnblockSessionId,
         },
@@ -258,16 +258,16 @@ describe('AuthService', () => {
         session_id: string;
       }>);
 
-      const expectedPath = '/auth/login/session';
+      const expectedPath = '/auth/otp';
+      const expectedBody = {
+        user_uuid: props.userSessionData?.userUuid,
+        code: emailSessionParams.emailCode,
+      };
 
       const expectedConfig = {
         headers: {
           accept: 'application/json',
           Authorization: props.apiKey,
-        },
-        params: {
-          user_uuid: props.userSessionData?.userUuid,
-          code: emailSessionParams.emailCode,
         },
       };
 
@@ -277,20 +277,20 @@ describe('AuthService', () => {
       await service.setUnblockSessionByEmailCode(emailSessionParams);
 
       // Assert
-      expect(axiosClient.get).toHaveBeenCalledTimes(1);
-      expect(axiosClient.get).toHaveBeenLastCalledWith(expectedPath, expectedConfig);
+      expect(axiosClient.post).toHaveBeenCalledTimes(1);
+      expect(axiosClient.post).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
       expect(props.userSessionData?.unblockSessionId).toBe(expectedUnblockSessionId);
     });
 
     // Sad
-    it('Should throw expected error when GET call in emailSession has an Axios Error', async () => {
+    it('Should throw expected error when POST call in emailSession has an Axios Error', async () => {
       // Arrange
       const emailSessionParams: SetUnblockSessionByEmailCodeRequest = {
         emailCode: faker.datatype.hexadecimal({ length: 256 }),
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
+      jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(axiosError);
 
       const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
       const service = new AuthService(props);
@@ -308,7 +308,7 @@ describe('AuthService', () => {
       expect((resultedError as Error).message).toBe(expectedErrorMesage);
     });
 
-    it('Should throw expected error when GET call in emailSession has an Unexpected Error', async () => {
+    it('Should throw expected error when POST call in emailSession has an Unexpected Error', async () => {
       // Arrange
 
       const emailSessionParams: SetUnblockSessionByEmailCodeRequest = {
@@ -316,7 +316,7 @@ describe('AuthService', () => {
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
+      jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(randomError);
 
       const expectedErrorMesage = `Unexpected error: ${randomError}`;
       const service = new AuthService(props);
