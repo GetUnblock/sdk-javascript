@@ -1,17 +1,17 @@
 import { SDK } from '../src/SDK';
 import { SdkSettings } from '../src/SdkSettings';
 import { ServiceFactory } from '../src/ServiceFactory';
-import { AuthService } from '../src/auth/AuthService';
-import { CompanyService } from '../src/company/CompanyService';
-import { ExchangeRatesService } from '../src/exchange-rates/ExchangeRatesService';
-import { KycService } from '../src/kyc/KycService';
-import { OfframpService } from '../src/offramp/OfframpService';
-import { ProcessService } from '../src/process/ProcessService';
-import { RemoteBankAccountService } from '../src/remote-bank-account/RemoteBankAccountService';
-import { TokenPreferenceService } from '../src/token-preference/TokenPreferenceService';
-import { TransactionFeeService } from '../src/transaction-fee/TransactionFeeService';
-import { UnblockBankAccountService } from '../src/unblock-bank-account/UnblockBankAccountService';
-import { UserService } from '../src/user/UserService';
+import { CorporateCryptoToFiatService } from '../src/corporate/crypto-to-fiat/CorporateCryptoToFiatService';
+import { CorporateFiatToCryptoService } from '../src/corporate/fiat-to-crypto/CorporateFiatToCryptoService';
+import { KybService } from '../src/corporate/kyb/KybService';
+import { CorporateManagementService } from '../src/corporate/management/CorporateManagementService';
+import { AuthService } from '../src/general/auth/AuthService';
+import { InformativeService } from '../src/general/informative/InformativeService';
+import { ProcessService } from '../src/general/process/ProcessService';
+import { UserCryptoToFiatService } from '../src/user/crypto-to-fiat/UserCryptoToFiatService';
+import { UserFiatToCryptoService } from '../src/user/fiat-to-crypto/UserFiatToCryptoService';
+import { KycService } from '../src/user/kyc/KycService';
+import { UserManagementService } from '../src/user/management/UserManagementService';
 import { propsMock } from './mocks/props.mock';
 
 describe('SDK', () => {
@@ -20,19 +20,45 @@ describe('SDK', () => {
     props = propsMock();
   });
 
-  describe('auth', () => {
-    it('Should return a AuthService type', () => {
-      // Arrange
-      const serviceFactory = new ServiceFactory(props);
+  describe('general', () => {
+    describe('auth', () => {
+      it('Should return a AuthService type', () => {
+        // Arrange
+        const serviceFactory = new ServiceFactory(props);
 
-      const sdk = new SDK(serviceFactory);
+        const sdk = new SDK(serviceFactory);
 
-      // Assert
-      expect(sdk.auth).toBeInstanceOf(AuthService);
+        // Assert
+        expect(sdk.general.auth).toBeInstanceOf(AuthService);
+      });
+    });
+
+    describe('informative', () => {
+      it('Should return a InformativeService type', () => {
+        // Arrange
+        const serviceFactory = new ServiceFactory(props);
+
+        const sdk = new SDK(serviceFactory);
+
+        // Assert
+        expect(sdk.general.informative).toBeInstanceOf(InformativeService);
+      });
+    });
+
+    describe('process', () => {
+      it('Should return a ProcessService type', () => {
+        // Arrange
+        const serviceFactory = new ServiceFactory(props);
+
+        const sdk = new SDK(serviceFactory);
+
+        // Assert
+        expect(sdk.general.process).toBeInstanceOf(ProcessService);
+      });
     });
   });
 
-  describe('kyc', () => {
+  describe('user', () => {
     it('Should return a KycService type', () => {
       // Arrange
       const serviceFactory = new ServiceFactory(props);
@@ -40,115 +66,79 @@ describe('SDK', () => {
       const sdk = new SDK(serviceFactory);
 
       // Assert
-      expect(sdk.kyc).toBeInstanceOf(KycService);
+      expect(sdk.user.kyc).toBeInstanceOf(KycService);
     });
-  });
 
-  describe('user', () => {
-    it('Should return a UserService type', () => {
+    it('Should return a UserManagementService type', () => {
       // Arrange
       const serviceFactory = new ServiceFactory(props);
 
       const sdk = new SDK(serviceFactory);
 
       // Assert
-      expect(sdk.user).toBeInstanceOf(UserService);
+      expect(sdk.user.management).toBeInstanceOf(UserManagementService);
     });
-  });
 
-  describe('exchangeRates', () => {
-    it('Should return a UserService type', () => {
+    it('Should return an UserCryptoToFiatService type', () => {
       // Arrange
       const serviceFactory = new ServiceFactory(props);
 
       const sdk = new SDK(serviceFactory);
 
       // Assert
-      expect(sdk.exchangeRates).toBeInstanceOf(ExchangeRatesService);
+      expect(sdk.user.cryptoToFiat).toBeInstanceOf(UserCryptoToFiatService);
     });
-  });
 
-  describe('remoteBankAccount', () => {
-    it('Should return a UserService type', () => {
+    it('Should return a UserFiatToCryptoService type', () => {
       // Arrange
       const serviceFactory = new ServiceFactory(props);
 
       const sdk = new SDK(serviceFactory);
 
       // Assert
-      expect(sdk.remoteBankAccount).toBeInstanceOf(RemoteBankAccountService);
+      expect(sdk.user.fiatToCrypto).toBeInstanceOf(UserFiatToCryptoService);
     });
   });
 
-  describe('unblockBankAccount', () => {
-    it('Should return a UserService type', () => {
+  describe('corporate', () => {
+    it('Should return a CorporateManagementService type', () => {
       // Arrange
       const serviceFactory = new ServiceFactory(props);
 
       const sdk = new SDK(serviceFactory);
 
       // Assert
-      expect(sdk.unblockBankAccount).toBeInstanceOf(UnblockBankAccountService);
+      expect(sdk.corporate.management).toBeInstanceOf(CorporateManagementService);
     });
-  });
 
-  describe('transactionFee', () => {
-    it('Should return a UserService type', () => {
+    it('Should return a CorporateCryptoToFiatService type', () => {
       // Arrange
       const serviceFactory = new ServiceFactory(props);
 
       const sdk = new SDK(serviceFactory);
 
       // Assert
-      expect(sdk.transactionFee).toBeInstanceOf(TransactionFeeService);
+      expect(sdk.corporate.cryptoToFiat).toBeInstanceOf(CorporateCryptoToFiatService);
     });
-  });
 
-  describe('process', () => {
-    it('Should return a ProcessService type', () => {
+    it('Should return a CorporateFiatToCryptoService type', () => {
       // Arrange
       const serviceFactory = new ServiceFactory(props);
 
       const sdk = new SDK(serviceFactory);
 
       // Assert
-      expect(sdk.process).toBeInstanceOf(ProcessService);
+      expect(sdk.corporate.fiatToCrypto).toBeInstanceOf(CorporateFiatToCryptoService);
     });
-  });
 
-  describe('company', () => {
-    it('Should return a CompanyService type', () => {
+    it('Should return a KybService type', () => {
       // Arrange
       const serviceFactory = new ServiceFactory(props);
 
       const sdk = new SDK(serviceFactory);
 
       // Assert
-      expect(sdk.company).toBeInstanceOf(CompanyService);
-    });
-  });
-
-  describe('token-preference', () => {
-    it('Should return a TokenPreferenceService type', () => {
-      // Arrange
-      const serviceFactory = new ServiceFactory(props);
-
-      const sdk = new SDK(serviceFactory);
-
-      // Assert
-      expect(sdk.tokenPreference).toBeInstanceOf(TokenPreferenceService);
-    });
-  });
-
-  describe('offramp', () => {
-    it('Should return an OfframpService type', () => {
-      // Arrange
-      const serviceFactory = new ServiceFactory(props);
-
-      const sdk = new SDK(serviceFactory);
-
-      // Assert
-      expect(sdk.offramp).toBeInstanceOf(OfframpService);
+      expect(sdk.corporate.kyb).toBeInstanceOf(KybService);
     });
   });
 });

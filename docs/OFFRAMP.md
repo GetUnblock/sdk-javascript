@@ -8,7 +8,7 @@ category: 64aebfcf6c645e002384ccdc
 
 ```typescript
 interface IOfframpService {
-  getUserOfframpAddress(dto: GetUserOfframpAddressRequest): Promise<GetUserOfframpAddressResponse>;
+  getUserOfframpAddress(params: GetUserOfframpAddressRequest): Promise<GetUserOfframpAddressResponse>;
 }
 ```
 
@@ -16,16 +16,16 @@ interface IOfframpService {
 
 #### <span id="GetUserOfframpAddressRequest"></span>GetUserOfframpAddressRequest
 
-| Field Name | Type |
-| ---------- | ---- |
-| chain | [Chain](COMMON_TYPES.md#chain) |
+| Field Name | Type                           |
+| ---------- | ------------------------------ |
+| chain      | [Chain](COMMON_TYPES.md#chain) |
 
 #### <span id="GetUserOfframpAddressResponse"></span>GetUserOfframpAddressResponse
 
-| Field Name | Type |
-| ---------- | ---- |
-| message | string |
-| addresses | string[] |
+| Field Name | Type     |
+| ---------- | -------- |
+| message    | string   |
+| addresses  | string[] |
 
 ### Service Methods
 
@@ -42,25 +42,24 @@ This method returns a crypto address to which user needs to transfer crypto asse
 ###### Typescript
 
 ```typescript
-import getunblockSDK, { Chain } from "@getunblock/sdk";
+import getunblockSDK, { Chain } from '@getunblock/sdk';
 
 (async () => {
   // setup SDK
   const sdk = getunblockSDK({
-    apiKey:
-      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    apiKey: 'API-Key [Some merchant Key]', // Key generated at the moment the merchant was created in getunblock system
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
-  
-  await sdk.auth.authenticateWithSiwe({    
-    message: "[Generated SIWE message]*",
-    signature: "[Generated SIWE signature]*",
+
+  await sdk.auth.authenticateWithSiwe({
+    message: '[Generated SIWE message]*',
+    signature: '[Generated SIWE signature]*',
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
-  
+
   // SDK API call example
   const result = await sdk.offramp.getUserOfframpAddress({
-    chain: Chain.POLYGON
+    chain: Chain.POLYGON,
   });
 })();
 ```
@@ -68,26 +67,25 @@ import getunblockSDK, { Chain } from "@getunblock/sdk";
 ###### Javascript
 
 ```javascript
-const getunblockSDK = require("@getunblock/sdk").default;
-const { Chain } = require("@getunblock/sdk"); 
+const getunblockSDK = require('@getunblock/sdk').default;
+const { Chain } = require('@getunblock/sdk');
 
 (async () => {
   // setup SDK
   const sdk = getunblockSDK({
-    apiKey:
-      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    apiKey: 'API-Key [Some merchant Key]', // Key generated at the moment the merchant was created in getunblock system
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
-  
-  await sdk.auth.authenticateWithSiwe({    
-    message: "[Generated SIWE message]*",
-    signature: "[Generated SIWE signature]*",
+
+  await sdk.auth.authenticateWithSiwe({
+    message: '[Generated SIWE message]*',
+    signature: '[Generated SIWE signature]*',
   });
   // * more info at https://docs.getunblock.com/docs/unblocker
-  
+
   // SDK API call example
   const result = await sdk.offramp.getUserOfframpAddress({
-    chain: Chain.POLYGON
+    chain: Chain.POLYGON,
   });
 })();
 ```
@@ -95,16 +93,17 @@ const { Chain } = require("@getunblock/sdk");
 <div class="CodeMirror-gutter-filler">
 <h3>Other Services Available</h3>
 
-* [auth](AUTH.md)
-* [company](COMPANY.md)
-* [exchangeRates](EXCHANGE_RATES.md)
-* [kyc](KYC.md)
-* [process](PROCESS.md)
-* [remoteBankAccount](REMOTE_BANK_ACCOUNT.md)
-* [tokenPreferences](TOKEN_PREFERENCES.md)
-* [transactionFee](TRANSACTION_FEE.md)
-* [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
-* [user](USER.md)
+- [auth](AUTH.md)
+- [company](COMPANY.md)
+- [exchangeRates](EXCHANGE_RATES.md)
+- [kyc](KYC.md)
+- [process](PROCESS.md)
+- [remoteBankAccount](REMOTE_BANK_ACCOUNT.md)
+- [tokenPreferences](TOKEN_PREFERENCES.md)
+- [transactionFee](TRANSACTION_FEE.md)
+- [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
+- [user](USER.md)
 
 [Back to README](../README.md)
+
 </div>

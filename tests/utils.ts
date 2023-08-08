@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { DocumentSubType, DocumentType, SourceOfFundsType } from 'src/kyc/definitions';
+import { DocumentSubType, DocumentType, SourceOfFundsType } from 'src/user/kyc/definitions';
 
 export const getRandomSourceOfFundsType = (): SourceOfFundsType =>
   faker.helpers.arrayElement(['SALARY', 'BUSINESS_INCOME', 'PENSION', 'OTHER']);
