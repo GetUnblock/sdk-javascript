@@ -1,39 +1,64 @@
+import { Chain } from '../../enums/Chain';
+import { Currency } from '../../enums/Currency';
+
+type EURAccountDetails = {
+  iban: string;
+};
+
+type GBPAccountDetails = {
+  accountNumber: string;
+  sortCode: string;
+};
+
+type AccountDetails =
+  | ({ currency: Currency.EURO } & EURAccountDetails)
+  | ({ currency: Currency.GBP } & GBPAccountDetails);
+
+type RemoteBankAccount = {
+  uuid: string;
+  iban: string;
+  bic: string;
+  accountNumber: string;
+  sortCode: string;
+  mainBeneficiary: string;
+  currency: Currency;
+};
+
 export type GetCorporateUnblockWalletRequest = {
-  not_defined_yet: true;
+  corporateUuid: string;
+  chain: Chain;
 };
 
 export type GetCorporateUnblockWalletResponse = {
-  not_defined_yet: true;
+  network: Chain;
+  address: string;
 };
 
 export type CreateCorporateRemoteBankAccountRequest = {
-  not_defined_yet: true;
+  corporateUuid: string;
+  accountName: string;
+  mainRemoteBankAccount: boolean;
+  accountDetails: AccountDetails;
 };
 
 export type CreateCorporateRemoteBankAccountResponse = {
-  not_defined_yet: true;
+  uuid: string;
 };
 
 export type GetCorporateRemoteBankAccountsRequest = {
-  not_defined_yet: true;
+  corporateUuid: string;
 };
 
-export type GetCorporateRemoteBankAccountsResponse = {
-  not_defined_yet: true;
-};
+export type GetCorporateRemoteBankAccountsResponse = [RemoteBankAccount];
 
-export type UpdateCorporateRemoteBankAccountRequest = {
-  not_defined_yet: true;
-};
-
-export type UpdateCorporateRemoteBankAccountResponse = {
-  not_defined_yet: true;
+export type UpdateCorporateMainRemoteBankAccountRequest = {
+  corporateUuid: string;
+  remoteBankAccountUuid: string;
 };
 
 export type GetCorporateRemoteBankAccountDetailsRequest = {
-  not_defined_yet: true;
+  corporateUuid: string;
+  remoteBankAccountUuid: string;
 };
 
-export type GetCorporateRemoteBankAccountDetailsResponse = {
-  not_defined_yet: true;
-};
+export type GetCorporateRemoteBankAccountDetailsResponse = RemoteBankAccount;
