@@ -8,11 +8,15 @@ category: 64aebfcf6c645e002384ccdc
 
 ```typescript
 interface IAuthService {
-  generateSiweSignedMessage(params: GenerateSiweSignedMessageRequest): Promise<GenerateSiweSignedMessageResponse>;
+  generateSiweSignedMessage(
+    params: GenerateSiweSignedMessageRequest,
+  ): Promise<GenerateSiweSignedMessageResponse>;
   siweLogin(params: SiweLoginRequest): Promise<void>;
   createSiweMessage(params: CreateSiweMessageRequest): string;
   authenticateWithSiwe(params: AuthenticateWithSiweRequest): Promise<void>;
-  authenticateWithEmail(params: AuthenticateWithEmailRequest): Promise<AuthenticateWithEmailResponse>;
+  authenticateWithEmail(
+    params: AuthenticateWithEmailRequest,
+  ): Promise<AuthenticateWithEmailResponse>;
   setUnblockSessionByEmailCode(params: SetUnblockSessionByEmailCodeRequest): Promise<void>;
 }
 ```
@@ -416,19 +420,8 @@ const getunblockSDK = require("@getunblock/sdk").default;
 ```
 
 <div class="CodeMirror-gutter-filler">
-<h3>Other Services Available</h3>
 
-- [company](COMPANY.md)
-- [exchangeRates](EXCHANGE_RATES.md)
-- [kyc](KYC.md)
-- [offramp](OFFRAMP.md)
-- [process](PROCESS.md)
-- [remoteBankAccount](REMOTE_BANK_ACCOUNT.md)
-- [tokenPreferences](TOKEN_PREFERENCES.md)
-- [transactionFee](TRANSACTION_FEE.md)
-- [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
-- [user](USER.md)
-
-[Back to README](../README.md)
+[Back to general services index](./index.md)
+[Back to root index](../index.md)
 
 </div>
