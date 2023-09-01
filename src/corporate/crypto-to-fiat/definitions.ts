@@ -20,7 +20,7 @@ type RemoteBankAccount = {
   bic: string;
   accountNumber: string;
   sortCode: string;
-  mainBeneficiary: string;
+  mainBeneficiary: boolean;
   currency: Currency;
 };
 
@@ -30,7 +30,7 @@ export type GetCorporateUnblockWalletRequest = {
 };
 
 export type GetCorporateUnblockWalletResponse = {
-  network: Chain;
+  chain: Chain;
   address: string;
 };
 
