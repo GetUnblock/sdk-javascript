@@ -8,8 +8,12 @@ category: 64aebfcf6c645e002384ccdc
 
 ```typescript
 interface IProcessService {
-  getOnrampProcessStatus(dto: GetOnrampProcessStatusRequest): Promise<GetOnrampProcessStatusResponse>;
-  getOfframpProcessStatus(dto: GetOfframpProcessStatusRequest): Promise<GetOfframpProcessStatusResponse>;
+  getOnrampProcessStatus(
+    paramsGetOnrampProcessStatusRequest,
+  ): Promise<GetOnrampProcessStatusResponse>;
+  getOfframpProcessStatus(
+    paramsGetOfframpProcessStatusRequest,
+  ): Promise<GetOfframpProcessStatusResponse>;
 }
 ```
 
@@ -17,27 +21,27 @@ interface IProcessService {
 
 #### <span id="GetOnrampProcessStatusRequest"></span>GetOnrampProcessStatusRequest
 
-| Field Name | Type |
-| ---------- | ---- |
+| Field Name  | Type   |
+| ----------- | ------ |
 | processUuid | string |
 
 #### <span id="GetOfframpProcessStatusRequest"></span>GetOfframpProcessStatusRequest
 
-| Field Name | Type |
-| ---------- | ---- |
+| Field Name  | Type   |
+| ----------- | ------ |
 | processUuid | string |
 
 #### <span id="GetOnrampProcessStatusResponse"></span>GetOnrampProcessStatusResponse
 
-| Field Name | Type |
-| ---------- | ---- |
-| status | [ProcessStatus](COMMON_TYPES.md#Processstatus) |
+| Field Name | Type                                           |
+| ---------- | ---------------------------------------------- |
+| status     | [ProcessStatus](COMMON_TYPES.md#Processstatus) |
 
 #### <span id="GetOfframpProcessStatusResponse"></span>GetOfframpProcessStatusResponse
 
-| Field Name | Type |
-| ---------- | ---- |
-| status | [ProcessStatus](COMMON_TYPES.md#Processstatus) |
+| Field Name | Type                                           |
+| ---------- | ---------------------------------------------- |
+| status     | [ProcessStatus](COMMON_TYPES.md#Processstatus) |
 
 ### Service Methods
 
@@ -54,19 +58,18 @@ This method returns the status of an onramp process.
 ###### Typescript
 
 ```typescript
-import getunblockSDK from "@getunblock/sdk";
+import getunblockSDK from '@getunblock/sdk';
 
 (async () => {
   // setup SDK
   const sdk = getunblockSDK({
-    apiKey:
-      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    apiKey: 'API-Key [Some merchant Key]', // Key generated at the moment the merchant was created in getunblock system
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
-  
+
   // SDK API call example
   const result = await sdk.process.getOnrampProcessStatus({
-    processUuid: "[target process uuid]",
+    processUuid: '[target process uuid]',
   });
 })();
 ```
@@ -74,19 +77,18 @@ import getunblockSDK from "@getunblock/sdk";
 ###### Javascript
 
 ```javascript
-const getunblockSDK = require("@getunblock/sdk").default;
+const getunblockSDK = require('@getunblock/sdk').default;
 
 (async () => {
   // setup SDK
   const sdk = getunblockSDK({
-    apiKey:
-      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    apiKey: 'API-Key [Some merchant Key]', // Key generated at the moment the merchant was created in getunblock system
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
-  
+
   // SDK API call example
   const result = await sdk.process.getOnrampProcessStatus({
-    processUuid: "[target process uuid]",
+    processUuid: '[target process uuid]',
   });
 })();
 ```
@@ -104,19 +106,18 @@ This method returns the status of an offramp process.
 ###### Typescript
 
 ```typescript
-import getunblockSDK from "@getunblock/sdk";
+import getunblockSDK from '@getunblock/sdk';
 
 (async () => {
   // setup SDK
   const sdk = getunblockSDK({
-    apiKey:
-      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    apiKey: 'API-Key [Some merchant Key]', // Key generated at the moment the merchant was created in getunblock system
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
-  
+
   // SDK API call example
   const result = await sdk.process.getOfframpProcessStatus({
-    processUuid: "[target process uuid]",
+    processUuid: '[target process uuid]',
   });
 })();
 ```
@@ -124,19 +125,18 @@ import getunblockSDK from "@getunblock/sdk";
 ###### Javascript
 
 ```javascript
-const getunblockSDK = require("@getunblock/sdk").default;
+const getunblockSDK = require('@getunblock/sdk').default;
 
 (async () => {
   // setup SDK
   const sdk = getunblockSDK({
-    apiKey:
-      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    apiKey: 'API-Key [Some merchant Key]', // Key generated at the moment the merchant was created in getunblock system
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
-  
+
   // SDK API call example
   const result = await sdk.process.getOfframpProcessStatus({
-    processUuid: "[target process uuid]",
+    processUuid: '[target process uuid]',
   });
 })();
 ```
@@ -144,16 +144,17 @@ const getunblockSDK = require("@getunblock/sdk").default;
 <div class="CodeMirror-gutter-filler">
 <h3>Other Services Available</h3>
 
-* [auth](AUTH.md)
-* [company](COMPANY.md)
-* [exchangeRates](EXCHANGE_RATES.md)
-* [kyc](KYC.md)
-* [offramp](OFFRAMP.md)
-* [remoteBankAccount](REMOTE_BANK_ACCOUNT.md)
-* [tokenPreferences](TOKEN_PREFERENCES.md)
-* [transactionFee](TRANSACTION_FEE.md)
-* [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
-* [user](USER.md)
+- [auth](AUTH.md)
+- [company](COMPANY.md)
+- [exchangeRates](EXCHANGE_RATES.md)
+- [kyc](KYC.md)
+- [offramp](OFFRAMP.md)
+- [remoteBankAccount](REMOTE_BANK_ACCOUNT.md)
+- [tokenPreferences](TOKEN_PREFERENCES.md)
+- [transactionFee](TRANSACTION_FEE.md)
+- [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
+- [user](USER.md)
 
 [Back to README](../README.md)
+
 </div>

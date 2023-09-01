@@ -8,7 +8,7 @@ category: 64aebfcf6c645e002384ccdc
 
 ```typescript
 interface ITransactionFeeService {
-  getTransactionFeeEstimation(dto: TransactionFeeEstRequest): Promise<TransactionFeeEstResponse>;
+  getTransactionFeeEstimation(params: TransactionFeeEstRequest): Promise<TransactionFeeEstResponse>;
 }
 ```
 
@@ -16,20 +16,20 @@ interface ITransactionFeeService {
 
 #### <span id="TransactionFeeEstRequest"></span>TransactionFeeEstRequest
 
-| Field Name | Type |
-| ---------- | ---- |
-| paymentMethod | [PaymentMethods](COMMON_TYPES.md#PaymentMethods) |
-| direction | [ProcessDirection](COMMON_TYPES.md#ProcessDirection) |
-| inputCurrency | [Currency](COMMON_TYPES.md#Currency) |
-| outputCurrency | [Currency](COMMON_TYPES.md#Currency) |
-| amount | number |
+| Field Name     | Type                                                 |
+| -------------- | ---------------------------------------------------- |
+| paymentMethod  | [PaymentMethods](COMMON_TYPES.md#PaymentMethods)     |
+| direction      | [ProcessDirection](COMMON_TYPES.md#ProcessDirection) |
+| inputCurrency  | [Currency](COMMON_TYPES.md#Currency)                 |
+| outputCurrency | [Currency](COMMON_TYPES.md#Currency)                 |
+| amount         | number                                               |
 
 #### <span id="TransactionFeeEstResponse"></span>TransactionFeeEstResponse
 
-| Field Name | Type |
-| ---------- | ---- |
+| Field Name    | Type   |
+| ------------- | ------ |
 | percentageFee | number |
-| totalAmount | number |
+| totalAmount   | number |
 
 ### Service Methods
 
@@ -46,23 +46,22 @@ This method returns the estimated transaction fee
 ###### Typescript
 
 ```typescript
-import getunblockSDK, { Currency, PaymentMethods, ProcessDirection } from "@getunblock/sdk";
+import getunblockSDK, { Currency, PaymentMethods, ProcessDirection } from '@getunblock/sdk';
 
 (async () => {
   // setup SDK
   const sdk = getunblockSDK({
-    apiKey:
-      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    apiKey: 'API-Key [Some merchant Key]', // Key generated at the moment the merchant was created in getunblock system
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
-  
+
   // SDK API call example
   const result = await sdk.transactionFee.getTransactionFeeEstimation({
     paymentMethod: PaymentMethods.OPEN_PAYD_BANK_TRANSFER,
     direction: ProcessDirection.ONRAMP,
     inputCurrency: Currency.EUR,
     outputCurrency: Currency.USD,
-    amount: 100
+    amount: 100,
   });
 })();
 ```
@@ -70,24 +69,23 @@ import getunblockSDK, { Currency, PaymentMethods, ProcessDirection } from "@getu
 ###### Javascript
 
 ```javascript
-const getunblockSDK = require("@getunblock/sdk").default;
-const { Currency, PaymentMethods, ProcessDirection } = require("@getunblock/sdk"); 
+const getunblockSDK = require('@getunblock/sdk').default;
+const { Currency, PaymentMethods, ProcessDirection } = require('@getunblock/sdk');
 
 (async () => {
   // setup SDK
   const sdk = getunblockSDK({
-    apiKey:
-      "API-Key [Some merchant Key]", // Key generated at the moment the merchant was created in getunblock system
+    apiKey: 'API-Key [Some merchant Key]', // Key generated at the moment the merchant was created in getunblock system
     prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
   });
-  
+
   // SDK API call example
   const result = await sdk.transactionFee.getTransactionFeeEstimation({
     paymentMethod: PaymentMethods.OPEN_PAYD_BANK_TRANSFER,
     direction: ProcessDirection.ONRAMP,
     inputCurrency: Currency.EUR,
     outputCurrency: Currency.USD,
-    amount: 100
+    amount: 100,
   });
 })();
 ```
@@ -95,16 +93,17 @@ const { Currency, PaymentMethods, ProcessDirection } = require("@getunblock/sdk"
 <div class="CodeMirror-gutter-filler">
 <h3>Other Services Available</h3>
 
-* [auth](AUTH.md)
-* [company](COMPANY.md)
-* [exchangeRates](EXCHANGE_RATES.md)
-* [kyc](KYC.md)
-* [offramp](OFFRAMP.md)
-* [process](PROCESS.md)
-* [remoteBankAccount](REMOTE_BANK_ACCOUNT.md)
-* [tokenPreferences](TOKEN_PREFERENCES.md)
-* [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
-* [user](USER.md)
+- [auth](AUTH.md)
+- [company](COMPANY.md)
+- [exchangeRates](EXCHANGE_RATES.md)
+- [kyc](KYC.md)
+- [offramp](OFFRAMP.md)
+- [process](PROCESS.md)
+- [remoteBankAccount](REMOTE_BANK_ACCOUNT.md)
+- [tokenPreferences](TOKEN_PREFERENCES.md)
+- [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
+- [user](USER.md)
 
 [Back to README](../README.md)
+
 </div>

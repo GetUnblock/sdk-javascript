@@ -1,42 +1,62 @@
 import { IServiceFactory } from './ServiceFactory';
-import { IAuthService } from './auth/AuthService';
-import { ICompanyService } from './company/CompanyService';
-import { IExchangeRatesService } from './exchange-rates/ExchangeRatesService';
-import { IKycService } from './kyc/KycService';
-import { IOfframpService } from './offramp/OfframpService';
-import { IProcessService } from './process/ProcessService';
-import { IRemoteBankAccountService } from './remote-bank-account/RemoteBankAccountService';
-import { ITokenPreferenceService } from './token-preference/TokenPreferenceService';
-import { ITransactionFeeService } from './transaction-fee/TransactionFeeService';
-import { IUnblockBankAccountService } from './unblock-bank-account/UnblockBankAccountService';
-import { IUserService } from './user/UserService';
+import { ICorporateCryptoToFiatService } from './corporate/crypto-to-fiat/CorporateCryptoToFiatService';
+import { ICorporateFiatToCryptoService } from './corporate/fiat-to-crypto/CorporateFiatToCryptoService';
+import { IKybService } from './corporate/kyb/KybService';
+import { ICorporateManagementService } from './corporate/management/CorporateManagementService';
+import { IAuthService } from './general/auth/AuthService';
+import { IInformativeService } from './general/informative/InformativeService';
+import { IProcessService } from './general/process/ProcessService';
+import { IUserCryptoToFiatService } from './user/crypto-to-fiat/UserCryptoToFiatService';
+import { IUserFiatToCryptoService } from './user/fiat-to-crypto/UserFiatToCryptoService';
+import { IKycService } from './user/kyc/KycService';
+import { IUserManagementService } from './user/management/UserManagementService';
+
+type GeneralServicesPack = {
+  auth: IAuthService;
+  informative: IInformativeService;
+  process: IProcessService;
+};
+
+type UserServicesPack = {
+  management: IUserManagementService;
+  fiatToCrypto: IUserFiatToCryptoService;
+  cryptoToFiat: IUserCryptoToFiatService;
+  kyc: IKycService;
+};
+
+type CorporateServicesPack = {
+  management: ICorporateManagementService;
+  fiatToCrypto: ICorporateFiatToCryptoService;
+  cryptoToFiat: ICorporateCryptoToFiatService;
+  kyb: IKybService;
+};
 
 export class SDK {
   private authService: IAuthService;
-  private remoteBankAccountService: IRemoteBankAccountService;
-  private kycService: IKycService;
-  private userService: IUserService;
-  private exchangeRatesService: IExchangeRatesService;
-  private unblockBankAccountService: IUnblockBankAccountService;
-  private transactionFeeService: ITransactionFeeService;
+  private informativeService: IInformativeService;
   private processService: IProcessService;
-  private companyService: ICompanyService;
-  private tokenPreferenceService: ITokenPreferenceService;
-  private offrampService: IOfframpService;
+  private userManagementService: IUserManagementService;
+  private userFiatToCryptoService: IUserFiatToCryptoService;
+  private userCryptoToFiatService: IUserCryptoToFiatService;
+  private kycService: IKycService;
+  private corporateManagementService: ICorporateManagementService;
+  private corporateCryptoToFiatService: ICorporateCryptoToFiatService;
+  private corporateFiatToCryptoService: ICorporateFiatToCryptoService;
+  private kybService: IKybService;
 
   constructor(private ServiceFactory: IServiceFactory) {
     // this.healthCheck();
     this.authService = this.ServiceFactory.createAuthService();
-    this.remoteBankAccountService = this.ServiceFactory.createRemoteBankAccountService();
-    this.kycService = this.ServiceFactory.createKycService();
-    this.userService = this.ServiceFactory.createUserService();
-    this.exchangeRatesService = this.ServiceFactory.createExchangeRatesService();
-    this.unblockBankAccountService = this.ServiceFactory.createUnblockBankAccountService();
-    this.transactionFeeService = this.ServiceFactory.createTransactionFeeService();
+    this.informativeService = this.ServiceFactory.createInformativeService();
     this.processService = this.ServiceFactory.createProcessService();
-    this.companyService = this.ServiceFactory.createCompanyService();
-    this.tokenPreferenceService = this.ServiceFactory.createTokenPreferenceService();
-    this.offrampService = this.ServiceFactory.createOfframpService();
+    this.kycService = this.ServiceFactory.createKycService();
+    this.userManagementService = this.ServiceFactory.createUserManagementService();
+    this.userFiatToCryptoService = this.ServiceFactory.createUserFiatToCryptoService();
+    this.userCryptoToFiatService = this.ServiceFactory.createUserCryptoToFiatService();
+    this.corporateManagementService = this.ServiceFactory.createCorporateManagementService();
+    this.corporateCryptoToFiatService = this.ServiceFactory.createCorporateCryptoToFiatService();
+    this.corporateFiatToCryptoService = this.ServiceFactory.createCorporateFiatToCryptoService();
+    this.kybService = this.ServiceFactory.createKybService();
   }
 
   private async healthCheck(): Promise<boolean> {
@@ -44,47 +64,29 @@ export class SDK {
     throw new Error('Method not implemented.');
   }
 
-  get auth(): IAuthService {
-    return this.authService;
+  get general(): GeneralServicesPack {
+    return {
+      auth: this.authService,
+      informative: this.informativeService,
+      process: this.processService,
+    };
   }
 
-  get remoteBankAccount(): IRemoteBankAccountService {
-    return this.remoteBankAccountService;
+  get user(): UserServicesPack {
+    return {
+      management: this.userManagementService,
+      fiatToCrypto: this.userFiatToCryptoService,
+      kyc: this.kycService,
+      cryptoToFiat: this.userCryptoToFiatService,
+    };
   }
 
-  get kyc(): IKycService {
-    return this.kycService;
-  }
-
-  get user(): IUserService {
-    return this.userService;
-  }
-
-  get exchangeRates(): IExchangeRatesService {
-    return this.exchangeRatesService;
-  }
-
-  get unblockBankAccount(): IUnblockBankAccountService {
-    return this.unblockBankAccountService;
-  }
-
-  get transactionFee(): ITransactionFeeService {
-    return this.transactionFeeService;
-  }
-
-  get process(): IProcessService {
-    return this.processService;
-  }
-
-  get company(): ICompanyService {
-    return this.companyService;
-  }
-
-  get tokenPreference(): ITokenPreferenceService {
-    return this.tokenPreferenceService;
-  }
-
-  get offramp(): IOfframpService {
-    return this.offrampService;
+  get corporate(): CorporateServicesPack {
+    return {
+      management: this.corporateManagementService,
+      cryptoToFiat: this.corporateCryptoToFiatService,
+      fiatToCrypto: this.corporateFiatToCryptoService,
+      kyb: this.kybService,
+    };
   }
 }
