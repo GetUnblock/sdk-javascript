@@ -1,15 +1,16 @@
 import { SdkSettings } from '../src/SdkSettings';
 import { ServiceFactory } from '../src/ServiceFactory';
-import { AuthService } from '../src/auth/AuthService';
-import { CompanyService } from '../src/company/CompanyService';
-import { ExchangeRatesService } from '../src/exchange-rates/ExchangeRatesService';
-import { KycService } from '../src/kyc/KycService';
-import { OfframpService } from '../src/offramp/OfframpService';
-import { ProcessService } from '../src/process/ProcessService';
-import { RemoteBankAccountService } from '../src/remote-bank-account/RemoteBankAccountService';
-import { TokenPreferenceService } from '../src/token-preference/TokenPreferenceService';
-import { TransactionFeeService } from '../src/transaction-fee/TransactionFeeService';
-import { UnblockBankAccountService } from '../src/unblock-bank-account/UnblockBankAccountService';
+import { CorporateCryptoToFiatService } from '../src/corporate/crypto-to-fiat/CorporateCryptoToFiatService';
+import { CorporateFiatToCryptoService } from '../src/corporate/fiat-to-crypto/CorporateFiatToCryptoService';
+import { KybService } from '../src/corporate/kyb/KybService';
+import { CorporateManagementService } from '../src/corporate/management/CorporateManagementService';
+import { AuthService } from '../src/general/auth/AuthService';
+import { InformativeService } from '../src/general/informative/InformativeService';
+import { ProcessService } from '../src/general/process/ProcessService';
+import { UserCryptoToFiatService } from '../src/user/crypto-to-fiat/UserCryptoToFiatService';
+import { UserFiatToCryptoService } from '../src/user/fiat-to-crypto/UserFiatToCryptoService';
+import { KycService } from '../src/user/kyc/KycService';
+import { UserManagementService } from '../src/user/management/UserManagementService';
 import { propsMock } from './mocks/props.mock';
 
 describe('ServiceFactory', () => {
@@ -40,59 +41,26 @@ describe('ServiceFactory', () => {
     expect(service).toBeInstanceOf(KycService);
   });
 
-  it('Should create an UserService instance', () => {
+  it('Should create an UserManagementService instance', () => {
     // Arrange
     const factory = new ServiceFactory(props);
 
     // Act
-    const service = factory.createAuthService();
+    const service = factory.createUserManagementService();
 
     // Assert
-    expect(service).toBeInstanceOf(AuthService);
+    expect(service).toBeInstanceOf(UserManagementService);
   });
 
-  it('Should create an ExchangeRatesService instance', () => {
+  it('Should create an UserFiatToCryptoService instance', () => {
     // Arrange
     const factory = new ServiceFactory(props);
 
     // Act
-    const service = factory.createExchangeRatesService();
+    const service = factory.createUserFiatToCryptoService();
 
     // Assert
-    expect(service).toBeInstanceOf(ExchangeRatesService);
-  });
-
-  it('Should create an RemoteBankAccountService instance', () => {
-    // Arrange
-    const factory = new ServiceFactory(props);
-
-    // Act
-    const service = factory.createRemoteBankAccountService();
-
-    // Assert
-    expect(service).toBeInstanceOf(RemoteBankAccountService);
-  });
-
-  it('Should create an UnblockBankAccountService instance', () => {
-    // Arrange
-    const factory = new ServiceFactory(props);
-
-    // Act
-    const service = factory.createUnblockBankAccountService();
-
-    // Assert
-    expect(service).toBeInstanceOf(UnblockBankAccountService);
-  });
-
-  it('Should create an TransactionFeeService instance', () => {
-    // Arrange
-    const factory = new ServiceFactory(props);
-
-    // Act
-    const service = factory.createTransactionFeeService();
-
-    // Assert
-    expect(service).toBeInstanceOf(TransactionFeeService);
+    expect(service).toBeInstanceOf(UserFiatToCryptoService);
   });
 
   it('Should create an ProcessService instance', () => {
@@ -106,36 +74,69 @@ describe('ServiceFactory', () => {
     expect(service).toBeInstanceOf(ProcessService);
   });
 
-  it('Should create an CompanyService instance', () => {
+  it('Should create a CorporateManagementService instance', () => {
     // Arrange
     const factory = new ServiceFactory(props);
 
     // Act
-    const service = factory.createCompanyService();
+    const service = factory.createCorporateManagementService();
 
     // Assert
-    expect(service).toBeInstanceOf(CompanyService);
+    expect(service).toBeInstanceOf(CorporateManagementService);
   });
 
-  it('Should create an TokenPreferenceService instance', () => {
+  it('Should create an UserCryptoToFiatService instance', () => {
     // Arrange
     const factory = new ServiceFactory(props);
 
     // Act
-    const service = factory.createTokenPreferenceService();
+    const service = factory.createUserCryptoToFiatService();
 
     // Assert
-    expect(service).toBeInstanceOf(TokenPreferenceService);
+    expect(service).toBeInstanceOf(UserCryptoToFiatService);
   });
 
-  it('Should create an OfframpService instance', () => {
+  it('Should create an InformativeService instance', () => {
     // Arrange
     const factory = new ServiceFactory(props);
 
     // Act
-    const service = factory.createOfframpService();
+    const service = factory.createInformativeService();
 
     // Assert
-    expect(service).toBeInstanceOf(OfframpService);
+    expect(service).toBeInstanceOf(InformativeService);
+  });
+
+  it('Should create a CorporateCryptoToFiatService instance', () => {
+    // Arrange
+    const factory = new ServiceFactory(props);
+
+    // Act
+    const service = factory.createCorporateCryptoToFiatService();
+
+    // Assert
+    expect(service).toBeInstanceOf(CorporateCryptoToFiatService);
+  });
+
+  it('Should create a CorporateFiatToCryptoService instance', () => {
+    // Arrange
+    const factory = new ServiceFactory(props);
+
+    // Act
+    const service = factory.createCorporateFiatToCryptoService();
+
+    // Assert
+    expect(service).toBeInstanceOf(CorporateFiatToCryptoService);
+  });
+
+  it('Should create a KybService instance', () => {
+    // Arrange
+    const factory = new ServiceFactory(props);
+
+    // Act
+    const service = factory.createKybService();
+
+    // Assert
+    expect(service).toBeInstanceOf(KybService);
   });
 });
