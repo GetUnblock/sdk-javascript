@@ -1,3 +1,3 @@
 export enum UserCorporateRole {
-  ADMINISTARTOR = 'ADMINISTARTOR',
+  ADMINISTRATOR = 'ADMINISTRATOR',
 }
