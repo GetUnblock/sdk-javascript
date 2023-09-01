@@ -65,8 +65,8 @@ describe('CorporateCryptoToFiatService', () => {
       const expectedConfig = {
         headers: {
           accept: 'application/json',
-          apiKey: props.apiKey,
-          unblockSessionId,
+          Authorization: props.apiKey,
+          'unblock-session-id': unblockSessionId,
         },
       };
 
@@ -344,7 +344,7 @@ describe('CorporateCryptoToFiatService', () => {
         headers: {
           accept: 'application/json',
           Authorization: props.apiKey,
-          unblockSessionId,
+          'unblock-session-id': unblockSessionId,
         },
       };
       const expectedResponse: GetCorporateRemoteBankAccountDetailsResponse = {
@@ -406,12 +406,5 @@ describe('CorporateCryptoToFiatService', () => {
       expect(resultedError).toBeInstanceOf(Error);
       expect((resultedError as Error).message).toBe(expectedErrorMesage);
     });
-  });
-
-  /**
-   * @todo: Delete after implementing the required tests
-   */
-  it('Tests Not Implemented Yet', () => {
-    expect(true).toBe(true);
   });
 });
