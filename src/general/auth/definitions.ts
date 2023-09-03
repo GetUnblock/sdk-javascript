@@ -39,11 +39,6 @@ export type GenerateSiweSignedMessageRequest = SiweLoginRequest;
 // Responses
 
 /** Response dto */
-export type AuthenticateWithEmailResponse = {
-  message: string;
-};
-
-/** Response dto */
 export type GenerateSiweSiginedMessageResponse = {
   message: string;
   signature: string;
