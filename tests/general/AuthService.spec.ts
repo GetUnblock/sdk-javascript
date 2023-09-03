@@ -174,15 +174,11 @@ describe('AuthService', () => {
       const service = new AuthService(props);
 
       // Act
-      const response = await service.authenticateWithEmail(params);
+      await service.authenticateWithEmail(params);
 
       // Assert
       expect(axiosClient.post).toHaveBeenCalledTimes(1);
       expect(axiosClient.post).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
-      expect(response).toStrictEqual({
-        message: expectedMessage,
-      });
-      expect(props.userSessionData?.userUuid).toBe(params.userUuid);
     });
 
     // Sad
@@ -252,16 +248,16 @@ describe('AuthService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockResolvedValue({
         data: {
-          session_id: expectedUnblockSessionId,
+          unblock_session_id: expectedUnblockSessionId,
         },
       } as AxiosResponse<{
-        session_id: string;
+        unblock_session_id: string;
       }>);
 
       const expectedPath = '/auth/otp';
       const expectedBody = {
         user_uuid: props.userSessionData?.userUuid,
-        code: emailSessionParams.emailCode,
+        one_time_password: emailSessionParams.emailCode,
       };
 
       const expectedConfig = {

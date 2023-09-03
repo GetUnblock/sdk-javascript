@@ -2,11 +2,9 @@ import { AxiosResponse } from 'axios';
 import { SiweMessage, generateNonce } from 'siwe';
 import { BaseService } from '../../BaseService';
 import { ErrorHandler } from '../../ErrorHandler';
-import { UserSessionData } from '../../definitions';
 import { SiweSigningError, UserUuidNotSetError } from '../../errors';
 import {
   AuthenticateWithEmailRequest,
-  AuthenticateWithEmailResponse,
   AuthenticateWithSiweRequest,
   CreateSiweMessageRequest,
   GenerateSiweSiginedMessageResponse,
@@ -22,9 +20,7 @@ export interface IAuthService {
   siweLogin(params: SiweLoginRequest): Promise<void>;
   createSiweMessage(params: CreateSiweMessageRequest): string;
   authenticateWithSiwe(params: AuthenticateWithSiweRequest): Promise<void>;
-  authenticateWithEmail(
-    params: AuthenticateWithEmailRequest,
-  ): Promise<AuthenticateWithEmailResponse>;
+  authenticateWithEmail(params: AuthenticateWithEmailRequest): Promise<void>;
   setUnblockSessionByEmailCode(params: SetUnblockSessionByEmailCodeRequest): Promise<void>;
 }
 
@@ -75,7 +71,7 @@ export class AuthService extends BaseService implements IAuthService {
       const path = '/auth/otp';
       const body = {
         user_uuid: this.props.userSessionData.userUuid,
-        code: code,
+        one_time_password: code,
       };
 
       const config = {
@@ -85,13 +81,14 @@ export class AuthService extends BaseService implements IAuthService {
         },
       };
 
-      const response: AxiosResponse<{ session_id: string }> = await this.axiosClient.post(
-        path,
-        body,
-        config,
-      );
+      const response: AxiosResponse<{ unblock_session_id: string; user_uuid: string }> =
+        await this.axiosClient.post(path, body, config);
 
-      this.props.userSessionData.unblockSessionId = response.data.session_id;
+      this.props.setUserSessionData({
+        unblockSessionId: response.data.unblock_session_id,
+        userUuid: response.data.user_uuid,
+      });
+      return;
     } catch (error) {
       ErrorHandler.handle(error);
     }
@@ -130,9 +127,7 @@ export class AuthService extends BaseService implements IAuthService {
     }
   }
 
-  async authenticateWithEmail(
-    params: AuthenticateWithEmailRequest,
-  ): Promise<AuthenticateWithEmailResponse> {
+  async authenticateWithEmail(params: AuthenticateWithEmailRequest): Promise<void> {
     const { userUuid } = params;
     const { apiKey } = this.props;
 
@@ -150,19 +145,12 @@ export class AuthService extends BaseService implements IAuthService {
     };
 
     try {
-      const response: AxiosResponse<{
-        user_uuid: string;
-        message: string;
-      }> = await this.axiosClient.post(path, body, config);
-
-      this.props.setUserSessionData({ userUuid: response.data.user_uuid } as UserSessionData);
-
-      return {
-        message: response.data.message,
-      };
+      // returns no content
+      await this.axiosClient.post(path, body, config);
     } catch (error) {
       ErrorHandler.handle(error);
     }
+    return;
   }
 
   createSiweMessage(params: CreateSiweMessageRequest): string {
