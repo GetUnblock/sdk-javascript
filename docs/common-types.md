@@ -382,8 +382,8 @@ enum CompanyType {
 ### <span id="UserCompanyRole"></span>UserCompanyRole
 
 ```typescript
-enum UserCompanyRole {
-  ADMINISTARTOR = 'ADMINISTARTOR',
+enum UserCorporateRole {
+  ADMINISTRATOR = 'ADMINISTRATOR',
 }
 ```
 
