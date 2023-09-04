@@ -27,11 +27,11 @@ describe('InformativeService', () => {
   let axiosError: AxiosError;
   let randomError: unknown;
 
-  let paymentMethod: PaymentMethods = PaymentMethods.BANK_TRANSFER;
-  let direction: ProcessDirection = ProcessDirection.fiatToCrypto;
-  let inputCurrency: Currency | Token = Currency.EURO;
-  let outputCurrency: Currency | Token = Token.USDC;
-  let amount: number = 100;
+  const paymentMethod: PaymentMethods = PaymentMethods.BANK_TRANSFER;
+  const direction: ProcessDirection = ProcessDirection.fiatToCrypto;
+  const inputCurrency: Currency | Token = Currency.EURO;
+  const outputCurrency: Currency | Token = Token.USDC;
+  const amount = 100;
   beforeAll(() => {
     axiosClient = mockedAxios.create();
   });
