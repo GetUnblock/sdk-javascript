@@ -10,11 +10,11 @@ type GBPAccountDetails = {
   sortCode: string;
 };
 
-type AccountDetails =
+export type AccountDetails =
   | ({ currency: Currency.EURO } & EURAccountDetails)
   | ({ currency: Currency.GBP } & GBPAccountDetails);
 
-type RemoteBankAccount = {
+export type RemoteBankAccount = {
   uuid: string;
   iban: string;
   bic: string;
@@ -49,7 +49,7 @@ export type GetCorporateRemoteBankAccountsRequest = {
   corporateUuid: string;
 };
 
-export type GetCorporateRemoteBankAccountsResponse = [RemoteBankAccount];
+export type GetCorporateRemoteBankAccountsResponse = RemoteBankAccount[];
 
 export type UpdateCorporateMainRemoteBankAccountRequest = {
   corporateUuid: string;

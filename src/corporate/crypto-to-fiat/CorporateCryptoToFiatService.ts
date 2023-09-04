@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { BaseService } from '../../BaseService';
 import { ErrorHandler } from '../../ErrorHandler';
+import { Currency } from '../../enums/Currency';
 import { UserSessionDataNotSetError } from '../../errors';
 import {
   CreateCorporateRemoteBankAccountRequest,
@@ -11,6 +12,7 @@ import {
   GetCorporateRemoteBankAccountsResponse,
   GetCorporateUnblockWalletRequest,
   GetCorporateUnblockWalletResponse,
+  RemoteBankAccount,
   UpdateCorporateMainRemoteBankAccountRequest,
 } from './definitions';
 
@@ -81,10 +83,18 @@ export class CorporateCryptoToFiatService
 
       const path = `corporate/${params.corporateUuid}/bank-account/remote`;
 
+      const accountDetails =
+        params.accountDetails.currency === Currency.EURO
+          ? { currency: params.accountDetails.currency, iban: params.accountDetails.iban }
+          : {
+              currency: params.accountDetails.currency,
+              sort_code: params.accountDetails.sortCode,
+              account_number: params.accountDetails.accountNumber,
+            };
       const body = {
         account_name: params.accountName,
         main_beneficiary: params.mainRemoteBankAccount,
-        account_details: params.accountDetails,
+        account_details: accountDetails,
       };
       const config = {
         headers: {
@@ -127,7 +137,9 @@ export class CorporateCryptoToFiatService
       const response: AxiosResponse<GetCorporateRemoteBankAccountsResponse> =
         await this.axiosClient.get(path, config);
 
-      return response.data;
+      return response.data.map((rca) => {
+        return this.remoteBankAccountToCamelCase(rca);
+      });
     } catch (e) {
       ErrorHandler.handle(e);
     }
@@ -186,9 +198,23 @@ export class CorporateCryptoToFiatService
 
       const response: AxiosResponse<GetCorporateRemoteBankAccountDetailsResponse> =
         await this.axiosClient.get(path, config);
-      return response.data;
+      return this.remoteBankAccountToCamelCase(response.data);
     } catch (e) {
       ErrorHandler.handle(e);
     }
+  }
+
+  private remoteBankAccountToCamelCase(remoteBankAccount: {
+    [key: string]: any;
+  }): RemoteBankAccount {
+    return {
+      uuid: remoteBankAccount.uuid,
+      iban: remoteBankAccount.iban,
+      bic: remoteBankAccount.bic,
+      accountNumber: remoteBankAccount.account_number,
+      sortCode: remoteBankAccount.sort_code,
+      mainBeneficiary: remoteBankAccount.main_beneficiary,
+      currency: remoteBankAccount.currency,
+    };
   }
 }

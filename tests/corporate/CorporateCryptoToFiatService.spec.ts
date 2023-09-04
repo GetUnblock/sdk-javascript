@@ -97,7 +97,7 @@ describe('CorporateCryptoToFiatService', () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
 
-      const expectedErrorMessage = `Unexpected error: ${userSessionDataNotSetError}`;
+      const expectedErrorMessage = `Bad request: ${userSessionDataNotSetError}`;
       let resultedError;
 
       const service = new CorporateCryptoToFiatService(props);
@@ -115,27 +115,33 @@ describe('CorporateCryptoToFiatService', () => {
     });
   });
 
-  describe.skip('createCorporateRemoteBankAccount', () => {
+  describe('createCorporateRemoteBankAccount', () => {
     // Happy
     it('Should call axios with correct method, path, body and config', async () => {
       // Arrange
       const expectedPath = `/corporate/${corporateUuid}/bank-account/remote`;
 
+      const accountNumber = faker.finance.account();
+      const sortCode = faker.finance.account();
       const gbpRequest: CreateCorporateRemoteBankAccountRequest = {
         accountName: faker.finance.accountName(),
         corporateUuid,
         mainRemoteBankAccount: true,
         accountDetails: {
           currency: Currency.GBP,
-          accountNumber: faker.finance.account(),
-          sortCode: faker.finance.account(),
+          accountNumber,
+          sortCode,
         },
       };
 
       const expectedBody = {
         account_name: gbpRequest.accountName,
         main_beneficiary: gbpRequest.mainRemoteBankAccount,
-        account_details: gbpRequest.accountDetails,
+        account_details: {
+          currency: Currency.GBP,
+          account_number: accountNumber,
+          sort_code: sortCode,
+        },
       };
       const expectedConfig = {
         headers: {
@@ -186,7 +192,7 @@ describe('CorporateCryptoToFiatService', () => {
           sortCode: faker.finance.account(),
         },
       };
-      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      const expectedErrorMesage = `Bad request: ${userSessionDataNotSetError}`;
       let resultedError;
 
       const service = new CorporateCryptoToFiatService(props);
@@ -205,7 +211,7 @@ describe('CorporateCryptoToFiatService', () => {
     });
   });
 
-  describe.skip('getCorporateRemoteBankAccounts', () => {
+  describe('getCorporateRemoteBankAccounts', () => {
     // Happy
     it('Should call axios with correct method, path and config', async () => {
       // Arrange
@@ -245,7 +251,7 @@ describe('CorporateCryptoToFiatService', () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
 
-      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      const expectedErrorMesage = `Bad request: ${userSessionDataNotSetError}`;
       let resultedError;
 
       const service = new CorporateCryptoToFiatService(props);
@@ -264,7 +270,7 @@ describe('CorporateCryptoToFiatService', () => {
     });
   });
 
-  describe.skip('updateCorporateRemoteBankAccount', () => {
+  describe('updateCorporateRemoteBankAccount', () => {
     // Happy
     it('Shoud call axios with correct method, path and config', async () => {
       const expectedPath = `/corporate/${corporateUuid}/bank-account/remote`;
@@ -282,7 +288,7 @@ describe('CorporateCryptoToFiatService', () => {
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axios, 'patch').mockResolvedValueOnce({
+      jest.spyOn(axiosClient, 'patch').mockResolvedValueOnce({
         status: 200,
       });
 
@@ -313,7 +319,7 @@ describe('CorporateCryptoToFiatService', () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
 
-      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      const expectedErrorMesage = `Bad request: ${userSessionDataNotSetError}`;
       let resultedError;
 
       const service = new CorporateCryptoToFiatService(props);
@@ -335,7 +341,7 @@ describe('CorporateCryptoToFiatService', () => {
     });
   });
 
-  describe.skip('getCorporateRemoteBankAccountDetails', () => {
+  describe('getCorporateRemoteBankAccountDetails', () => {
     // Happy
     it('Should call axios with the correct method path and config', async () => {
       const randomUuid = faker.datatype.uuid();
@@ -356,11 +362,20 @@ describe('CorporateCryptoToFiatService', () => {
         mainBeneficiary: true,
         currency: Currency.EURO,
       };
+      const axiosResponse = {
+        uuid: randomUuid,
+        iban: expectedResponse.iban,
+        bic: expectedResponse.bic,
+        account_number: expectedResponse.accountNumber,
+        sort_code: expectedResponse.sortCode,
+        main_beneficiary: true,
+        currency: Currency.EURO,
+      };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axios, 'get').mockResolvedValueOnce({
+      jest.spyOn(axiosClient, 'get').mockResolvedValueOnce({
         status: 200,
-        data: expectedResponse,
+        data: axiosResponse,
       });
 
       props.setUserSessionData({
@@ -387,7 +402,7 @@ describe('CorporateCryptoToFiatService', () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
 
-      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      const expectedErrorMesage = `Bad request: ${userSessionDataNotSetError}`;
       let resultedError;
 
       const service = new CorporateCryptoToFiatService(props);

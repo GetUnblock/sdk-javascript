@@ -179,7 +179,7 @@ describe('UserCryptoToFiatService', () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
 
-      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      const expectedErrorMesage = `Bad request: ${userSessionDataNotSetError}`;
       let resultedError;
 
       const service = new UserCryptoToFiatService(props);
@@ -231,7 +231,7 @@ describe('UserCryptoToFiatService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error: ${randomError}`;
+      const expectedErrorMesage = `Bad request: ${randomError}`;
       let resultedError;
 
       props.setUserSessionData({
@@ -401,7 +401,7 @@ describe('UserCryptoToFiatService', () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
 
-      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      const expectedErrorMesage = `Bad request: ${userSessionDataNotSetError}`;
       let resultedError;
 
       const service = new UserCryptoToFiatService(props);
@@ -452,7 +452,7 @@ describe('UserCryptoToFiatService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error: ${randomError}`;
+      const expectedErrorMesage = `Bad request: ${randomError}`;
       let resultedError;
 
       props.setUserSessionData({
@@ -487,7 +487,7 @@ describe('UserCryptoToFiatService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockResolvedValueOnce('');
 
-      const expectedErrorMesage = `Unexpected error: ${new InvalidAccountDetailsError()}`;
+      const expectedErrorMesage = `Bad request: ${new InvalidAccountDetailsError()}`;
       let resultedError;
 
       props.setUserSessionData({
@@ -639,7 +639,7 @@ describe('UserCryptoToFiatService', () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
 
-      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      const expectedErrorMesage = `Bad request: ${userSessionDataNotSetError}`;
       let resultedError;
 
       const service = new UserCryptoToFiatService(props);
@@ -690,7 +690,7 @@ describe('UserCryptoToFiatService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error: ${randomError}`;
+      const expectedErrorMesage = `Bad request: ${randomError}`;
       let resultedError;
 
       props.setUserSessionData({
@@ -762,7 +762,7 @@ describe('UserCryptoToFiatService', () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
 
-      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      const expectedErrorMesage = `Bad request: ${userSessionDataNotSetError}`;
       let resultedError;
 
       const service = new UserCryptoToFiatService(props);
@@ -813,7 +813,7 @@ describe('UserCryptoToFiatService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'patch').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error: ${randomError}`;
+      const expectedErrorMesage = `Bad request: ${randomError}`;
       let resultedError;
 
       props.setUserSessionData({
@@ -930,7 +930,7 @@ describe('UserCryptoToFiatService', () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
 
-      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      const expectedErrorMesage = `Bad request: ${userSessionDataNotSetError}`;
       let resultedError;
 
       const service = new UserCryptoToFiatService(props);
@@ -981,7 +981,7 @@ describe('UserCryptoToFiatService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Unexpected error: ${randomError}`;
+      const expectedErrorMesage = `Bad request: ${randomError}`;
       let resultedError;
 
       props.setUserSessionData({

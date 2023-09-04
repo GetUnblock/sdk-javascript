@@ -1,6 +1,6 @@
 import { Currency } from '../../enums/Currency';
 
-type UnblockBankAccount = {
+export type UnblockBankAccount = {
   uuid: string;
   currency: Currency;
   iban: string;
@@ -27,3 +27,9 @@ export type GetCorporateUnblockBankAccountRequest = {
 };
 
 export type GetCorporateUnblockBankAccountResponse = UnblockBankAccount;
+
+export type SimulateFiatToCryptoRequest = {
+  corporateUuid: string;
+  accountUuid: string;
+  value: number;
+};
