@@ -1,8 +1,11 @@
 import { AxiosResponse } from 'axios';
 import { BaseService } from '../../BaseService';
 import { ErrorHandler } from '../../ErrorHandler';
+import { Currency } from '../../enums/Currency';
+import { Token } from '../../enums/Token';
+import { InputAndOutputCurrencyMustBeOfDifferentTypeError } from '../../errors';
 import {
-  ApiTransactionFeeEstReqParams,
+  ApiTransactionFeeEstRequest,
   ApiTransactionFeeEstResponse,
   ExchangeRatesServiceRequest,
   ExchangeRatesServiceResponse,
@@ -43,17 +46,30 @@ export class InformativeService extends BaseService implements IInformativeServi
     }
   }
 
+  private inputAndOutputCurrencyCorrect(
+    inputCurrency: Currency | Token,
+    outputCurrency: Currency | Token,
+  ): boolean {
+    const isInputFiat = Object.values(Currency).includes(inputCurrency as Currency);
+    const isOutputFiat = Object.values(Currency).includes(outputCurrency as Currency);
+    const isInputCrypto = Object.values(Token).includes(inputCurrency as Token);
+    const isOutputCrypto = Object.values(Token).includes(outputCurrency as Token);
+
+    return (isInputFiat && isOutputCrypto) || (isInputCrypto && isOutputFiat);
+  }
+
   async getTransactionFeeEstimation(
     params: TransactionFeeEstRequest,
   ): Promise<TransactionFeeEstResponse> {
     const { apiKey } = this.props;
     const { paymentMethod, direction, inputCurrency, outputCurrency, amount } = params;
-    const path = `/transaction-fee`;
-    const queryParams: ApiTransactionFeeEstReqParams = {
-      paymentMethod: paymentMethod,
+
+    const path = `/fees`;
+    const queryParams: ApiTransactionFeeEstRequest = {
+      payment_method: paymentMethod,
       direction: direction,
-      inputCurrency: inputCurrency,
-      outputCurrency: outputCurrency,
+      input_currency: inputCurrency,
+      output_currency: outputCurrency,
       amount: amount,
     };
     const config = {
@@ -64,11 +80,20 @@ export class InformativeService extends BaseService implements IInformativeServi
       },
     };
     try {
+      const currenciesCorrect = this.inputAndOutputCurrencyCorrect(inputCurrency, outputCurrency);
+      if (!currenciesCorrect) {
+        throw new InputAndOutputCurrencyMustBeOfDifferentTypeError(inputCurrency, outputCurrency);
+      }
+
       const response: AxiosResponse<ApiTransactionFeeEstResponse> = await this.axiosClient.get(
         path,
         config,
       );
-      return response.data;
+      return {
+        unblockFee: response.data.unblock_fee,
+        merchantFee: response.data.merchant_fee,
+        totalFeePercentage: response.data.total_fee_percentage,
+      };
     } catch (error) {
       ErrorHandler.handle(error);
     }

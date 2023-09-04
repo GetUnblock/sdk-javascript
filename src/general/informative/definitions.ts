@@ -1,6 +1,7 @@
 import { Currency } from '../../enums/Currency';
 import { PaymentMethods } from '../../enums/PaymentMethods';
 import { ProcessDirection } from '../../enums/ProcessDirection';
+import { Token } from '../../enums/Token';
 
 /** Request dto */
 export type ExchangeRatesServiceRequest = {
@@ -19,34 +20,34 @@ export type ExchangeRatesServiceResponse = {
 export type TransactionFeeEstRequest = {
   paymentMethod: PaymentMethods;
   direction: ProcessDirection;
-  inputCurrency: Currency;
-  outputCurrency: Currency;
+  inputCurrency: Currency | Token;
+  outputCurrency: Currency | Token;
   amount: number;
 };
 
+type MerchantFee = {
+  type: 'add' | 'remove';
+  amount: number;
+};
 /**
  * Response for Get Transaction Fee Estimation
  */
 export type TransactionFeeEstResponse = {
-  percentageFee: number;
-  totalAmount: number;
+  unblockFee: number;
+  merchantFee: MerchantFee;
+  totalFeePercentage: number;
 };
 
-/**
- * Query Params for GU API Get Transaction Fee Estimation
- */
-export type ApiTransactionFeeEstReqParams = {
-  paymentMethod: PaymentMethods;
+export type ApiTransactionFeeEstRequest = {
+  payment_method: PaymentMethods;
   direction: ProcessDirection;
-  inputCurrency: Currency;
-  outputCurrency: Currency;
+  input_currency: Currency | Token;
+  output_currency: Currency | Token;
   amount: number;
 };
 
-/**
- * GU API Response for Get Transaction Fee Estimation
- */
 export type ApiTransactionFeeEstResponse = {
-  percentageFee: number;
-  totalAmount: number;
+  unblock_fee: number;
+  merchant_fee: MerchantFee;
+  total_fee_percentage: number;
 };

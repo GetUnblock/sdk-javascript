@@ -8,7 +8,7 @@ import {
   MainnetToken,
   OptimismToken,
   PolygonToken,
-} from '../../enums/Tokens';
+} from '../../enums/Token';
 import { UserStatus } from '../../enums/UserStatus';
 
 export type CreateUserRequest = {
