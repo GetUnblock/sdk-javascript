@@ -81,7 +81,7 @@ export class CorporateCryptoToFiatService
         throw new UserSessionDataNotSetError();
       }
 
-      const path = `corporate/${params.corporateUuid}/bank-account/remote`;
+      const path = `/corporate/${params.corporateUuid}/bank-account/remote`;
 
       const accountDetails =
         params.accountDetails.currency === Currency.EURO
@@ -99,7 +99,7 @@ export class CorporateCryptoToFiatService
       const config = {
         headers: {
           accept: 'application/json',
-          'Content-type': 'application-json',
+          'Content-type': 'application/json',
           Authorization: apiKey,
           'unblock-session-id': userSessionData.unblockSessionId,
         },

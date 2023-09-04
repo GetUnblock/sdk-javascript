@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { SdkSettings } from '../../src/SdkSettings';
-import { CorporateManagementService } from '../../src/corporate/management/CorporateManagementService';
+import { SdkSettings } from '../../../src/SdkSettings';
+import { CorporateManagementService } from '../../../src/corporate/management/CorporateManagementService';
 import {
   AddUserToCorporateApiRequestBody,
   CorporateDetails,
@@ -10,11 +10,11 @@ import {
   CreateCorporateResponse,
   TargetAddress,
   UpdateCorporateApiRequestBody,
-} from '../../src/corporate/management/definitions';
-import { UserCorporateRole } from '../../src/enums/UserCorporateRole';
-import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
-import { propsMock } from '../mocks/props.mock';
-import { corporateDetailsMock } from './corporateDetails.mock';
+} from '../../../src/corporate/management/definitions';
+import { UserCorporateRole } from '../../../src/enums/UserCorporateRole';
+import { axiosErrorMock, randomErrorMock } from '../../mocks/errors.mock';
+import { propsMock } from '../../mocks/props.mock';
+import { corporateDetailsMock } from '../corporateDetails.mock';
 
 describe('CorporateManagementService', () => {
   jest.mock('axios');
@@ -139,7 +139,7 @@ describe('CorporateManagementService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Bad request: ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
 
       const service = new CorporateManagementService(props);
@@ -244,7 +244,7 @@ describe('CorporateManagementService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'patch').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Bad request: ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
 
       const service = new CorporateManagementService(props);
@@ -346,7 +346,7 @@ describe('CorporateManagementService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Bad request: ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
 
       const service = new CorporateManagementService(props);
@@ -442,7 +442,7 @@ describe('CorporateManagementService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'delete').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Bad request: ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
       const service = new CorporateManagementService(props);
 

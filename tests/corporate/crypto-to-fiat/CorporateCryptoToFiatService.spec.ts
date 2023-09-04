@@ -1,18 +1,18 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { Chain } from '../../src';
-import { SdkSettings } from '../../src/SdkSettings';
-import { CorporateCryptoToFiatService } from '../../src/corporate/crypto-to-fiat/CorporateCryptoToFiatService';
+import { Chain } from '../../../src';
+import { SdkSettings } from '../../../src/SdkSettings';
+import { CorporateCryptoToFiatService } from '../../../src/corporate/crypto-to-fiat/CorporateCryptoToFiatService';
 import {
   CreateCorporateRemoteBankAccountRequest,
   CreateCorporateRemoteBankAccountResponse,
   GetCorporateRemoteBankAccountDetailsResponse,
   GetCorporateUnblockWalletResponse,
-} from '../../src/corporate/crypto-to-fiat/definitions';
-import { Currency } from '../../src/enums/Currency';
-import { UserSessionDataNotSetError } from '../../src/errors';
-import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
-import { propsMock } from '../mocks/props.mock';
+} from '../../../src/corporate/crypto-to-fiat/definitions';
+import { Currency } from '../../../src/enums/Currency';
+import { UserSessionDataNotSetError } from '../../../src/errors';
+import { axiosErrorMock, randomErrorMock } from '../../mocks/errors.mock';
+import { propsMock } from '../../mocks/props.mock';
 
 describe('CorporateCryptoToFiatService', () => {
   jest.mock('axios');
@@ -145,7 +145,7 @@ describe('CorporateCryptoToFiatService', () => {
       };
       const expectedConfig = {
         headers: {
-          'content-type': 'application/json',
+          'Content-type': 'application/json',
           accept: 'application/json',
           Authorization: props.apiKey,
           'unblock-session-id': unblockSessionId,
@@ -219,7 +219,6 @@ describe('CorporateCryptoToFiatService', () => {
       const expectedConfig = {
         headers: {
           accept: 'application/json',
-          'Content-type': 'application/json',
           Authorization: props.apiKey,
           'unblock-session-id': unblockSessionId,
         },
@@ -393,8 +392,8 @@ describe('CorporateCryptoToFiatService', () => {
 
       // Assert
       expect(response).toStrictEqual(expectedResponse);
-      expect(axios.get).toBeCalledTimes(1);
-      expect(axios.get).toHaveBeenLastCalledWith(expectedPath, expectedConfig);
+      expect(axiosClient.get).toBeCalledTimes(1);
+      expect(axiosClient.get).toHaveBeenLastCalledWith(expectedPath, expectedConfig);
     });
 
     // Sad

@@ -1,6 +1,6 @@
 export class BadRequestError extends Error {}
 
-export class SiweSigningError extends BadRequestError {
+export class SiweSigningError extends Error {
   constructor(public error: Error) {
     super(error.message);
   }

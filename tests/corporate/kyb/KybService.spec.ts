@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { SdkSettings } from '../../src/SdkSettings';
-import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
-import { propsMock } from '../mocks/props.mock';
+import { SdkSettings } from '../../../src/SdkSettings';
+import { axiosErrorMock, randomErrorMock } from '../../mocks/errors.mock';
+import { propsMock } from '../../mocks/props.mock';
 
 describe('KybService', () => {
   jest.mock('axios');

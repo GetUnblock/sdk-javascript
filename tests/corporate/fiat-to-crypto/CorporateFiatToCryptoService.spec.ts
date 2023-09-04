@@ -1,14 +1,14 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { Currency } from '../../src';
-import { SdkSettings } from '../../src/SdkSettings';
-import { CorporateFiatToCryptoService } from '../../src/corporate/fiat-to-crypto/CorporateFiatToCryptoService';
-import { CreateCorporateUnblockBankAccountResponse } from '../../src/corporate/fiat-to-crypto/definitions';
-import { UnsupportedEnvironmentError, UserSessionDataNotSetError } from '../../src/errors';
-import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
-import { propsMock } from '../mocks/props.mock';
-import { apiUnblockBankAccountToCamelCase } from '../utils';
-import { unblockBankAccountApiMock } from './corporateDetails.mock';
+import { Currency } from '../../../src';
+import { SdkSettings } from '../../../src/SdkSettings';
+import { CorporateFiatToCryptoService } from '../../../src/corporate/fiat-to-crypto/CorporateFiatToCryptoService';
+import { CreateCorporateUnblockBankAccountResponse } from '../../../src/corporate/fiat-to-crypto/definitions';
+import { UnsupportedEnvironmentError, UserSessionDataNotSetError } from '../../../src/errors';
+import { axiosErrorMock, randomErrorMock } from '../../mocks/errors.mock';
+import { propsMock } from '../../mocks/props.mock';
+import { apiUnblockBankAccountToCamelCase } from '../../utils';
+import { unblockBankAccountApiMock } from '../corporateDetails.mock';
 
 describe('CorporateFiatToCryptoService', () => {
   jest.mock('axios');
@@ -283,6 +283,7 @@ describe('CorporateFiatToCryptoService', () => {
         userUuid,
         unblockSessionId,
       });
+      props.prod = false;
 
       const service = new CorporateFiatToCryptoService(props);
 
