@@ -1,23 +1,29 @@
+import { Currency } from '../../enums/Currency';
+
+type UnblockBankAccount = {
+  uuid: string;
+  currency: Currency;
+  iban: string;
+  bic: string;
+  accountNumber: string;
+  sortCode: string;
+};
 export type CreateCorporateUnblockBankAccountRequest = {
-  not_defined_yet: true;
+  corporateUuid: string;
+  currency: Currency;
 };
 
-export type CreateCorporateUnblockBankAccountResponse = {
-  not_defined_yet: true;
-};
+export type CreateCorporateUnblockBankAccountResponse = UnblockBankAccount;
 
 export type GetCorporateUnblockBankAccountsRequest = {
-  not_defined_yet: true;
+  corporateUuid: string;
 };
 
-export type GetCorporateUnblockBankAccountsResponse = {
-  not_defined_yet: true;
-};
+export type GetCorporateUnblockBankAccountsResponse = UnblockBankAccount[];
 
 export type GetCorporateUnblockBankAccountRequest = {
-  not_defined_yet: true;
+  corporateUuid: string;
+  accountUuid: string;
 };
 
-export type GetCorporateUnblockBankAccountResponse = {
-  not_defined_yet: true;
-};
+export type GetCorporateUnblockBankAccountResponse = UnblockBankAccount;
