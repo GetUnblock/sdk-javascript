@@ -196,7 +196,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Bad request: ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
 
       props.setUserSessionData({
         unblockSessionId,
@@ -315,7 +315,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Bad request: ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
 
       props.setUserSessionData({
         unblockSessionId,
@@ -467,7 +467,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Bad request: ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
 
       props.setUserSessionData({
         unblockSessionId,
@@ -574,7 +574,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Bad request: ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
 
       props.setUserSessionData({
         unblockSessionId,
@@ -628,7 +628,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Bad request: ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
 
       props.setUserSessionData({
         unblockSessionId,
@@ -741,7 +741,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Bad request: ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
 
       props.setUserSessionData({
         unblockSessionId,

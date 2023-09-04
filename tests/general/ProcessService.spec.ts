@@ -95,7 +95,7 @@ describe('TrnsactionFeeService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Bad request: ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
 
       const service = new ProcessService(props);
@@ -175,7 +175,7 @@ describe('TrnsactionFeeService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
 
-      const expectedErrorMesage = `Bad request: ${randomError}`;
+      const expectedErrorMesage = `Unexpected error: ${randomError}`;
       let resultedError;
 
       const service = new ProcessService(props);
