@@ -1,3 +1,6 @@
+import { Currency } from './enums/Currency';
+import { Token } from './enums/Token';
+
 export class BadRequestError extends Error {}
 
 export class SiweSigningError extends Error {
@@ -27,5 +30,13 @@ export class UnsupportedEnvironmentError extends BadRequestError {
 export class InvalidAccountDetailsError extends BadRequestError {
   constructor() {
     super(`Invalid account details`);
+  }
+}
+
+export class InputAndOutputCurrencyMustBeOfDifferentTypeError extends BadRequestError {
+  constructor(inputCurrency: Currency | Token, outputCurrency: Currency | Token) {
+    super(
+      `Input and Output Currency cannot be of the same type (fiat or crypto). Input currency provided ${inputCurrency}; Output currency provided: ${outputCurrency}`,
+    );
   }
 }

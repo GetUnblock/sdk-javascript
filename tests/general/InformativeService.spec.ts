@@ -11,6 +11,7 @@ import {
   TransactionFeeEstResponse,
 } from '../../src';
 import { SdkSettings } from '../../src/SdkSettings';
+import { InputAndOutputCurrencyMustBeOfDifferentTypeError } from '../../src/errors';
 import { InformativeService } from '../../src/general/informative/InformativeService';
 import {
   ApiTransactionFeeEstRequest,
@@ -214,6 +215,38 @@ describe('InformativeService', () => {
       expect(axiosClient.get).toBeCalledTimes(1);
       expect(axiosClient.get).toHaveBeenLastCalledWith(expectedPath, expectedConfig);
       expect(result).toStrictEqual(expectedResult);
+    });
+
+    // Sad
+    it('Should throw expected error when input and output currencies are of the same type', async () => {
+      // Arrange
+      const params: TransactionFeeEstRequest = {
+        paymentMethod,
+        direction,
+        inputCurrency: Currency.EURO,
+        outputCurrency: Currency.GBP,
+        amount,
+      };
+
+      const expectedError = new InputAndOutputCurrencyMustBeOfDifferentTypeError(
+        Currency.EURO,
+        Currency.GBP,
+      );
+      const expectedErrorMessage = `Bad request: ${expectedError}`;
+      let resultedError;
+
+      const service = new InformativeService(props);
+
+      // Act
+      try {
+        await service.getTransactionFeeEstimation(params);
+      } catch (e) {
+        resultedError = e;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMessage);
     });
 
     // Sad
