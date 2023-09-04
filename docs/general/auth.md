@@ -14,9 +14,10 @@ interface IAuthService {
   siweLogin(params: SiweLoginRequest): Promise<void>;
   createSiweMessage(params: CreateSiweMessageRequest): string;
   authenticateWithSiwe(params: AuthenticateWithSiweRequest): Promise<void>;
+  authenticateWithEmail(params: AuthenticateWithEmailRequest): Promise<void>;
   authenticateWithEmail(
     params: AuthenticateWithEmailRequest,
-  ): Promise<AuthenticateWithEmailResponse>;
+  ): Promise<void>;
   setUnblockSessionByEmailCode(params: SetUnblockSessionByEmailCodeRequest): Promise<void>;
 }
 ```
@@ -80,13 +81,14 @@ _In theory you will be using a provider that extends [this class](https://github
 
 | Field Name | Type   |
 | ---------- | ------ |
-| code       | string |
+| emailCode  | string |
 
 #### <span id="AuthenticateWithEmailResponse"></span>AuthenticateWithEmailResponse
 
 | Field Name | Type   |
 | ---------- | ------ |
-| message    | string |
+
+\* An email is sent to the user's email with the OTP code
 
 #### <span id="GenerateSiweSignedMessageResponse"></span>GenerateSiweSignedMessageResponse
 
@@ -151,7 +153,7 @@ const getunblockSDK = require('@getunblock/sdk').default;
 
 #### <span id="authenticateWithEmail"></span>authenticateWithEmail
 
-<div><pre>authenticateWithEmail(params: <a href="#AuthenticateWithEmailRequest">AuthenticateWithEmailRequest</a>): Promise&#60;<a href="#AuthenticateWithEmailResponse">AuthenticateWithEmailResponse</a>&#62;</pre></div>
+<div><pre>authenticateWithEmail(params: <a href="#AuthenticateWithEmailRequest">AuthenticateWithEmailRequest</a>): Promise&#60;void&#62;</pre></div>
 
 ##### Overview
 
@@ -221,7 +223,7 @@ import getunblockSDK from '@getunblock/sdk';
 
   // SDK API call example
   const result = await sdk.auth.setUnblockSessionByEmailCode({
-    code: '[The code received in the email]',
+    emailCode: '[The code received in the email]',
   });
 })();
 ```
@@ -240,7 +242,7 @@ const getunblockSDK = require('@getunblock/sdk').default;
 
   // SDK API call example
   const result = await sdk.auth.setUnblockSessionByEmailCode({
-    code: '[The code received in the email]',
+    emailCode: '[The code received in the email]',
   });
 })();
 ```
@@ -270,9 +272,9 @@ import getunblockSDK from "@getunblock/sdk";
 
   // SDK API call example
   const result = await sdk.auth.createSiweMessage(
-    address: '0xbEFcCcFC70d97884f70b41927f6D20C511F4A36C',
+    walletAddress: '0xbEFcCcFC70d97884f70b41927f6D20C511F4A36C',
     statement: 'Sign in with Ethereum',
-    domain: 'getunblock.com',
+    signingUrl: 'getunblock.com',
     chainId: 8001
   );
 })();
@@ -293,9 +295,9 @@ const getunblockSDK = require("@getunblock/sdk").default;
 
   // SDK API call example
   const result = await sdk.auth.createSiweMessage(
-    address: '0xbEFcCcFC70d97884f70b41927f6D20C511F4A36C',
+    walletAddress: '0xbEFcCcFC70d97884f70b41927f6D20C511F4A36C',
     statement: 'Sign in with Ethereum',
-    domain: 'getunblock.com',
+    signingUrl: 'getunblock.com',
     chainId: 8001
   );
 })();
