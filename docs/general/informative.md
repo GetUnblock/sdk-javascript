@@ -81,7 +81,7 @@ import getunblockSDK, { Currency, PaymentMethods, ProcessDirection } from '@getu
   });
 
   // SDK API call example
-  const result = await sdk.transactionFee.getTransactionFeeEstimation({
+  const result = await sdk.general.informative.getTransactionFeeEstimation({
     paymentMethod: PaymentMethods.BANK_TRANSFER,
     direction: ProcessDirection.fiatToCrypto,
     inputCurrency: Currency.EUR,
@@ -105,7 +105,7 @@ const { Currency, PaymentMethods, ProcessDirection } = require('@getunblock/sdk'
   });
 
   // SDK API call example
-  const result = await sdk.transactionFee.getTransactionFeeEstimation({
+  const result = await sdk.general.informative.getTransactionFeeEstimation({
     paymentMethod: PaymentMethods.BANK_TRANSFER,
     direction: ProcessDirection.fiatToCrypto,
     inputCurrency: Currency.EUR,
@@ -138,7 +138,7 @@ import getunblockSDK, { Currency } from '@getunblock/sdk';
   });
 
   // SDK API call example
-  const result = await sdk.exchangeRates.getExchangeRate({
+  const result = await sdk.general.informative.getExchangeRate({
     baseCurrency: Currency.USD,
     targetCurrency: Currency.EURO,
   });
@@ -159,7 +159,7 @@ const { Currency } = require('@getunblock/sdk');
   });
 
   // SDK API call example
-  const result = await sdk.exchangeRates.getExchangeRate({
+  const result = await sdk.general.informative.getExchangeRate({
     baseCurrency: Currency.USD,
     targetCurrency: Currency.EURO,
   });
