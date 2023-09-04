@@ -7,7 +7,7 @@ import {
   MainnetToken,
   OptimismToken,
   PolygonToken,
-} from '../../../src/enums/Tokens';
+} from '../../../src/enums/Token';
 import {
   TokenPreference,
   TokenPreferenceArbitrum,
