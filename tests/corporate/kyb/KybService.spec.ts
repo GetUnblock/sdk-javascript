@@ -1,9 +1,9 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { SdkSettings } from '../../src/SdkSettings';
-import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
-import { propsMock } from '../mocks/props.mock';
+import { SdkSettings } from '../../../src/SdkSettings';
+import { axiosErrorMock, randomErrorMock } from '../../mocks/errors.mock';
+import { propsMock } from '../../mocks/props.mock';
 
-describe('CorporateFiatToCryptoService', () => {
+describe('KybService', () => {
   jest.mock('axios');
   const mockedAxios = axios as jest.Mocked<typeof axios>;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -29,11 +29,7 @@ describe('CorporateFiatToCryptoService', () => {
     jest.resetAllMocks();
   });
 
-  describe.skip('createCorporateUnblockBankAccount', () => undefined);
-
-  describe.skip('getCorporateUnblockBankAccounts', () => undefined);
-
-  describe.skip('getCorporateUnblockBankAccount', () => undefined);
+  describe.skip('getKybDocumentsChecklist', () => undefined);
 
   /**
    * @todo: Delete after implementing the required tests

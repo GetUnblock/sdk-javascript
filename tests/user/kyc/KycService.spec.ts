@@ -127,7 +127,7 @@ describe('KycService', () => {
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
 
-      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      const expectedErrorMesage = `Bad request: ${userSessionDataNotSetError}`;
 
       const service = new KycService(props);
       let resultedError;
@@ -266,7 +266,7 @@ describe('KycService', () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
 
-      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      const expectedErrorMesage = `Bad request: ${userSessionDataNotSetError}`;
 
       const service = new KycService(props);
       let resultedError;
@@ -402,7 +402,7 @@ describe('KycService', () => {
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
 
-      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      const expectedErrorMesage = `Bad request: ${userSessionDataNotSetError}`;
 
       const service = new KycService(props);
       let resultedError;
@@ -692,7 +692,7 @@ describe('KycService', () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
 
-      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      const expectedErrorMesage = `Bad request: ${userSessionDataNotSetError}`;
 
       const service = new KycService(props);
       let resultedError;
@@ -829,7 +829,7 @@ describe('KycService', () => {
       // Arrange
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
 
-      const expectedErrorMesage = `Unexpected error: ${userSessionDataNotSetError}`;
+      const expectedErrorMesage = `Bad request: ${userSessionDataNotSetError}`;
       const service = new KycService(props);
       let resultedError;
 

@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { SdkSettings } from '../../src/SdkSettings';
-import { CorporateManagementService } from '../../src/corporate/management/CorporateManagementService';
+import { SdkSettings } from '../../../src/SdkSettings';
+import { CorporateManagementService } from '../../../src/corporate/management/CorporateManagementService';
 import {
   AddUserToCorporateApiRequestBody,
   CorporateDetails,
@@ -10,11 +10,11 @@ import {
   CreateCorporateResponse,
   TargetAddress,
   UpdateCorporateApiRequestBody,
-} from '../../src/corporate/management/definitions';
-import { UserCorporateRole } from '../../src/enums/UserCorporateRole';
-import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
-import { propsMock } from '../mocks/props.mock';
-import { corporateDetailsMock } from './corporateDetails.mock';
+} from '../../../src/corporate/management/definitions';
+import { UserCorporateRole } from '../../../src/enums/UserCorporateRole';
+import { axiosErrorMock, randomErrorMock } from '../../mocks/errors.mock';
+import { propsMock } from '../../mocks/props.mock';
+import { corporateDetailsMock } from '../corporateDetails.mock';
 
 describe('CorporateManagementService', () => {
   jest.mock('axios');
