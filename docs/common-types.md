@@ -288,7 +288,7 @@ enum Currency {
 ### <span id="Token"></span>Token
 
 ```typescript
-export enum Token {
+enum Token {
   USDT = 'USDT',
   USDC = 'USDC',
   DAI = 'DAI',
@@ -388,20 +388,7 @@ enum UserCompanyRole {
 ```
 
 <div class="CodeMirror-gutter-filler">
-<h3>List of Services Available</h3>
 
-- [auth](AUTH.md)
-- [company](COMPANY.md)
-- [exchangeRates](EXCHANGE_RATES.md)
-- [kyc](KYC.md)
-- [offramp](OFFRAMP.md)
-- [process](PROCESS.md)
-- [remoteBankAccount](REMOTE_BANK_ACCOUNT.md)
-- [tokenPreferences](TOKEN_PREFERENCES.md)
-- [transactionFee](TRANSACTION_FEE.md)
-- [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
-- [user](USER.md)
-
-[Back to README](../README.md)
+[Back to root index](./index.md)
 
 </div>
