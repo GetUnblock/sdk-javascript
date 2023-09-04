@@ -22,3 +22,11 @@ export enum ArbitrumToken {
   USDC = 'usdc',
   ETH = 'eth',
 }
+
+export enum Token {
+  USDT = 'USDT',
+  USDC = 'USDC',
+  DAI = 'DAI',
+  CEUR = 'CEUR',
+  CUSD = 'CUSD',
+}

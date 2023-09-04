@@ -6,13 +6,14 @@ import {
   ExchangeRatesServiceResponse,
   PaymentMethods,
   ProcessDirection,
+  Token,
   TransactionFeeEstRequest,
   TransactionFeeEstResponse,
 } from '../../src';
 import { SdkSettings } from '../../src/SdkSettings';
 import { InformativeService } from '../../src/general/informative/InformativeService';
 import {
-  ApiTransactionFeeEstReqParams,
+  ApiTransactionFeeEstRequest,
   ApiTransactionFeeEstResponse,
 } from '../../src/general/informative/definitions';
 import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
@@ -26,11 +27,11 @@ describe('InformativeService', () => {
   let axiosError: AxiosError;
   let randomError: unknown;
 
-  let paymentMethod: PaymentMethods;
-  let direction: ProcessDirection;
-  let inputCurrency: Currency;
-  let outputCurrency: Currency;
-  let amount: number;
+  let paymentMethod: PaymentMethods = PaymentMethods.BANK_TRANSFER;
+  let direction: ProcessDirection = ProcessDirection.fiatToCrypto;
+  let inputCurrency: Currency | Token = Currency.EURO;
+  let outputCurrency: Currency | Token = Token.USDC;
+  let amount: number = 100;
   beforeAll(() => {
     axiosClient = mockedAxios.create();
   });
@@ -147,17 +148,14 @@ describe('InformativeService', () => {
     });
   });
 
-  describe('getAllUnblockUserBankAccounts', () => {
+  describe('getTransactionFeeEstimation', () => {
     // Happy
     it('should call axios get method with expected params and return the expected response', async () => {
       // Arrange
 
-      const percentageFee: number = faker.datatype.number({ min: 0, max: 100, precision: 0.01 });
-      const totalAmount: number = faker.datatype.number({
-        min: 0.01,
-        max: 1000000,
-        precision: 0.01,
-      });
+      const unblockFee: number = faker.datatype.number({ min: 0, max: 100, precision: 0.01 });
+      const merchantFee: number = faker.datatype.number({ min: 0, max: 100, precision: 0.01 });
+      const totalFee = unblockFee + merchantFee;
 
       const params: TransactionFeeEstRequest = {
         paymentMethod: paymentMethod,
@@ -167,12 +165,12 @@ describe('InformativeService', () => {
         amount: amount,
       };
 
-      const expectedPath = `/transaction-fee`;
-      const expectedQueryParams: ApiTransactionFeeEstReqParams = {
-        paymentMethod: paymentMethod,
+      const expectedPath = `/fees`;
+      const expectedQueryParams: ApiTransactionFeeEstRequest = {
+        payment_method: paymentMethod,
         direction: direction,
-        inputCurrency: inputCurrency,
-        outputCurrency: outputCurrency,
+        input_currency: inputCurrency,
+        output_currency: outputCurrency,
         amount: amount,
       };
       const expectedConfig = {
@@ -184,13 +182,21 @@ describe('InformativeService', () => {
       };
 
       const responseData: ApiTransactionFeeEstResponse = {
-        percentageFee: percentageFee,
-        totalAmount: totalAmount,
+        unblock_fee: unblockFee,
+        merchant_fee: {
+          type: 'add',
+          amount: merchantFee,
+        },
+        total_fee_percentage: totalFee,
       };
 
       const expectedResult: TransactionFeeEstResponse = {
-        percentageFee: percentageFee,
-        totalAmount: totalAmount,
+        unblockFee: unblockFee,
+        merchantFee: {
+          type: 'add',
+          amount: merchantFee,
+        },
+        totalFeePercentage: totalFee,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);

@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios';
 import { BaseService } from '../../BaseService';
 import { ErrorHandler } from '../../ErrorHandler';
 import {
-  ApiTransactionFeeEstReqParams,
+  ApiTransactionFeeEstRequest,
   ApiTransactionFeeEstResponse,
   ExchangeRatesServiceRequest,
   ExchangeRatesServiceResponse,
@@ -48,12 +48,12 @@ export class InformativeService extends BaseService implements IInformativeServi
   ): Promise<TransactionFeeEstResponse> {
     const { apiKey } = this.props;
     const { paymentMethod, direction, inputCurrency, outputCurrency, amount } = params;
-    const path = `/transaction-fee`;
-    const queryParams: ApiTransactionFeeEstReqParams = {
-      paymentMethod: paymentMethod,
+    const path = `/fees`;
+    const queryParams: ApiTransactionFeeEstRequest = {
+      payment_method: paymentMethod,
       direction: direction,
-      inputCurrency: inputCurrency,
-      outputCurrency: outputCurrency,
+      input_currency: inputCurrency,
+      output_currency: outputCurrency,
       amount: amount,
     };
     const config = {
@@ -68,7 +68,11 @@ export class InformativeService extends BaseService implements IInformativeServi
         path,
         config,
       );
-      return response.data;
+      return {
+        unblockFee: response.data.unblock_fee,
+        merchantFee: response.data.merchant_fee,
+        totalFeePercentage: response.data.total_fee_percentage,
+      };
     } catch (error) {
       ErrorHandler.handle(error);
     }
