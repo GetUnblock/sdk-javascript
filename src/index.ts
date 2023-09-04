@@ -9,28 +9,22 @@ const GetUnblock = (props: SdkProps): SDK => {
 };
 
 // Types
-export * from './auth/definitions';
+export * from './general/auth/definitions';
 
 export {
-  AddUserToCompanyRequest,
-  AddUserToCompanyResponse,
-  CompanyDetails,
-  CreateCompanyResponse,
-  RemoveUserFromCompanyRequest,
-  RemoveUserFromCompanyResponse,
+  CorporateDetails,
+  CreateCorporateResponse,
+  LinkUserToCorporateRequest,
+  LinkUserToCorporateResponse,
   TargetAddress,
-  UpdateCompanyResponse,
-} from './company/definitions';
+  UnlinkUserFromCorporateRequest,
+  UnlinkUserFromCorporateResponse,
+  UpdateCorporateResponse,
+} from './corporate/management/definitions';
 
 export { SdkProps } from './definitions';
 
-export * from './exchange-rates/definitions';
-
-export * from './kyc/definitions';
-
-export { GetUserOfframpAddressRequest, GetUserOfframpAddressResponse } from './offramp/definitions';
-
-export * from './process/definitions';
+export * from './user/kyc/definitions';
 
 export {
   ChangeMainUserRemoteBankAccountRequest,
@@ -42,22 +36,19 @@ export {
   GetAllRemoteBankAccountsResponse,
   GetRemoteBankAccountByUuidRequest,
   GetRemoteBankAccountByUuidResponse,
+  GetUserOfframpAddressRequest,
+  GetUserOfframpAddressResponse,
   RemoteUserBankAccount,
-} from './remote-bank-account/definitions';
+} from './user/crypto-to-fiat/definitions';
+
+export * from './general/process/definitions';
 
 export {
-  GetUserTokenPreferenceResponse,
-  TokenPreference,
-  TokenPreferenceArbitrum,
-  TokenPreferenceCelo,
-  TokenPreferenceMainnet,
-  TokenPreferenceOptimism,
-  TokenPreferencePolygon,
-  UpdateUserTokenPreferencesRequest,
-  UpdateUserTokenPreferencesResponse,
-} from './token-preference/definitions';
-
-export { TransactionFeeEstRequest, TransactionFeeEstResponse } from './transaction-fee/definitions';
+  ExchangeRatesServiceRequest,
+  ExchangeRatesServiceResponse,
+  TransactionFeeEstRequest,
+  TransactionFeeEstResponse,
+} from './general/informative/definitions';
 
 export {
   CreateUnblockUserBankAccountRequest,
@@ -70,20 +61,37 @@ export {
   UserBankAccount,
   UserBankAccountDetails,
   UserBankAccountFull,
-} from './unblock-bank-account/definitions';
+} from './user/fiat-to-crypto/definitions';
 
-export * from './user/definitions';
+export {
+  CreateUserRequest,
+  CreateUserResponse,
+  GetUserRampTransactionsResponse,
+  GetUserStatusResponse,
+  GetUserTokenPreferenceResponse,
+  RampTransactionProcess,
+  TokenPreference,
+  TokenPreferenceArbitrum,
+  TokenPreferenceCelo,
+  TokenPreferenceMainnet,
+  TokenPreferenceOptimism,
+  TokenPreferencePolygon,
+  UpdateUserRequest,
+  UpdateUserResponse,
+  UpdateUserTokenPreferencesRequest,
+  UpdateUserTokenPreferencesResponse,
+} from './user/management/definitions';
 
 // Enums
 export * from './enums/Chain';
-export * from './enums/CompanyType';
+export * from './enums/CorporateType';
 export * from './enums/Country';
 export * from './enums/Currency';
 export * from './enums/PaymentMethods';
 export * from './enums/ProcessDirection';
 export * from './enums/ProcessStatus';
 export * from './enums/Tokens';
-export * from './enums/UserCompanyRole';
+export * from './enums/UserCorporateRole';
 export * from './enums/UserStatus';
 
 // Default
