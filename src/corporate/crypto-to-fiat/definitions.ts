@@ -32,7 +32,7 @@ export type GetCorporateUnblockWalletRequest = {
 export type GetCorporateUnblockWalletResponse = {
   chain: Chain;
   address: string;
-};
+}[];
 
 export type CreateCorporateRemoteBankAccountRequest = {
   corporateUuid: string;
