@@ -1,7 +1,8 @@
 import { AxiosResponse } from 'axios';
 import { BaseService } from '../../BaseService';
 import { ErrorHandler } from '../../ErrorHandler';
-import { InvalidAccountDetailsError, UserSessionDataNotSetError } from '../../errors';
+import { Currency } from '../../enums/Currency';
+import { CurrencyNotSupportedError, UserSessionDataNotSetError } from '../../errors';
 import {
   ChangeMainUserRemoteBankAccountRequest,
   CreateRemoteUserBankAccountRequest,
@@ -13,7 +14,6 @@ import {
   GetUserOfframpAddressResponse,
   GetUserOfframpAddressResponseData,
   RemoteUserBankAccount,
-  UnblockCreateRemoteUserBankAccount,
   UnblockEurAccountDetails,
   UnblockGbpAccountDetails,
   UnblockRemoteUserBankAccount,
@@ -27,7 +27,7 @@ export interface IUserCryptoToFiatService {
     params: CreateRemoteUserBankAccountRequest,
   ): Promise<CreateRemoteUserBankAccountResponse>;
 
-  getAllRemoteBankAccounts(): Promise<GetAllRemoteBankAccountsResponse[]>;
+  getAllRemoteBankAccounts(): Promise<GetAllRemoteBankAccountsResponse>;
 
   changeMainUserRemoteBankAccount(params: ChangeMainUserRemoteBankAccountRequest): Promise<void>;
 
@@ -43,12 +43,12 @@ export class UserCryptoToFiatService extends BaseService implements IUserCryptoT
     const { apiKey } = this.props;
 
     try {
-      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+      if (!this.props.userSessionData?.unblockSessionId) {
         throw new UserSessionDataNotSetError();
       }
 
       const { chain } = params;
-      const path = `/user/${this.props.userSessionData.userUuid}/wallet/${chain}`;
+      const path = `/user/wallet/${chain}`;
 
       const config = {
         headers: {
@@ -74,67 +74,63 @@ export class UserCryptoToFiatService extends BaseService implements IUserCryptoT
     let accountDetails: UnblockGbpAccountDetails | UnblockEurAccountDetails;
 
     try {
-      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+      if (!this.props.userSessionData?.unblockSessionId) {
         throw new UserSessionDataNotSetError();
       }
 
-      if ('iban' in params.accountDetails) {
-        accountDetails = {
-          currency: params.accountDetails.currency,
-          iban: params.accountDetails.iban,
-        };
-      } else if ('accountNumber' in params.accountDetails && 'sortCode' in params.accountDetails) {
+      const { currency } = params.accountDetails;
+
+      if (currency !== Currency.EURO && currency !== Currency.GBP) {
+        throw new CurrencyNotSupportedError(currency);
+      }
+
+      if (currency === Currency.GBP) {
         accountDetails = {
           currency: params.accountDetails.currency,
           account_number: params.accountDetails.accountNumber,
           sort_code: params.accountDetails.sortCode,
         };
       } else {
-        throw new InvalidAccountDetailsError();
+        accountDetails = {
+          currency: params.accountDetails.currency,
+          iban: params.accountDetails.iban,
+        };
       }
 
-      const path = `/user/${this.props.userSessionData.userUuid}/bank-account/remote`;
+      const path = `/user/bank-account/remote`;
 
-      const body: UnblockCreateRemoteUserBankAccount = {
+      const body = {
         account_name: params.accountName,
-        account_country: params.accountCountry,
-        beneficiary_country: params.beneficiaryCountry,
         main_beneficiary: params.mainBeneficiary,
         account_details: accountDetails,
       };
 
       const config = {
         headers: {
-          'content-type': 'application/json',
+          'Content-type': 'application/json',
           accept: 'application/json',
           Authorization: apiKey,
           'unblock-session-id': this.props.userSessionData.unblockSessionId,
         },
       };
 
-      const response: AxiosResponse<UnblockRemoteUserBankAccount> = await this.axiosClient.post(
-        path,
-        body,
-        config,
-      );
-      const newRemoteBankAccount: RemoteUserBankAccount = this.mapToRemoteUserBankAccountResponse([
-        response.data,
-      ])[0];
+      const response: AxiosResponse<CreateRemoteUserBankAccountResponse> =
+        await this.axiosClient.post(path, body, config);
 
-      return newRemoteBankAccount;
+      return response.data;
     } catch (error) {
       ErrorHandler.handle(error);
     }
   }
 
-  async getAllRemoteBankAccounts(): Promise<GetAllRemoteBankAccountsResponse[]> {
+  async getAllRemoteBankAccounts(): Promise<GetAllRemoteBankAccountsResponse> {
     const { apiKey } = this.props;
     try {
-      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+      if (!this.props.userSessionData?.unblockSessionId) {
         throw new UserSessionDataNotSetError();
       }
 
-      const path = `/user/${this.props.userSessionData.userUuid}/bank-account/remote`;
+      const path = `/user/bank-account/remote`;
       const config = {
         headers: {
           accept: 'application/json',
@@ -147,9 +143,10 @@ export class UserCryptoToFiatService extends BaseService implements IUserCryptoT
         path,
         config,
       );
-      const remoteUserBankAccounts: GetAllRemoteBankAccountsResponse[] =
-        this.mapToRemoteUserBankAccountResponse(response.data);
-      return remoteUserBankAccounts;
+
+      return response.data.map((item) => {
+        return this.mapToRemoteUserBankAccountResponse(item);
+      });
     } catch (error) {
       ErrorHandler.handle(error);
     }
@@ -160,19 +157,18 @@ export class UserCryptoToFiatService extends BaseService implements IUserCryptoT
   ): Promise<void> {
     const { apiKey } = this.props;
     try {
-      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+      if (!this.props.userSessionData?.unblockSessionId) {
         throw new UserSessionDataNotSetError();
       }
 
-      const path = `/user/${this.props.userSessionData.userUuid}/bank-account/remote`;
+      const path = `/user/bank-account/remote`;
 
-      const body: { account_uuid: string } = {
-        account_uuid: params.accountUuid,
+      const body = {
+        remote_bank_account_uuid: params.remoteBankAccountUuid,
       };
 
       const config = {
         headers: {
-          'content-type': 'application/json',
           accept: 'application/json',
           Authorization: apiKey,
           'unblock-session-id': this.props.userSessionData.unblockSessionId,
@@ -191,11 +187,11 @@ export class UserCryptoToFiatService extends BaseService implements IUserCryptoT
   ): Promise<GetRemoteBankAccountByUuidResponse> {
     const { apiKey } = this.props;
     try {
-      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+      if (!this.props.userSessionData?.unblockSessionId) {
         throw new UserSessionDataNotSetError();
       }
 
-      const path = `/user/${this.props.userSessionData.userUuid}/bank-account/remote/${params.accountUuid}`;
+      const path = `/user/bank-account/remote/${params.accountUuid}`;
       const config = {
         headers: {
           accept: 'application/json',
@@ -208,31 +204,24 @@ export class UserCryptoToFiatService extends BaseService implements IUserCryptoT
         path,
         config,
       );
-      const remoteUserBankAccounts: GetRemoteBankAccountByUuidResponse =
-        this.mapToRemoteUserBankAccountResponse([response.data])[0];
-      return remoteUserBankAccounts;
+
+      return this.mapToRemoteUserBankAccountResponse(response.data);
     } catch (error) {
       ErrorHandler.handle(error);
     }
   }
 
   private mapToRemoteUserBankAccountResponse(
-    input: UnblockRemoteUserBankAccount[],
-  ): RemoteUserBankAccount[] {
-    return input.map((item) => ({
-      firstName: item.first_name,
-      lastName: item.last_name,
-      currency: item.currency,
-      mainBeneficiary: item.main_beneficiary,
-      iban: item.iban,
-      bic: item.bic,
-      accountNumber: item.account_number,
-      createdAt: item.created_at,
-      updatedAt: item.updated_at,
-      accountName: item.account_name,
-      bankName: item.bank_name,
-      uuid: item.uuid,
-      sortCode: item.sort_code,
-    }));
+    input: UnblockRemoteUserBankAccount,
+  ): RemoteUserBankAccount {
+    return {
+      currency: input.currency,
+      mainBeneficiary: input.main_beneficiary,
+      iban: input.iban,
+      bic: input.bic,
+      accountNumber: input.account_number,
+      uuid: input.uuid,
+      sortCode: input.sort_code,
+    };
   }
 }

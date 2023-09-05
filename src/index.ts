@@ -28,7 +28,6 @@ export * from './user/kyc/definitions';
 
 export {
   ChangeMainUserRemoteBankAccountRequest,
-  CreateRemoteUserBankAccount,
   CreateRemoteUserBankAccountRequest,
   CreateRemoteUserBankAccountResponse,
   EurAccountDetails,
