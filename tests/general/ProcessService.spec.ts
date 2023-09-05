@@ -1,12 +1,13 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance } from 'axios';
+import { Currency, ProcessDirection, Token } from '../../src';
 import { SdkSettings } from '../../src/SdkSettings';
 import { ProcessStatus } from '../../src/enums/ProcessStatus';
 import { ProcessService } from '../../src/general/process/ProcessService';
 import { axiosErrorMock, randomErrorMock } from '../mocks/errors.mock';
 import { propsMock } from '../mocks/props.mock';
 
-describe('TrnsactionFeeService', () => {
+describe('ProcessService', () => {
   jest.mock('axios');
   const mockedAxios = axios as jest.Mocked<typeof axios>;
   let axiosClient: AxiosInstance;
@@ -26,7 +27,6 @@ describe('TrnsactionFeeService', () => {
     axiosError = axiosErrorMock();
     randomError = randomErrorMock();
     processUuid = faker.datatype.uuid();
-    status = faker.helpers.arrayElement(Object.values(ProcessStatus));
   });
 
   afterEach(() => {
@@ -37,10 +37,40 @@ describe('TrnsactionFeeService', () => {
     // Happy
     it('should call axios get method with expected params and return the expected response', async () => {
       // Arrange
-      const expectedResult = { status: status };
-      const responseData = { status: status };
-      const expectedPath = `/process/offramp/${processUuid}`;
+      status = faker.helpers.arrayElement(Object.values(ProcessStatus));
+      const axiosResponse = {
+        status,
+        user_uuid: faker.datatype.uuid(),
+        direction: ProcessDirection.fiatToCrypto,
+        input: {
+          amount: 100,
+          currency: Currency.EURO,
+          transaction_id: faker.datatype.uuid(),
+        },
+        output: {
+          amount: 110,
+          currency: Token.USDC,
+          transaction_id: faker.datatype.uuid(),
+        },
+      };
+      const expectedResult = {
+        status: axiosResponse.status,
+        userUuid: axiosResponse.user_uuid,
+        direction: axiosResponse.direction,
+        input: {
+          amount: axiosResponse.input.amount,
+          currency: axiosResponse.input.currency,
+          transactionId: axiosResponse.input.transaction_id,
+        },
+        output: {
+          amount: axiosResponse.output.amount,
+          currency: axiosResponse.output.currency,
+          transactionId: axiosResponse.output.transaction_id,
+        },
+      };
+      const expectedPath = `/process`;
       const expectedConfig = {
+        params: { process_uuid: processUuid },
         headers: {
           accept: 'application/json',
           Authorization: props.apiKey,
@@ -50,13 +80,13 @@ describe('TrnsactionFeeService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockResolvedValueOnce({
         status: 200,
-        data: responseData,
+        data: axiosResponse,
       });
 
       const service = new ProcessService(props);
 
       // Act
-      const result = await service.getOfframpProcessStatus({ processUuid: processUuid });
+      const result = await service.getTransactionDetails({ processUuid: processUuid });
 
       // Assert
       expect(axiosClient.get).toBeCalledTimes(1);
@@ -78,7 +108,7 @@ describe('TrnsactionFeeService', () => {
 
       // Act
       try {
-        await service.getOfframpProcessStatus({ processUuid: processUuid });
+        await service.getTransactionDetails({ processUuid: processUuid });
       } catch (error) {
         resultedError = error;
       }
@@ -102,87 +132,7 @@ describe('TrnsactionFeeService', () => {
 
       // Act
       try {
-        await service.getOfframpProcessStatus({ processUuid: processUuid });
-      } catch (error) {
-        resultedError = error;
-      }
-
-      // Assert
-      expect(resultedError).toBeInstanceOf(Error);
-      expect((resultedError as Error).message).toBe(expectedErrorMesage);
-    });
-  });
-
-  describe('getOnrampProcessStatus', () => {
-    // Happy
-    it('should call axios get method with expected params and return the expected response', async () => {
-      // Arrange
-      const expectedResult = { status: status };
-      const responseData = { status: status };
-      const expectedPath = `/process/onramp/${processUuid}`;
-      const expectedConfig = {
-        headers: {
-          accept: 'application/json',
-          Authorization: props.apiKey,
-        },
-      };
-
-      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockResolvedValueOnce({
-        status: 200,
-        data: responseData,
-      });
-
-      const service = new ProcessService(props);
-
-      // Act
-      const result = await service.getOnrampProcessStatus({ processUuid: processUuid });
-
-      // Assert
-      expect(axiosClient.get).toBeCalledTimes(1);
-      expect(axiosClient.get).toHaveBeenLastCalledWith(expectedPath, expectedConfig);
-      expect(result).toStrictEqual(expectedResult);
-    });
-
-    // Sad
-    it('should throw expected error when an Axios Error Happens', async () => {
-      // Arrange
-
-      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
-
-      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
-      let resultedError;
-
-      const service = new ProcessService(props);
-
-      // Act
-      try {
-        await service.getOnrampProcessStatus({ processUuid: processUuid });
-      } catch (error) {
-        resultedError = error;
-      }
-
-      // Assert
-      expect(axiosClient.get).toBeCalledTimes(1);
-      expect(resultedError).toBeInstanceOf(Error);
-      expect((resultedError as Error).message).toBe(expectedErrorMesage);
-    });
-
-    it('should throw expected error when an Unexpected Error Happens', async () => {
-      // Arrange
-
-      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
-
-      const expectedErrorMesage = `Unexpected error: ${randomError}`;
-      let resultedError;
-
-      const service = new ProcessService(props);
-
-      // Act
-      try {
-        await service.getOnrampProcessStatus({ processUuid: processUuid });
+        await service.getTransactionDetails({ processUuid: processUuid });
       } catch (error) {
         resultedError = error;
       }
