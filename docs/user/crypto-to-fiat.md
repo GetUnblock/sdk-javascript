@@ -103,6 +103,256 @@ type RemoteUserBankAccount = {
 | --------------------- | ------ |
 | remoteBankAccountUuid | string |
 
-#### <span id="GetRemoteBankAccountByUuidResponse></span>GetRemoteBankAccountByUuidResponse
+#### <span id="GetRemoteBankAccountByUuidResponse"></span>GetRemoteBankAccountByUuidResponse
 
 **Object** [RemoteBankAccount](#RemoteBankAccount)
+
+### Service methods
+
+#### getUserUnblockWallet
+
+<div><pre>getUserUnblockWallet(params: <a href="#getuserunblockwalletrequest">GetUserUnblockWalletRequest</a>): Promise&#60;<a href="#getuserunblockwalletresponse">GetUserUnblockWalletResponse</a>&#62;</pre></div>
+
+##### Overview
+
+This method allows an user to obtain the unblock wallets associated with the given chain. This is required in order to obtain the address to which the user should send crypto when going from crypto to fiat
+
+##### Usage
+
+###### Typescript
+
+```typescript
+import getUnblockSDK from '@getunblock/sdk';
+
+(async () => {
+  //Setup SDK
+  const sdk = getUnblockSDK({
+    apiKey: 'API-Key [Your api key here]', // This key will be generated and provided by Unblock
+    prod: false, // If true, the sdk will contact the production environment, otherwise Sandbox
+  });
+
+  // Api call
+  const result = await sdk.user.cryptoToFiat.getUserUnblockWallet({
+    corporateUuid: 'The uuid of the user',
+    chain: 'The chain for which you wish to obtain the wallet address',
+  });
+})();
+```
+
+###### Javascript
+
+```javascript
+import getUnblockSDK from '@getunblock/sdk';
+
+(async () => {
+  //Setup SDK
+  const sdk = getUnblockSDK({
+    apiKey: 'API-Key [Your api key here]', // This key will be generated and provided by Unblock
+    prod: false, // If true, the sdk will contact the production environment, otherwise Sandbox
+  });
+
+  // Api call
+  const result = await sdk.user.cryptoToFiat.getUserUnblockWallet({
+    corporateUuid: 'The uuid of the user',
+    chain: 'The chain for which you wish to obtain the wallet address',
+  });
+})();
+```
+
+#### createRemoteUserBankAccount
+
+<div><pre>createRemoteUserBankAccount(params: <a href="#createremoteuserbankaccountrequest">CreateRemoteUserBankAccountRequest</a>): Promise&#60;<a href="#createremoteuserbankaccountresponse">CreateRemoteUserBankAccountResponse</a>&#62;</pre></div>
+
+##### Overview
+
+This method allows an user to create a remote bank account, required to be able to go from crypto to fiat.
+
+##### Usage
+
+###### Typescript
+
+```typescript
+import getUnblockSDK from '@getunblock/sdk';
+
+(async () => {
+  //Setup SDK
+  const sdk = getUnblockSDK({
+    apiKey: 'API-Key [Your api key here]', // This key will be generated and provided by Unblock
+    prod: false, // If true, the sdk will contact the production environment, otherwise Sandbox
+  });
+
+  // Api call
+  const result = await sdk.user.cryptoToFiat.createRemoteUserBankAccount({
+    accountName: 'Main account',
+    mainBeneficiary: true,
+    accountDetails: {
+      currency: Currency.EURO,
+      iban: 'some iban',
+    },
+  });
+})();
+```
+
+###### Javascript
+
+```javascript
+import getUnblockSDK from '@getunblock/sdk';
+
+(async () => {
+  //Setup SDK
+  const sdk = getUnblockSDK({
+    apiKey: 'API-Key [Your api key here]', // This key will be generated and provided by Unblock
+    prod: false, // If true, the sdk will contact the production environment, otherwise Sandbox
+  });
+
+  // Api call
+  const result = await sdk.user.cryptoToFiat.createRemoteUserBankAccount({
+    accountName: 'Main account',
+    mainBeneficiary: true,
+    accountDetails: {
+      currency: Currency.EURO,
+      iban: 'some iban',
+    },
+  });
+})();
+```
+
+#### getAllRemoteBankAccounts
+
+<div><pre>getAllRemoteBankAccounts(params: void): Promise&#60;<a href="#getallremotebankaccountsresponse">GetAllRemoteBankAccountsResponse</a>&#62;</pre></div>
+
+##### Overview
+
+This method allows an user to obtain all remote bank accounts registered in it's name
+
+##### Usage
+
+###### Typescript
+
+```typescript
+import getUnblockSDK from '@getunblock/sdk';
+
+(async () => {
+  //Setup SDK
+  const sdk = getUnblockSDK({
+    apiKey: 'API-Key [Your api key here]', // This key will be generated and provided by Unblock
+    prod: false, // If true, the sdk will contact the production environment, otherwise Sandbox
+  });
+
+  // Api call
+  const result = await sdk.user.cryptoToFiat.getAllRemoteBankAccounts();
+})();
+```
+
+###### Javascript
+
+```javascript
+import getUnblockSDK from '@getunblock/sdk';
+
+(async () => {
+  //Setup SDK
+  const sdk = getUnblockSDK({
+    apiKey: 'API-Key [Your api key here]', // This key will be generated and provided by Unblock
+    prod: false, // If true, the sdk will contact the production environment, otherwise Sandbox
+  });
+
+  // Api call
+  const result = await sdk.user.cryptoToFiat.getAllRemoteBankAccounts();
+})();
+```
+
+#### changeMainUserRemoteBankAccount
+
+<div><pre>changeMainUserRemoteBankAccount(params: <a href="#changemainuserremotebankaccountrequest">CreateRemoteUserBankAccountRequest</a>): Promise&#60;void&#62;</pre></div>
+
+##### Overview
+
+This method allows an user to change the remote bank account to which the money should be sent when going from crypto to fiat
+
+##### Usage
+
+###### Typescript
+
+```typescript
+import getUnblockSDK from '@getunblock/sdk';
+
+(async () => {
+  //Setup SDK
+  const sdk = getUnblockSDK({
+    apiKey: 'API-Key [Your api key here]', // This key will be generated and provided by Unblock
+    prod: false, // If true, the sdk will contact the production environment, otherwise Sandbox
+  });
+
+  // Api call
+  const result = await sdk.user.cryptoToFiat.changeMainUserRemoteBankAccount({
+    remoteBankAccountUuid: 'The uuid of the bank account here',
+  });
+})();
+```
+
+###### Javascript
+
+```javascript
+import getUnblockSDK from '@getunblock/sdk';
+
+(async () => {
+  //Setup SDK
+  const sdk = getUnblockSDK({
+    apiKey: 'API-Key [Your api key here]', // This key will be generated and provided by Unblock
+    prod: false, // If true, the sdk will contact the production environment, otherwise Sandbox
+  });
+
+  // Api call
+  const result = await sdk.user.cryptoToFiat.changeMainUserRemoteBankAccount({
+    remoteBankAccountUuid: 'The uuid of the bank account here',
+  });
+})();
+```
+
+#### getRemoteBankAccountByUuid
+
+<div><pre>getRemoteBankAccountByUuid(params: <a href="#getremotebankaccountbyuuidrequest">GetRemoteBankAccountByUuidResponse</a>): Promise&#60;<a href="#getremotebankaccountbyuuidresponse">GetRemoteBankAccountByUuidResponse</a>&#62;</pre></div>
+
+##### Overview
+
+This method allows an user to consult a specific remote bank account, by providing its uuid
+
+##### Usage
+
+###### Typescript
+
+```typescript
+import getUnblockSDK from '@getunblock/sdk';
+
+(async () => {
+  //Setup SDK
+  const sdk = getUnblockSDK({
+    apiKey: 'API-Key [Your api key here]', // This key will be generated and provided by Unblock
+    prod: false, // If true, the sdk will contact the production environment, otherwise Sandbox
+  });
+
+  // Api call
+  const result = await sdk.user.cryptoToFiat.getRemoteBankAccountByUuid({
+    remoteBankAccountUuid: 'The uuid of the bank account here',
+  });
+})();
+```
+
+###### Javascript
+
+```javascript
+import getUnblockSDK from '@getunblock/sdk';
+
+(async () => {
+  //Setup SDK
+  const sdk = getUnblockSDK({
+    apiKey: 'API-Key [Your api key here]', // This key will be generated and provided by Unblock
+    prod: false, // If true, the sdk will contact the production environment, otherwise Sandbox
+  });
+
+  // Api call
+  const result = await sdk.user.cryptoToFiat.getRemoteBankAccountByUuid({
+    remoteBankAccountUuid: 'The uuid of the bank account here',
+  });
+})();
+```
