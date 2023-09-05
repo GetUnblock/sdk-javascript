@@ -1,18 +1,19 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
+import { Currency } from '../../../src';
 import { SdkSettings } from '../../../src/SdkSettings';
 import { Chain } from '../../../src/enums/Chain';
-import Country from '../../../src/enums/Country';
-import { InvalidAccountDetailsError, UserSessionDataNotSetError } from '../../../src/errors';
+import { CurrencyNotSupportedError, UserSessionDataNotSetError } from '../../../src/errors';
 import { UserCryptoToFiatService } from '../../../src/user/crypto-to-fiat/UserCryptoToFiatService';
 import {
   CreateRemoteUserBankAccountRequest,
   CreateRemoteUserBankAccountResponse,
+  EurAccountDetails,
+  GbpAccountDetails,
   GetAllRemoteBankAccountsResponse,
   GetRemoteBankAccountByUuidResponse,
-  GetUserOfframpAddressResponse,
-  GetUserOfframpAddressResponseData,
-  UnblockCreateRemoteUserBankAccount,
+  GetUserUnblockWalletResponse,
+  GetUserUnblockWalletResponseData,
   UnblockRemoteUserBankAccount,
 } from '../../../src/user/crypto-to-fiat/definitions';
 import { axiosErrorMock, randomErrorMock } from '../../mocks/errors.mock';
@@ -29,17 +30,11 @@ describe('UserCryptoToFiatService', () => {
 
   let userUuid: string;
   let unblockSessionId: string;
-  let firstName: string;
-  let lastName: string;
   let bic: string;
-  let createdAt: string;
-  let updatedAt: string;
-  let bankName: string;
   let uuid: string;
 
   let chain: Chain;
 
-  const message = 'User offramp address pulled';
   const addressMock = (): string => {
     return faker.datatype.hexadecimal({ length: 42 });
   };
@@ -56,94 +51,53 @@ describe('UserCryptoToFiatService', () => {
 
     userUuid = faker.datatype.uuid();
     unblockSessionId = faker.datatype.uuid();
-    firstName = faker.name.firstName();
-    lastName = faker.name.lastName();
     bic = faker.finance.bic();
-    createdAt = faker.date.recent().toDateString();
-    updatedAt = createdAt;
-    bankName = faker.company.name();
     uuid = faker.datatype.uuid();
-
-    chain = faker.helpers.arrayElement(Object.values(Chain));
   });
 
   afterEach(() => {
     jest.resetAllMocks();
   });
 
-  const accountDetailsGbp = {
-    currency: faker.finance.currencyCode(),
-    accountNumber: faker.finance.account(),
-    sortCode: faker.finance.account(),
-  };
-
-  const accountDetailsEur = {
-    currency: faker.finance.currencyCode(),
-    iban: faker.finance.iban(),
-  };
-
   const dtoGbp: CreateRemoteUserBankAccountRequest = {
     accountName: faker.finance.accountName(),
-    accountCountry: faker.address.countryCode() as Country,
-    beneficiaryCountry: faker.address.countryCode(),
     mainBeneficiary: faker.datatype.boolean(),
-    accountDetails: accountDetailsGbp,
+    accountDetails: {
+      currency: Currency.GBP,
+      accountNumber: faker.finance.account(),
+      sortCode: faker.finance.account(),
+    },
   };
 
   const dtoEur: CreateRemoteUserBankAccountRequest = {
     accountName: faker.finance.accountName(),
-    accountCountry: faker.address.countryCode() as Country,
-    beneficiaryCountry: faker.address.countryCode(),
     mainBeneficiary: faker.datatype.boolean(),
-    accountDetails: accountDetailsGbp,
-  };
-
-  const bodyAccountDetailsGbp = {
-    currency: accountDetailsGbp.currency,
-    account_number: accountDetailsGbp.accountNumber,
-    sort_code: accountDetailsGbp.sortCode,
-  };
-
-  const bodyAccountDetailsEur = {
-    currency: accountDetailsEur.currency,
-    iban: accountDetailsEur.iban,
-  };
-
-  const bodyGbp: UnblockCreateRemoteUserBankAccount = {
-    account_name: dtoGbp.accountName,
-    account_country: dtoGbp.accountCountry,
-    beneficiary_country: dtoGbp.beneficiaryCountry,
-    main_beneficiary: dtoGbp.mainBeneficiary,
-    account_details: bodyAccountDetailsGbp,
-  };
-
-  const bodyEur: UnblockCreateRemoteUserBankAccount = {
-    account_name: dtoEur.accountName,
-    account_country: dtoEur.accountCountry,
-    beneficiary_country: dtoEur.beneficiaryCountry,
-    main_beneficiary: dtoEur.mainBeneficiary,
-    account_details: bodyAccountDetailsEur,
+    accountDetails: {
+      currency: Currency.EURO,
+      iban: faker.finance.iban(),
+    },
   };
 
   describe('getUserOfframpAddress', () => {
     // Happy
     it('should call axios get method with expected params and return the expected response', async () => {
       // Arrange
-      const addresses = Array.from(
-        { length: faker.datatype.number({ min: 1, max: 5 }) },
-        addressMock,
-      );
+      const chain = Chain.POLYGON;
+      const address = addressMock();
+      const expectedResult: GetUserUnblockWalletResponse = [
+        {
+          chain,
+          address,
+        },
+      ];
 
-      const expectedResult: GetUserOfframpAddressResponse = {
-        message: message,
-        addresses: addresses,
-      };
-
-      const responseData: GetUserOfframpAddressResponseData = {
-        message: message,
-        addresses: addresses,
-      };
-      const expectedPath = `/user/${userUuid}/wallet/${chain}`;
+      const responseData: GetUserUnblockWalletResponseData = [
+        {
+          chain,
+          address,
+        },
+      ];
+      const expectedPath = `/user/wallet/${chain}`;
       const expectedConfig = {
         headers: {
           accept: 'application/json',
@@ -166,7 +120,7 @@ describe('UserCryptoToFiatService', () => {
       const service = new UserCryptoToFiatService(props);
 
       // Act
-      const result = await service.getUserOfframpAddress({ chain: chain });
+      const result = await service.getUserUnblockWallet({ chain: chain });
 
       // Assert
       expect(axiosClient.get).toBeCalledTimes(1);
@@ -186,7 +140,7 @@ describe('UserCryptoToFiatService', () => {
 
       // Act
       try {
-        await service.getUserOfframpAddress({ chain: chain });
+        await service.getUserUnblockWallet({ chain: chain });
       } catch (error) {
         resultedError = error;
       }
@@ -214,7 +168,7 @@ describe('UserCryptoToFiatService', () => {
 
       // Act
       try {
-        await service.getUserOfframpAddress({ chain: chain });
+        await service.getUserUnblockWallet({ chain: chain });
       } catch (error) {
         resultedError = error;
       }
@@ -243,7 +197,7 @@ describe('UserCryptoToFiatService', () => {
 
       // Act
       try {
-        await service.getUserOfframpAddress({ chain: chain });
+        await service.getUserUnblockWallet({ chain: chain });
       } catch (error) {
         resultedError = error;
       }
@@ -258,11 +212,19 @@ describe('UserCryptoToFiatService', () => {
     // Happy
     it('should call axios with correct method, path, body and config', async () => {
       // Arrange
-      const expectedPath = `/user/${userUuid}/bank-account/remote`;
-      const expectedBody = bodyGbp;
+      const expectedPath = `/user/bank-account/remote`;
+      const expectedBody = {
+        account_name: dtoGbp.accountName,
+        main_beneficiary: dtoGbp.mainBeneficiary,
+        account_details: {
+          currency: dtoGbp.accountDetails.currency,
+          account_number: (dtoGbp.accountDetails as GbpAccountDetails).accountNumber,
+          sort_code: (dtoGbp.accountDetails as GbpAccountDetails).sortCode,
+        },
+      };
       const expectedConfig = {
         headers: {
-          'content-type': 'application/json',
+          'Content-type': 'application/json',
           accept: 'application/json',
           Authorization: props.apiKey,
           'unblock-session-id': unblockSessionId,
@@ -293,36 +255,10 @@ describe('UserCryptoToFiatService', () => {
     it('should return created bank account data for GBP currency', async () => {
       // Arrange
       const expectedResponse: CreateRemoteUserBankAccountResponse = {
-        firstName: firstName,
-        lastName: lastName,
-        currency: accountDetailsGbp.currency,
-        mainBeneficiary: dtoGbp.mainBeneficiary,
-        iban: '',
-        bic: bic,
-        accountNumber: accountDetailsGbp.accountNumber,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-        accountName: dtoGbp.accountName,
-        bankName: bankName,
-        uuid: uuid,
-        sortCode: accountDetailsGbp.sortCode,
+        uuid,
       };
 
-      const responseData: UnblockRemoteUserBankAccount = {
-        first_name: firstName,
-        last_name: lastName,
-        currency: bodyAccountDetailsGbp.currency,
-        main_beneficiary: bodyGbp.main_beneficiary,
-        iban: '',
-        bic: bic,
-        account_number: bodyAccountDetailsGbp.account_number,
-        created_at: createdAt,
-        updated_at: updatedAt,
-        account_name: bodyGbp.account_name,
-        bank_name: bankName,
-        uuid: uuid,
-        sort_code: bodyAccountDetailsGbp.sort_code,
-      };
+      const responseData = expectedResponse;
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockResolvedValueOnce({
@@ -346,36 +282,10 @@ describe('UserCryptoToFiatService', () => {
     it('should return created bank account data for EUR currency', async () => {
       // Arrange
       const expectedResponse: CreateRemoteUserBankAccountResponse = {
-        firstName: firstName,
-        lastName: lastName,
-        currency: accountDetailsEur.currency,
-        mainBeneficiary: dtoEur.mainBeneficiary,
-        iban: accountDetailsEur.iban,
-        bic: bic,
-        accountNumber: '',
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-        accountName: dtoEur.accountName,
-        bankName: bankName,
-        uuid: uuid,
-        sortCode: '',
+        uuid,
       };
 
-      const responseData: UnblockRemoteUserBankAccount = {
-        first_name: firstName,
-        last_name: lastName,
-        currency: bodyAccountDetailsEur.currency,
-        main_beneficiary: bodyEur.main_beneficiary,
-        iban: bodyAccountDetailsEur.iban,
-        bic: bic,
-        account_number: '',
-        created_at: createdAt,
-        updated_at: updatedAt,
-        account_name: bodyEur.account_name,
-        bank_name: bankName,
-        uuid: uuid,
-        sort_code: '',
-      };
+      const responseData = expectedResponse;
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockResolvedValueOnce({
@@ -475,19 +385,20 @@ describe('UserCryptoToFiatService', () => {
       expect((resultedError as Error).message).toBe(expectedErrorMesage);
     });
 
-    it('should throw invalid account details error', async () => {
+    it('should throw invalid account details error if currency is not present or not supported', async () => {
       // Arrange
       const invalidDto = {
         ...dtoEur,
         accountDetails: {
           invalidProperty: '',
+          currency: 'XOF',
         },
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockResolvedValueOnce('');
 
-      const expectedErrorMesage = `Bad request: ${new InvalidAccountDetailsError()}`;
+      const expectedErrorMesage = `Bad request: ${new CurrencyNotSupportedError('XOF')}`;
       let resultedError;
 
       props.setUserSessionData({
@@ -518,7 +429,7 @@ describe('UserCryptoToFiatService', () => {
     // Happy
     it('should call axios with correct method, path, body and config', async () => {
       // Arrange
-      const expectedPath = `/user/${userUuid}/bank-account/remote`;
+      const expectedPath = `/user/bank-account/remote`;
       const expectedConfig = {
         headers: {
           accept: 'application/json',
@@ -551,69 +462,45 @@ describe('UserCryptoToFiatService', () => {
     it('should return an array of remote bank accounts', async () => {
       // Arrange
 
-      const expectedResponse: GetAllRemoteBankAccountsResponse[] = [
+      const expectedResponse: GetAllRemoteBankAccountsResponse = [
         {
-          firstName: firstName,
-          lastName: lastName,
-          currency: accountDetailsEur.currency,
+          currency: Currency.EURO,
           mainBeneficiary: dtoEur.mainBeneficiary,
-          iban: accountDetailsEur.iban,
+          iban: (dtoEur.accountDetails as EurAccountDetails).iban,
           bic: bic,
           accountNumber: '',
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          accountName: dtoEur.accountName,
-          bankName: bankName,
-          uuid: uuid,
           sortCode: '',
+          uuid: uuid,
         },
         {
-          firstName: firstName,
-          lastName: lastName,
-          currency: accountDetailsGbp.currency,
+          currency: Currency.GBP,
           mainBeneficiary: dtoGbp.mainBeneficiary,
-          iban: '',
-          bic: bic,
-          accountNumber: accountDetailsGbp.accountNumber,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          accountName: dtoGbp.accountName,
-          bankName: bankName,
+          accountNumber: (dtoGbp.accountDetails as GbpAccountDetails).accountNumber,
           uuid: uuid,
-          sortCode: accountDetailsGbp.sortCode,
+          iban: '',
+          bic: '',
+          sortCode: (dtoGbp.accountDetails as GbpAccountDetails).sortCode,
         },
       ];
 
       const responseData: UnblockRemoteUserBankAccount[] = [
         {
-          first_name: firstName,
-          last_name: lastName,
-          currency: bodyAccountDetailsEur.currency,
-          main_beneficiary: bodyEur.main_beneficiary,
-          iban: bodyAccountDetailsEur.iban,
+          currency: Currency.EURO,
+          main_beneficiary: dtoEur.mainBeneficiary,
+          iban: (dtoEur.accountDetails as EurAccountDetails).iban,
           bic: bic,
           account_number: '',
-          created_at: createdAt,
-          updated_at: updatedAt,
-          account_name: bodyEur.account_name,
-          bank_name: bankName,
           uuid: uuid,
           sort_code: '',
         },
         {
-          first_name: firstName,
-          last_name: lastName,
-          currency: bodyAccountDetailsGbp.currency,
-          main_beneficiary: bodyGbp.main_beneficiary,
+          currency: Currency.GBP,
+          main_beneficiary: dtoGbp.mainBeneficiary,
           iban: '',
-          bic: bic,
-          account_number: bodyAccountDetailsGbp.account_number,
-          created_at: createdAt,
-          updated_at: updatedAt,
-          account_name: bodyGbp.account_name,
-          bank_name: bankName,
+          bic: '',
+          account_number: (dtoGbp.accountDetails as GbpAccountDetails).accountNumber,
           uuid: uuid,
-          sort_code: bodyAccountDetailsGbp.sort_code,
+          sort_code: (dtoGbp.accountDetails as GbpAccountDetails).sortCode,
         },
       ];
 
@@ -718,17 +605,16 @@ describe('UserCryptoToFiatService', () => {
     // Happy
     it('should call axios with correct method, path, body and config', async () => {
       // Arrange
-      const expectedPath = `/user/${userUuid}/bank-account/remote`;
+      const expectedPath = `/user/bank-account/remote`;
       const expectedConfig = {
         headers: {
-          'content-type': 'application/json',
           accept: 'application/json',
           Authorization: props.apiKey,
           'unblock-session-id': unblockSessionId,
         },
       };
       const expectedBody = {
-        account_uuid: uuid,
+        remote_bank_account_uuid: uuid,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -745,7 +631,7 @@ describe('UserCryptoToFiatService', () => {
 
       // Act
       await service.changeMainUserRemoteBankAccount({
-        accountUuid: uuid,
+        remoteBankAccountUuid: uuid,
       });
 
       // Assert
@@ -770,7 +656,7 @@ describe('UserCryptoToFiatService', () => {
       // Act
 
       try {
-        await service.changeMainUserRemoteBankAccount({ accountUuid: uuid });
+        await service.changeMainUserRemoteBankAccount({ remoteBankAccountUuid: uuid });
       } catch (error) {
         resultedError = error;
       }
@@ -798,7 +684,7 @@ describe('UserCryptoToFiatService', () => {
       // Act
 
       try {
-        await service.changeMainUserRemoteBankAccount({ accountUuid: uuid });
+        await service.changeMainUserRemoteBankAccount({ remoteBankAccountUuid: uuid });
       } catch (error) {
         resultedError = error;
       }
@@ -826,7 +712,7 @@ describe('UserCryptoToFiatService', () => {
       // Act
 
       try {
-        await service.changeMainUserRemoteBankAccount({ accountUuid: uuid });
+        await service.changeMainUserRemoteBankAccount({ remoteBankAccountUuid: uuid });
       } catch (error) {
         resultedError = error;
       }
@@ -841,7 +727,7 @@ describe('UserCryptoToFiatService', () => {
     // Happy
     it('should call axios with correct method, path, body and config', async () => {
       // Arrange
-      const expectedPath = `/user/${userUuid}/bank-account/remote/${uuid}`;
+      const expectedPath = `/user/bank-account/remote/${uuid}`;
       const expectedConfig = {
         headers: {
           accept: 'application/json',
@@ -864,7 +750,7 @@ describe('UserCryptoToFiatService', () => {
       const service = new UserCryptoToFiatService(props);
 
       // Act
-      await service.getRemoteBankAccountByUuid({ accountUuid: uuid });
+      await service.getRemoteBankAccountByUuid({ remoteBankAccountUuid: uuid });
 
       // Assert
       expect(axiosClient.get).toBeCalledTimes(1);
@@ -875,35 +761,23 @@ describe('UserCryptoToFiatService', () => {
       // Arrange
 
       const expectedResponse: GetRemoteBankAccountByUuidResponse = {
-        firstName: firstName,
-        lastName: lastName,
-        currency: accountDetailsGbp.currency,
+        currency: Currency.GBP,
         mainBeneficiary: dtoGbp.mainBeneficiary,
         iban: '',
         bic: bic,
-        accountNumber: accountDetailsGbp.accountNumber,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-        accountName: dtoGbp.accountName,
-        bankName: bankName,
+        accountNumber: (dtoGbp.accountDetails as GbpAccountDetails).accountNumber,
         uuid: uuid,
-        sortCode: accountDetailsGbp.sortCode,
+        sortCode: (dtoGbp.accountDetails as GbpAccountDetails).sortCode,
       };
 
       const responseData: UnblockRemoteUserBankAccount = {
-        first_name: firstName,
-        last_name: lastName,
-        currency: bodyAccountDetailsGbp.currency,
-        main_beneficiary: bodyGbp.main_beneficiary,
+        currency: Currency.GBP,
+        main_beneficiary: dtoGbp.mainBeneficiary,
         iban: '',
         bic: bic,
-        account_number: bodyAccountDetailsGbp.account_number,
-        created_at: createdAt,
-        updated_at: updatedAt,
-        account_name: bodyGbp.account_name,
-        bank_name: bankName,
+        account_number: (dtoGbp.accountDetails as GbpAccountDetails).accountNumber,
         uuid: uuid,
-        sort_code: bodyAccountDetailsGbp.sort_code,
+        sort_code: (dtoGbp.accountDetails as GbpAccountDetails).sortCode,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -918,7 +792,7 @@ describe('UserCryptoToFiatService', () => {
 
       // Act
       const result = await service.getRemoteBankAccountByUuid({
-        accountUuid: uuid,
+        remoteBankAccountUuid: uuid,
       });
 
       // Assert
@@ -938,7 +812,7 @@ describe('UserCryptoToFiatService', () => {
       // Act
 
       try {
-        await service.getRemoteBankAccountByUuid({ accountUuid: uuid });
+        await service.getRemoteBankAccountByUuid({ remoteBankAccountUuid: uuid });
       } catch (error) {
         resultedError = error;
       }
@@ -966,7 +840,7 @@ describe('UserCryptoToFiatService', () => {
       // Act
 
       try {
-        await service.getRemoteBankAccountByUuid({ accountUuid: uuid });
+        await service.getRemoteBankAccountByUuid({ remoteBankAccountUuid: uuid });
       } catch (error) {
         resultedError = error;
       }
@@ -994,7 +868,7 @@ describe('UserCryptoToFiatService', () => {
       // Act
 
       try {
-        await service.getRemoteBankAccountByUuid({ accountUuid: uuid });
+        await service.getRemoteBankAccountByUuid({ remoteBankAccountUuid: uuid });
       } catch (error) {
         resultedError = error;
       }

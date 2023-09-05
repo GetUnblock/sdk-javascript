@@ -40,3 +40,9 @@ export class InputAndOutputCurrencyMustBeOfDifferentTypeError extends BadRequest
     );
   }
 }
+
+export class CurrencyNotSupportedError extends BadRequestError {
+  constructor(currency: string) {
+    super(`The currency ${currency} that you provided is not supported for this operation`);
+  }
+}
