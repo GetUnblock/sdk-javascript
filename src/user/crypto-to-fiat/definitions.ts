@@ -25,13 +25,13 @@ export type RemoteUserBankAccount = {
 };
 
 /** Request dto */
-export type GetUserOfframpAddressRequest = { chain: Chain };
+export type GetUserUnblockWalletRequest = { chain: Chain };
 
 /** Response dto */
-export type GetUserOfframpAddressResponse = { chain: Chain; address: string }[];
+export type GetUserUnblockWalletResponse = { chain: Chain; address: string }[];
 
 /** GetUnblock API response data */
-export type GetUserOfframpAddressResponseData = GetUserOfframpAddressResponse;
+export type GetUserUnblockWalletResponseData = GetUserUnblockWalletResponse;
 
 /** Request dto */
 export type CreateRemoteUserBankAccountRequest = {
@@ -52,7 +52,7 @@ export type GetAllRemoteBankAccountsResponse = RemoteUserBankAccount[];
 export type ChangeMainUserRemoteBankAccountRequest = { remoteBankAccountUuid: string };
 
 /** Request dto */
-export type GetRemoteBankAccountByUuidRequest = { accountUuid: string };
+export type GetRemoteBankAccountByUuidRequest = { remoteBankAccountUuid: string };
 
 /** Response dto */
 export type GetRemoteBankAccountByUuidResponse = RemoteUserBankAccount;

@@ -35,8 +35,8 @@ export {
   GetAllRemoteBankAccountsResponse,
   GetRemoteBankAccountByUuidRequest,
   GetRemoteBankAccountByUuidResponse,
-  GetUserOfframpAddressRequest,
-  GetUserOfframpAddressResponse,
+  GetUserUnblockWalletRequest,
+  GetUserUnblockWalletResponse,
   RemoteUserBankAccount,
 } from './user/crypto-to-fiat/definitions';
 

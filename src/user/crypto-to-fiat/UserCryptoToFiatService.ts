@@ -10,9 +10,9 @@ import {
   GetAllRemoteBankAccountsResponse,
   GetRemoteBankAccountByUuidRequest,
   GetRemoteBankAccountByUuidResponse,
-  GetUserOfframpAddressRequest,
-  GetUserOfframpAddressResponse,
-  GetUserOfframpAddressResponseData,
+  GetUserUnblockWalletRequest,
+  GetUserUnblockWalletResponse,
+  GetUserUnblockWalletResponseData,
   RemoteUserBankAccount,
   UnblockEurAccountDetails,
   UnblockGbpAccountDetails,
@@ -20,9 +20,7 @@ import {
 } from './definitions';
 
 export interface IUserCryptoToFiatService {
-  getUserOfframpAddress(
-    params: GetUserOfframpAddressRequest,
-  ): Promise<GetUserOfframpAddressResponse>;
+  getUserUnblockWallet(params: GetUserUnblockWalletRequest): Promise<GetUserUnblockWalletResponse>;
   createRemoteUserBankAccount(
     params: CreateRemoteUserBankAccountRequest,
   ): Promise<CreateRemoteUserBankAccountResponse>;
@@ -37,9 +35,9 @@ export interface IUserCryptoToFiatService {
 }
 
 export class UserCryptoToFiatService extends BaseService implements IUserCryptoToFiatService {
-  async getUserOfframpAddress(
-    params: GetUserOfframpAddressRequest,
-  ): Promise<GetUserOfframpAddressResponse> {
+  async getUserUnblockWallet(
+    params: GetUserUnblockWalletRequest,
+  ): Promise<GetUserUnblockWalletResponse> {
     const { apiKey } = this.props;
 
     try {
@@ -57,7 +55,7 @@ export class UserCryptoToFiatService extends BaseService implements IUserCryptoT
           'unblock-session-id': this.props.userSessionData.unblockSessionId,
         },
       };
-      const response: AxiosResponse<GetUserOfframpAddressResponseData> = await this.axiosClient.get(
+      const response: AxiosResponse<GetUserUnblockWalletResponseData> = await this.axiosClient.get(
         path,
         config,
       );
@@ -191,7 +189,7 @@ export class UserCryptoToFiatService extends BaseService implements IUserCryptoT
         throw new UserSessionDataNotSetError();
       }
 
-      const path = `/user/bank-account/remote/${params.accountUuid}`;
+      const path = `/user/bank-account/remote/${params.remoteBankAccountUuid}`;
       const config = {
         headers: {
           accept: 'application/json',

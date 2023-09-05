@@ -12,8 +12,8 @@ import {
   GbpAccountDetails,
   GetAllRemoteBankAccountsResponse,
   GetRemoteBankAccountByUuidResponse,
-  GetUserOfframpAddressResponse,
-  GetUserOfframpAddressResponseData,
+  GetUserUnblockWalletResponse,
+  GetUserUnblockWalletResponseData,
   UnblockRemoteUserBankAccount,
 } from '../../../src/user/crypto-to-fiat/definitions';
 import { axiosErrorMock, randomErrorMock } from '../../mocks/errors.mock';
@@ -84,14 +84,14 @@ describe('UserCryptoToFiatService', () => {
       // Arrange
       const chain = Chain.POLYGON;
       const address = addressMock();
-      const expectedResult: GetUserOfframpAddressResponse = [
+      const expectedResult: GetUserUnblockWalletResponse = [
         {
           chain,
           address,
         },
       ];
 
-      const responseData: GetUserOfframpAddressResponseData = [
+      const responseData: GetUserUnblockWalletResponseData = [
         {
           chain,
           address,
@@ -120,7 +120,7 @@ describe('UserCryptoToFiatService', () => {
       const service = new UserCryptoToFiatService(props);
 
       // Act
-      const result = await service.getUserOfframpAddress({ chain: chain });
+      const result = await service.getUserUnblockWallet({ chain: chain });
 
       // Assert
       expect(axiosClient.get).toBeCalledTimes(1);
@@ -140,7 +140,7 @@ describe('UserCryptoToFiatService', () => {
 
       // Act
       try {
-        await service.getUserOfframpAddress({ chain: chain });
+        await service.getUserUnblockWallet({ chain: chain });
       } catch (error) {
         resultedError = error;
       }
@@ -168,7 +168,7 @@ describe('UserCryptoToFiatService', () => {
 
       // Act
       try {
-        await service.getUserOfframpAddress({ chain: chain });
+        await service.getUserUnblockWallet({ chain: chain });
       } catch (error) {
         resultedError = error;
       }
@@ -197,7 +197,7 @@ describe('UserCryptoToFiatService', () => {
 
       // Act
       try {
-        await service.getUserOfframpAddress({ chain: chain });
+        await service.getUserUnblockWallet({ chain: chain });
       } catch (error) {
         resultedError = error;
       }
@@ -750,7 +750,7 @@ describe('UserCryptoToFiatService', () => {
       const service = new UserCryptoToFiatService(props);
 
       // Act
-      await service.getRemoteBankAccountByUuid({ accountUuid: uuid });
+      await service.getRemoteBankAccountByUuid({ remoteBankAccountUuid: uuid });
 
       // Assert
       expect(axiosClient.get).toBeCalledTimes(1);
@@ -792,7 +792,7 @@ describe('UserCryptoToFiatService', () => {
 
       // Act
       const result = await service.getRemoteBankAccountByUuid({
-        accountUuid: uuid,
+        remoteBankAccountUuid: uuid,
       });
 
       // Assert
@@ -812,7 +812,7 @@ describe('UserCryptoToFiatService', () => {
       // Act
 
       try {
-        await service.getRemoteBankAccountByUuid({ accountUuid: uuid });
+        await service.getRemoteBankAccountByUuid({ remoteBankAccountUuid: uuid });
       } catch (error) {
         resultedError = error;
       }
@@ -840,7 +840,7 @@ describe('UserCryptoToFiatService', () => {
       // Act
 
       try {
-        await service.getRemoteBankAccountByUuid({ accountUuid: uuid });
+        await service.getRemoteBankAccountByUuid({ remoteBankAccountUuid: uuid });
       } catch (error) {
         resultedError = error;
       }
@@ -868,7 +868,7 @@ describe('UserCryptoToFiatService', () => {
       // Act
 
       try {
-        await service.getRemoteBankAccountByUuid({ accountUuid: uuid });
+        await service.getRemoteBankAccountByUuid({ remoteBankAccountUuid: uuid });
       } catch (error) {
         resultedError = error;
       }
