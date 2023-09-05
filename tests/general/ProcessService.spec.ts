@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { Currency, ProcessDirection } from '../../src';
+import { Currency, ProcessDirection, Token } from '../../src';
 import { SdkSettings } from '../../src/SdkSettings';
 import { ProcessStatus } from '../../src/enums/ProcessStatus';
 import { ProcessService } from '../../src/general/process/ProcessService';
@@ -41,7 +41,7 @@ describe('ProcessService', () => {
       const axiosResponse = {
         status,
         user_uuid: faker.datatype.uuid(),
-        direction: ProcessDirection.ONRAMP, // Change to fiatToCrypto once done
+        direction: ProcessDirection.fiatToCrypto,
         input: {
           amount: 100,
           currency: Currency.EURO,
@@ -49,7 +49,7 @@ describe('ProcessService', () => {
         },
         output: {
           amount: 110,
-          currency: 'USDC', // Should be token.USDC later on
+          currency: Token.USDC,
           transaction_id: faker.datatype.uuid(),
         },
       };

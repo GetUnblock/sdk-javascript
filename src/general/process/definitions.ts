@@ -1,10 +1,11 @@
 import { Currency } from '../../enums/Currency';
 import { ProcessDirection } from '../../enums/ProcessDirection';
 import { ProcessStatus } from '../../enums/ProcessStatus';
+import { Token } from '../../enums/Token';
 
 type InputDetail = {
   amount: number;
-  currency: Currency; // | Token -> Is in the other PR
+  currency: Currency | Token;
   transactionId: string;
 };
 type OutputDetail = InputDetail;
