@@ -90,7 +90,7 @@ export * from './enums/Currency';
 export * from './enums/PaymentMethods';
 export * from './enums/ProcessDirection';
 export * from './enums/ProcessStatus';
-export * from './enums/Tokens';
+export * from './enums/Token';
 export * from './enums/UserCorporateRole';
 export * from './enums/UserStatus';
 

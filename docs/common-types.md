@@ -8,9 +8,9 @@ category: 64aebfcf6c645e002384ccdc
 
 ### <span id="UserSessionData"></span>UserSessionData
 
-| Field Name | Type |
-| ---------- | ---- |
-| userUuid | string |
+| Field Name       | Type   |
+| ---------------- | ------ |
+| userUuid         | string |
 | unblockSessionId | string |
 
 ## Union Types
@@ -285,6 +285,18 @@ enum Currency {
 }
 ```
 
+### <span id="Token"></span>Token
+
+```typescript
+enum Token {
+  USDT = 'USDT',
+  USDC = 'USDC',
+  DAI = 'DAI',
+  CEUR = 'CEUR',
+  CUSD = 'CUSD',
+}
+```
+
 ### <span id="ProcessStatus"></span>ProcessStatus
 
 ```typescript
@@ -328,7 +340,8 @@ enum ProcessStatus {
 
 ```typescript
 enum PaymentMethods {
-  OPEN_PAYD_BANK_TRANSFER = 'OPEN_PAYD_BANK_TRANSFER',
+  BANK_TRANSFER = 'bank_transfer',
+  MOBILE_MONEY = 'mobile_money',
 }
 ```
 
@@ -336,8 +349,8 @@ enum PaymentMethods {
 
 ```typescript
 enum ProcessDirection {
-  ONRAMP = 'ONRAMP',
-  OFFRAMP = 'OFFRAMP',
+  fiatToCrypto = 'fiatToCrypto',
+  cryptoToFiat = 'cryptoToFiat',
 }
 ```
 
@@ -369,25 +382,13 @@ enum CompanyType {
 ### <span id="UserCompanyRole"></span>UserCompanyRole
 
 ```typescript
-enum UserCompanyRole {
-  ADMINISTARTOR = 'ADMINISTARTOR',
+enum UserCorporateRole {
+  ADMINISTRATOR = 'ADMINISTRATOR',
 }
 ```
 
 <div class="CodeMirror-gutter-filler">
-<h3>List of Services Available</h3>
 
-* [auth](AUTH.md)
-* [company](COMPANY.md)
-* [exchangeRates](EXCHANGE_RATES.md)
-* [kyc](KYC.md)
-* [offramp](OFFRAMP.md)
-* [process](PROCESS.md)
-* [remoteBankAccount](REMOTE_BANK_ACCOUNT.md)
-* [tokenPreferences](TOKEN_PREFERENCES.md)
-* [transactionFee](TRANSACTION_FEE.md)
-* [unblockBankAccount](UNBLOCK_BANK_ACCOUNT.md)
-* [user](USER.md)
+[Back to root index](./index.md)
 
-[Back to README](../README.md)
 </div>

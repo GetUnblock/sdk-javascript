@@ -15,12 +15,23 @@ interface IInformativeService {
 
 ### Structures used
 
+#### Union types, Literal types, Enums and Other Interfaces
+
+<span id="MerchantFee"></span>MerchantFee
+
+```typescript
+type MerchantFee = {
+  type: 'add' | 'remove';
+  amount: number;
+};
+```
+
 #### <span id="ExchangeRatesServiceRequest"></span>ExchangeRatesServiceRequest
 
-| Field Name     | Type                                 |
-| -------------- | ------------------------------------ |
-| baseCurrency   | [Currency](COMMON_TYPES.md#Currency) |
-| targetCurrency | [Currency](COMMON_TYPES.md#Currency) |
+| Field Name     | Type                                    |
+| -------------- | --------------------------------------- |
+| baseCurrency   | [Currency](../common_types.md#Currency) |
+| targetCurrency | [Currency](../common_types.md#Currency) |
 
 #### <span id="ExchangeRatesServiceResponse"></span>ExchangeRatesServiceResponse
 
@@ -30,20 +41,20 @@ interface IInformativeService {
 
 #### <span id="TransactionFeeEstRequest"></span>TransactionFeeEstRequest
 
-| Field Name     | Type                                                 |
-| -------------- | ---------------------------------------------------- |
-| paymentMethod  | [PaymentMethods](COMMON_TYPES.md#PaymentMethods)     |
-| direction      | [ProcessDirection](COMMON_TYPES.md#ProcessDirection) |
-| inputCurrency  | [Currency](COMMON_TYPES.md#Currency)                 |
-| outputCurrency | [Currency](COMMON_TYPES.md#Currency)                 |
-| amount         | number                                               |
+| Field Name     | Type                                                                         |
+| -------------- | ---------------------------------------------------------------------------- |
+| paymentMethod  | [PaymentMethods](../common-types.md#paymentmethods)                          |
+| direction      | [ProcessDirection](../common_types.md#ProcessDirection)                      |
+| inputCurrency  | [Currency](../common-types.md#currency) OR [Token](../common-types.md#token) |
+| outputCurrency | [Currency](../common_types.md#Currency) OR [Token](../common-types.md#token) |
+| amount         | number                                                                       |
 
 #### <span id="TransactionFeeEstResponse"></span>TransactionFeeEstResponse
 
-| Field Name    | Type   |
-| ------------- | ------ |
-| percentageFee | number |
-| totalAmount   | number |
+| Field Name  | Type                        |
+| ----------- | --------------------------- |
+| unblockFee  | number                      |
+| merchantFee | [MerchantFee](#MerchantFee) |
 
 ### Service Methods
 
@@ -70,9 +81,9 @@ import getunblockSDK, { Currency, PaymentMethods, ProcessDirection } from '@getu
   });
 
   // SDK API call example
-  const result = await sdk.transactionFee.getTransactionFeeEstimation({
-    paymentMethod: PaymentMethods.OPEN_PAYD_BANK_TRANSFER,
-    direction: ProcessDirection.ONRAMP,
+  const result = await sdk.general.informative.getTransactionFeeEstimation({
+    paymentMethod: PaymentMethods.BANK_TRANSFER,
+    direction: ProcessDirection.fiatToCrypto,
     inputCurrency: Currency.EUR,
     outputCurrency: Currency.USD,
     amount: 100,
@@ -94,9 +105,9 @@ const { Currency, PaymentMethods, ProcessDirection } = require('@getunblock/sdk'
   });
 
   // SDK API call example
-  const result = await sdk.transactionFee.getTransactionFeeEstimation({
-    paymentMethod: PaymentMethods.OPEN_PAYD_BANK_TRANSFER,
-    direction: ProcessDirection.ONRAMP,
+  const result = await sdk.general.informative.getTransactionFeeEstimation({
+    paymentMethod: PaymentMethods.BANK_TRANSFER,
+    direction: ProcessDirection.fiatToCrypto,
     inputCurrency: Currency.EUR,
     outputCurrency: Currency.USD,
     amount: 100,
@@ -127,7 +138,7 @@ import getunblockSDK, { Currency } from '@getunblock/sdk';
   });
 
   // SDK API call example
-  const result = await sdk.exchangeRates.getExchangeRate({
+  const result = await sdk.general.informative.getExchangeRate({
     baseCurrency: Currency.USD,
     targetCurrency: Currency.EURO,
   });
@@ -148,7 +159,7 @@ const { Currency } = require('@getunblock/sdk');
   });
 
   // SDK API call example
-  const result = await sdk.exchangeRates.getExchangeRate({
+  const result = await sdk.general.informative.getExchangeRate({
     baseCurrency: Currency.USD,
     targetCurrency: Currency.EURO,
   });
