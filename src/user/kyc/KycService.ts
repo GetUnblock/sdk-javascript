@@ -9,6 +9,8 @@ import {
   CreateKYCApplicantResponse,
   DocumentSubType,
   DocumentType,
+  DocumentObject,
+  KycStatuses,
   GetKYCApplicationResponse,
   GetSumsubTokenForIDVCollectionResponse,
   PatchKYCVerificationStatusSandboxRequest,
@@ -100,7 +102,12 @@ export class KycService extends BaseService implements IKycService {
           'unblock-session-id': this.props.userSessionData.unblockSessionId,
         },
       };
-      const response: AxiosResponse<{GetKYCApplicationResponse}> = await this.axiosClient.get(path, config);
+      const response: AxiosResponse<{
+        status: KycStatuses
+        docsMissing?: DocumentObject[],
+        kycEnduserErrorMessage?: string,
+        kcyRejectLabel?: string
+      }> = await this.axiosClient.get(path, config);
 
       return response.data;
     } catch (error) {
