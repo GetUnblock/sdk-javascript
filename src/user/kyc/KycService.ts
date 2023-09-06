@@ -54,7 +54,7 @@ export class KycService extends BaseService implements IKycService {
         throw new UserSessionDataNotSetError();
       }
 
-      const path = `/user/${this.props.userSessionData.userUuid}/kyc/applicant`;
+      const path = `/user/kyc/applicant`;
       const body = {
         address: createKYCApplicantParams.address,
         date_of_birth: DateTime.fromJSDate(createKYCApplicantParams.dateOfBirth).toFormat(
@@ -90,7 +90,7 @@ export class KycService extends BaseService implements IKycService {
         throw new UserSessionDataNotSetError();
       }
 
-      const path = `/user/${this.props.userSessionData.userUuid}/kyc/applicant/token`;
+      const path = `/user/kyc/applicant/token`;
 
       const config = {
         headers: {
@@ -120,7 +120,7 @@ export class KycService extends BaseService implements IKycService {
         throw new UserSessionDataNotSetError();
       }
 
-      const path = `/user/${this.props.userSessionData.userUuid}/kyc/applicant/token`;
+      const path = `/user/kyc/applicant/token`;
 
       const config = {
         headers: {
@@ -151,7 +151,7 @@ export class KycService extends BaseService implements IKycService {
         throw new UserSessionDataNotSetError();
       }
 
-      const path = `/user/${this.props.userSessionData.userUuid}/kyc/document`;
+      const path = `/user/kyc/document`;
       const body = {
         content: uploadKycDocumentParams.content,
         filename: uploadKycDocumentParams.filename,
@@ -191,7 +191,7 @@ export class KycService extends BaseService implements IKycService {
         throw new UserSessionDataNotSetError();
       }
 
-      const path = `/user/${this.props.userSessionData.userUuid}/kyc/verification`;
+      const path = `/user/kyc/verification`;
 
       const config = {
         headers: {
@@ -222,7 +222,7 @@ export class KycService extends BaseService implements IKycService {
         throw new UserSessionDataNotSetError();
       }
 
-      const path = `/user/${this.props.userSessionData.userUuid}/kyc/document`;
+      const path = `/user/kyc/document`;
       const body = {
         status: patchKYCVerificationStatusSandboxParams.status,
       };
