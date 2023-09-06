@@ -56,9 +56,9 @@ export type CreateKYCApplicantResponse = {};
 /** Response dto */
 export type GetKYCApplicationResponse = {
   status: KycStatuses
-  docsMissing: DocumentObject[],
-  kycEnduserErrorMessage: string,
-  kcyRejectLabel: string
+  docsMissing?: DocumentObject[],
+  kycEnduserErrorMessage?: string,
+  kcyRejectLabel?: string
 }
 
 /** Response dto */
