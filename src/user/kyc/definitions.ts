@@ -87,10 +87,6 @@ export type InitSumsubSdkRequest = {
   applicantData: ApplicantData;
 };
 
-export type InitSumsubSdkResponse = {
-  token: string;
-};
-
 /** Request dto */
 export type UploadKycDocumentRequest = UploadDocumentData;
 

@@ -7,7 +7,7 @@ export const getRandomSourceOfFundsType = (): SourceOfFundsType =>
   faker.helpers.arrayElement(['SALARY', 'BUSINESS_INCOME', 'PENSION', 'OTHER']);
 
 export const getRandomDocumentType = (): DocumentType =>
-  faker.helpers.arrayElement(['SELFIE', 'PASSPORT', 'DRIVERS', 'ID_CARD', 'RESIDENCE_PERMIT']);
+  faker.helpers.arrayElement(['SELFIE', 'PASSPORT', 'DRIVERS', 'ID_CARD']);
 
 export const getRandomDocumentSubType = (): DocumentSubType =>
   faker.helpers.arrayElement(['FRONT_SIDE', 'BACK_SIDE']);
