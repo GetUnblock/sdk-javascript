@@ -37,7 +37,7 @@ export interface IKycService {
 
   startKycVerification(): Promise<StartKycVerificationResponse>;
 
-  patchKYCVerificationStatusSandbox(PatchKYCVerificationStatusSandboxRequest): Promise<PatchKYCVerificationStatusSandboxResponse>;
+  patchKYCVerificationStatusSandbox(dto: PatchKYCVerificationStatusSandboxRequest): Promise<PatchKYCVerificationStatusSandboxResponse>;
 
   onboarding(dto: OnboardingRequest): Promise<OnboardingResponse>;
 
@@ -104,7 +104,7 @@ export class KycService extends BaseService implements IKycService {
         token: string;
       }> = await this.axiosClient.get(path, config);
 
-      return {};
+      return;
     } catch (error) {
       ErrorHandler.handle(error);
     }

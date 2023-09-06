@@ -14,8 +14,6 @@ import {
   InitSumsubSdkRequest,
   OnboardingResponse,
   GetKYCApplicationResponse,
-  PatchKYCVerificationStatusSandboxRequest,
-  PatchKYCVerificationStatusSandboxResponse,
   SourceOfFundsType,
   UploadDocumentData,
   UploadKycDocumentRequest,
@@ -109,7 +107,7 @@ describe('KycService', () => {
       // Assert
       expect(axiosClient.post).toHaveBeenCalledTimes(1);
       expect(axiosClient.post).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
-      expect(204, '');
+      expect(204);
     });
 
     // Sad
@@ -389,7 +387,7 @@ describe('KycService', () => {
       // Assert
       expect(axiosClient.post).toHaveBeenCalledTimes(1);
       expect(axiosClient.post).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
-      expect(204, '');
+      expect(204);
     });
 
     // Sad
@@ -529,7 +527,7 @@ describe('KycService', () => {
       // Assert
       expect(axiosClient.post).toHaveBeenCalledTimes(1);
       expect(axiosClient.post).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
-      expect(204, '');
+      expect(204);
     });
 
     // Sad
@@ -672,7 +670,7 @@ describe('KycService', () => {
       expect(service.uploadKycDocument).toBeCalledWith(uploadKycDocumentDto);
       expect(service.startKycVerification).toBeCalledTimes(1);
       // expect(result).toEqual(expectedResponse);
-      expect(204, '')
+      expect(204)
     });
 
     it('should throw error if createKYCApplicant throws an error', async () => {
