@@ -100,9 +100,9 @@ export class KycService extends BaseService implements IKycService {
           'unblock-session-id': this.props.userSessionData.unblockSessionId,
         },
       };
-      const response: AxiosResponse<GetKYCApplicationResponse> = await this.axiosClient.get(path, config);
+      const response: AxiosResponse<{GetKYCApplicationResponse}> = await this.axiosClient.get(path, config);
 
-      return response;
+      return response.data;
     } catch (error) {
       ErrorHandler.handle(error);
     }
