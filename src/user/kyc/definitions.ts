@@ -2,31 +2,39 @@ import Country from '../../enums/Country';
 
 export type SourceOfFundsType = 'SALARY' | 'BUSINESS_INCOME' | 'PENSION' | 'OTHER';
 
+/** Address Details */
+export type AddressDetails =
+  {
+    address_line_1: string,
+    address_line_2: string,
+    post_code: string,
+    city: string,
+    country: Country
+  };
+
+/** Aplicant Data */
 export type ApplicantData = {
-  address: string;
-  postcode: string;
-  city: string;
-  country: Country;
+  address: AddressDetails
   dateOfBirth: Date;
   sourceOfFunds: SourceOfFundsType;
-  sourceOfFundsDescription: string;
 };
 
-/** Request dto */
-export type CreateKYCApplicantRequest = ApplicantData;
-
-/** Response dto */
-export type CreateKYCApplicantResponse = {
-  created: true;
+/** Document Object */
+export type DocumentObject = {
+  docType : DocumentType,
+  docSubtype: DocumentSubType
 };
 
+/** KYC statuses */
+export type KycStatuses = 'KYC_NEEDED' | 'PENDING_KYC_DATA' | 'KYC_PENDING' | 'SOFT_KYC_FAILED' | 'HARD_KYC_FAILED';
+
 /** Response dto */
-export type GetAccessTokenForUserApplicantResponse = {
+export type GetSumsubTokenForIDVCollectionResponse = {
   token: string;
 };
 
 /** KYC document type */
-export type DocumentType = 'SELFIE' | 'PASSPORT' | 'DRIVERS' | 'ID_CARD' | 'RESIDENCE_PERMIT';
+export type DocumentType = 'SELFIE' | 'PASSPORT' | 'DRIVERS' | 'ID_CARD' ;
 
 /** KYC document subtype (side) */
 export type DocumentSubType = 'FRONT_SIDE' | 'BACK_SIDE';
@@ -41,32 +49,30 @@ export type UploadDocumentData = {
 };
 
 /** Request dto */
+export type CreateKYCApplicantRequest = ApplicantData;
+
+/** Response dto */
+export type CreateKYCApplicantResponse = {};
+
+/** Response dto */
+export type GetKYCApplicationResponse = {
+  status: KycStatuses
+  docsMissing: DocumentObject[],
+  kycEnduserErrorMessage: string,
+  kcyRejectLabel: string
+}
+
+/** Response dto */
+export type GetSumsubTokenForIDVCollectionResponse = {
+  token: string
+}
+
+/** Request dto */
 export type UploadKycDocumentRequest = UploadDocumentData;
 
-/** Response dto */
-export type UploadKycDocumentResponse = {
-  uploadUuid: string;
-};
 
 /** Response dto */
-export type GetUploadedKycDocumentsForUserResponse = {
-  uuid: string;
-  documentType: DocumentType;
-  documentSubType?: DocumentSubType;
-  name: string;
-  country: Country;
-  status: string;
-  uploadErrors?: string;
-  verificationErrors?: string;
-  createdAt: string;
-  updatedAt: string;
-  checkUuid: string;
-};
-
-/** Response dto */
-export type StartKycVerificationResponse = {
-  started: true;
-};
+export type StartKycVerificationResponse = {};
 
 /** Response dto */
 export type GetRequiredKycInformationResponse = {
@@ -74,25 +80,3 @@ export type GetRequiredKycInformationResponse = {
   documentTypes: DocumentType[];
 };
 
-/** Request dto */
-export type OnboardingRequest = {
-  applicantData: ApplicantData;
-  documentData: UploadDocumentData;
-};
-
-/** Response dto */
-export type OnboardingResponse = {
-  applicantCreated: boolean;
-  uploadUuid: string;
-  verificationStarted: boolean;
-};
-
-/** Request dto */
-export type InitSumsubSdkRequest = {
-  applicantData: ApplicantData;
-};
-
-export type InitSumsubSdkResponse = {
-  applicantCreated: boolean;
-  token: string;
-};
