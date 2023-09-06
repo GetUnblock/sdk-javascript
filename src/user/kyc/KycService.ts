@@ -2,13 +2,10 @@ import { AxiosResponse } from 'axios';
 import { DateTime } from 'luxon';
 import { BaseService } from '../../BaseService';
 import { ErrorHandler } from '../../ErrorHandler';
-import Country from '../../enums/Country';
 import { UserSessionDataNotSetError } from '../../errors';
 import {
   CreateKYCApplicantRequest,
   CreateKYCApplicantResponse,
-  DocumentSubType,
-  DocumentType,
   DocumentObject,
   KycStatuses,
   GetKYCApplicationResponse,
@@ -21,7 +18,7 @@ import {
   InitSumsubSdkRequest,
   InitSumsubSdkResponse,
   OnboardingRequest,
-  OnboardingResponse
+  OnboardingResponse,
 } from './definitions';
 
 export interface IKycService {
@@ -103,10 +100,10 @@ export class KycService extends BaseService implements IKycService {
         },
       };
       const response: AxiosResponse<{
-        status: KycStatuses
-        docsMissing?: DocumentObject[],
-        kycEnduserErrorMessage?: string,
-        kcyRejectLabel?: string
+        status: KycStatuses;
+        docsMissing?: DocumentObject[];
+        kycEnduserErrorMessage?: string;
+        kcyRejectLabel?: string;
       }> = await this.axiosClient.get(path, config);
 
       return response.data;
@@ -239,7 +236,7 @@ export class KycService extends BaseService implements IKycService {
         },
       };
 
-      const response: AxiosResponse<{ upload_uuid: string }> = await this.axiosClient.put(
+      await this.axiosClient.put(
         path,
         body,
         config,
