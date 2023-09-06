@@ -66,7 +66,6 @@ export {
   CreateUserRequest,
   CreateUserResponse,
   GetUserRampTransactionsResponse,
-  GetUserStatusResponse,
   GetUserTokenPreferenceResponse,
   RampTransactionProcess,
   TokenPreference,
@@ -76,7 +75,6 @@ export {
   TokenPreferenceOptimism,
   TokenPreferencePolygon,
   UpdateUserRequest,
-  UpdateUserResponse,
   UpdateUserTokenPreferencesRequest,
   UpdateUserTokenPreferencesResponse,
 } from './user/management/definitions';
