@@ -4,8 +4,6 @@ import { ErrorHandler } from '../../ErrorHandler';
 import {
   AddUserToCorporateApiRequestBody,
   AddUserToCorporateApiResponseData,
-  CreateCorporateApiRequestBody,
-  CreateCorporateApiResponseData,
   CreateCorporateRequest,
   CreateCorporateResponse,
   GetCorporateDetailsRequest,
@@ -19,17 +17,15 @@ import {
   RemoveUserFromCorporateApiResponseData,
   UnlinkUserFromCorporateRequest,
   UnlinkUserFromCorporateResponse,
-  UpdateCorporateApiRequestBody,
-  UpdateCorporateApiResponseData,
   UpdateCorporateRequest,
-  UpdateCorporateResponse,
   UpdateCorporateTokenPreferencesRequest,
   UpdateCorporateTokenPreferencesResponse,
 } from './definitions';
+import { UserSessionDataNotSetError } from '../../errors';
 
 export interface ICorporateManagementService {
   createCorporate(params: CreateCorporateRequest): Promise<CreateCorporateResponse>;
-  updateCorporate(params: UpdateCorporateRequest): Promise<UpdateCorporateResponse>;
+  updateCorporate(params: UpdateCorporateRequest): Promise<void>;
   getCorporateDetails(params: GetCorporateDetailsRequest): Promise<GetCorporateDetailsResponse>;
   linkUserToCorporate(params: LinkUserToCorporateRequest): Promise<LinkUserToCorporateResponse>;
   unlinkUserFromCorporate(
@@ -51,20 +47,6 @@ export class CorporateManagementService extends BaseService implements ICorporat
     const { apiKey } = this.props;
 
     const path = '/corporate';
-    const body: CreateCorporateApiRequestBody = {
-      name: params.legal_name,
-      type: params.type,
-      registered_address: params.registeredAddress,
-      city: params.city,
-      country: params.country,
-      registration_number: params.registrationNumber,
-      contact_name: params.contactName,
-      phone: params.phone,
-      email: params.email,
-      industry_sector_type: params.industrySectorType,
-      industry_sector_value: params.industrySectorValue,
-      target_address: params.targetAddress,
-    };
     const config = {
       headers: {
         'content-type': 'application/json',
@@ -74,9 +56,9 @@ export class CorporateManagementService extends BaseService implements ICorporat
     };
 
     try {
-      const response: AxiosResponse<CreateCorporateApiResponseData> = await this.axiosClient.post(
+      const response: AxiosResponse<CreateCorporateResponse> = await this.axiosClient.post(
         path,
-        body,
+        params,
         config,
       );
       return response.data;
@@ -85,39 +67,26 @@ export class CorporateManagementService extends BaseService implements ICorporat
     }
   }
 
-  async updateCorporate(params: UpdateCorporateRequest): Promise<UpdateCorporateResponse> {
+  async updateCorporate(params: UpdateCorporateRequest): Promise<void> {
     const { apiKey } = this.props;
 
-    const path = `/corporate/${params.corporateUuid}`;
-    const body: UpdateCorporateApiRequestBody = {
-      name: params.legal_name,
-      type: params.type,
-      registered_address: params.registeredAddress,
-      city: params.city,
-      country: params.country,
-      registration_number: params.registrationNumber,
-      contact_name: params.contactName,
-      phone: params.phone,
-      email: params.email,
-      industry_sector_type: params.industrySectorType,
-      industry_sector_value: params.industrySectorValue,
-    };
+    if (!this.props.userSessionData?.unblockSessionId) {
+      throw new UserSessionDataNotSetError();
+    }
 
+    const { corporate_uuid, ...body } = params;
+    const path = `/corporate/${corporate_uuid}`;
     const config = {
       headers: {
         'content-type': 'application/json',
         accept: 'application/json',
         Authorization: apiKey,
+        'unblock-session-id': this.props.userSessionData.unblockSessionId,
       },
     };
 
     try {
-      const response: AxiosResponse<UpdateCorporateApiResponseData> = await this.axiosClient.patch(
-        path,
-        body,
-        config,
-      );
-      return response.data;
+      await this.axiosClient.patch(path, body, config);
     } catch (error) {
       ErrorHandler.handle(error);
     }
@@ -156,11 +125,16 @@ export class CorporateManagementService extends BaseService implements ICorporat
   ): Promise<UnlinkUserFromCorporateResponse> {
     const { apiKey } = this.props;
 
+    if (!this.props.userSessionData?.unblockSessionId) {
+      throw new UserSessionDataNotSetError();
+    }
+
     const path = `/corporate/${params.corporateUuid}/user/${params.corporateUserUuid}`;
     const config = {
       headers: {
         accept: 'application/json',
         Authorization: apiKey,
+        'unblock-session-id': this.props.userSessionData.unblockSessionId,
       },
     };
 
@@ -173,9 +147,36 @@ export class CorporateManagementService extends BaseService implements ICorporat
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getCorporateDetails(params: GetCorporateDetailsRequest): Promise<GetCorporateDetailsResponse> {
-    throw new Error('Method not implemented.');
+  async getCorporateDetails(
+    params: GetCorporateDetailsRequest,
+  ): Promise<GetCorporateDetailsResponse> {
+    const { apiKey } = this.props;
+
+    try {
+      const path = `/corporate/${params.corporate_uuid}`;
+
+      const config: any = {
+        headers: {
+          accept: 'application/json',
+          Authorization: apiKey,
+        },
+      };
+      if (this.props.userSessionData?.userUuid) {
+        config.headers['user-uuid'] = this.props.userSessionData.userUuid;
+      } else if (this.props.userSessionData?.unblockSessionId) {
+        config.headers['unblock-session-id'] = this.props.userSessionData.unblockSessionId;
+      } else {
+        throw new UserSessionDataNotSetError();
+      }
+      const response: AxiosResponse<GetCorporateDetailsResponse> = await this.axiosClient.get(
+        path,
+        config,
+      );
+
+      return response.data;
+    } catch (error) {
+      ErrorHandler.handle(error);
+    }
   }
 
   getCorporateTransactions(
