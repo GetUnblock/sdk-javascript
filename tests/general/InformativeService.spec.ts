@@ -32,7 +32,6 @@ describe('InformativeService', () => {
   const direction: ProcessDirection = ProcessDirection.fiatToCrypto;
   const inputCurrency: Currency | Token = Currency.EURO;
   const outputCurrency: Currency | Token = Token.USDC;
-  const amount = 100;
   beforeAll(() => {
     axiosClient = mockedAxios.create();
   });
@@ -163,7 +162,6 @@ describe('InformativeService', () => {
         direction: direction,
         inputCurrency: inputCurrency,
         outputCurrency: outputCurrency,
-        amount: amount,
       };
 
       const expectedPath = `/fees`;
@@ -172,7 +170,6 @@ describe('InformativeService', () => {
         direction: direction,
         input_currency: inputCurrency,
         output_currency: outputCurrency,
-        amount: amount,
       };
       const expectedConfig = {
         params: { ...expectedQueryParams },
@@ -225,7 +222,6 @@ describe('InformativeService', () => {
         direction,
         inputCurrency: Currency.EURO,
         outputCurrency: Currency.GBP,
-        amount,
       };
 
       const expectedError = new InputAndOutputCurrencyMustBeOfDifferentTypeError(
@@ -257,7 +253,6 @@ describe('InformativeService', () => {
         direction: direction,
         inputCurrency: inputCurrency,
         outputCurrency: outputCurrency,
-        amount: amount,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -288,7 +283,6 @@ describe('InformativeService', () => {
         direction: direction,
         inputCurrency: inputCurrency,
         outputCurrency: outputCurrency,
-        amount: amount,
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);

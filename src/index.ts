@@ -28,7 +28,6 @@ export * from './user/kyc/definitions';
 
 export {
   ChangeMainUserRemoteBankAccountRequest,
-  CreateRemoteUserBankAccount,
   CreateRemoteUserBankAccountRequest,
   CreateRemoteUserBankAccountResponse,
   EurAccountDetails,
@@ -36,8 +35,8 @@ export {
   GetAllRemoteBankAccountsResponse,
   GetRemoteBankAccountByUuidRequest,
   GetRemoteBankAccountByUuidResponse,
-  GetUserOfframpAddressRequest,
-  GetUserOfframpAddressResponse,
+  GetUserUnblockWalletRequest,
+  GetUserUnblockWalletResponse,
   RemoteUserBankAccount,
 } from './user/crypto-to-fiat/definitions';
 

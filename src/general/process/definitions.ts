@@ -1,21 +1,24 @@
+import { Currency } from '../../enums/Currency';
+import { ProcessDirection } from '../../enums/ProcessDirection';
 import { ProcessStatus } from '../../enums/ProcessStatus';
+import { Token } from '../../enums/Token';
 
-/** Request dto*/
-export type GetOnrampProcessStatusRequest = {
+type InputDetail = {
+  amount: number;
+  currency: Currency | Token;
+  transactionId: string;
+};
+type OutputDetail = InputDetail;
+
+/** Request dto */
+export type GetTransactionDetailsRequest = {
   processUuid: string;
 };
-
-/** Request dto*/
-export type GetOfframpProcessStatusRequest = {
-  processUuid: string;
-};
-
-/** Response dto*/
-export type GetOnrampProcessStatusResponse = {
+/** Response dto */
+export type GetTransactionDetailsResponse = {
   status: ProcessStatus;
-};
-
-/** Response dto*/
-export type GetOfframpProcessStatusResponse = {
-  status: ProcessStatus;
+  userUuid: string;
+  direction: ProcessDirection;
+  input: InputDetail;
+  output: OutputDetail;
 };

@@ -62,7 +62,7 @@ export class InformativeService extends BaseService implements IInformativeServi
     params: TransactionFeeEstRequest,
   ): Promise<TransactionFeeEstResponse> {
     const { apiKey } = this.props;
-    const { paymentMethod, direction, inputCurrency, outputCurrency, amount } = params;
+    const { paymentMethod, direction, inputCurrency, outputCurrency } = params;
 
     const path = `/fees`;
     const queryParams: ApiTransactionFeeEstRequest = {
@@ -70,7 +70,6 @@ export class InformativeService extends BaseService implements IInformativeServi
       direction: direction,
       input_currency: inputCurrency,
       output_currency: outputCurrency,
-      amount: amount,
     };
     const config = {
       params: { ...queryParams },
