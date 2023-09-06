@@ -25,4 +25,4 @@ export type GetUnblockBankAccountByUuidRequest = { accountUuid: string };
 export type GetUnblockBankAccountByUuidResponse = UnblockBankAccount;
 
 /** Request dto */
-export type SimulateOnRampRequest = { accountUuid: string; value: number };
+export type simulateRequest = { accountUuid: string; value: number };

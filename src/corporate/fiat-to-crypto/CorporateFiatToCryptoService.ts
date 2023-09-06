@@ -9,8 +9,8 @@ import {
   GetCorporateUnblockBankAccountResponse,
   GetCorporateUnblockBankAccountsRequest,
   GetCorporateUnblockBankAccountsResponse,
-  SimulateFiatToCryptoRequest,
   UnblockBankAccount,
+  simulateRequest,
 } from './definitions';
 
 export interface ICorporateFiatToCryptoService {
@@ -23,7 +23,7 @@ export interface ICorporateFiatToCryptoService {
   getCorporateUnblockBankAccount(
     params: GetCorporateUnblockBankAccountRequest,
   ): Promise<GetCorporateUnblockBankAccountResponse>;
-  simulateFiatToCrypto(params: SimulateFiatToCryptoRequest): Promise<void>;
+  simulate(params: simulateRequest): Promise<void>;
 }
 
 export class CorporateFiatToCryptoService
@@ -124,7 +124,7 @@ export class CorporateFiatToCryptoService
     }
   }
 
-  async simulateFiatToCrypto(params: SimulateFiatToCryptoRequest): Promise<void> {
+  async simulate(params: simulateRequest): Promise<void> {
     const { apiKey, userSessionData } = this.props;
 
     try {

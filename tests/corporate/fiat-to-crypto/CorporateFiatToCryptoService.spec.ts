@@ -259,7 +259,7 @@ describe('CorporateFiatToCryptoService', () => {
     });
   });
 
-  describe('simulateFiatToCrypto', () => {
+  describe('simulate', () => {
     // Happy
     it('Should call axios with expected params', async () => {
       // Arrange
@@ -288,7 +288,7 @@ describe('CorporateFiatToCryptoService', () => {
       const service = new CorporateFiatToCryptoService(props);
 
       // Act
-      await service.simulateFiatToCrypto({ corporateUuid, accountUuid, value });
+      await service.simulate({ corporateUuid, accountUuid, value });
 
       // Assert
       expect(axiosClient.post).toBeCalledTimes(1);
@@ -307,7 +307,7 @@ describe('CorporateFiatToCryptoService', () => {
 
       // Act
       try {
-        await service.simulateFiatToCrypto({
+        await service.simulate({
           corporateUuid,
           accountUuid: faker.datatype.uuid(),
           value: 100,
@@ -339,7 +339,7 @@ describe('CorporateFiatToCryptoService', () => {
 
       // Act
       try {
-        await service.simulateFiatToCrypto({
+        await service.simulate({
           corporateUuid,
           accountUuid: faker.datatype.uuid(),
           value: 100,

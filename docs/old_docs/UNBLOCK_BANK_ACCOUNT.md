@@ -12,7 +12,7 @@ interface IUnblockBankAccountService {
     params: CreateUnblockUserBankAccountRequest,
   ): Promise<CreateUnblockUserBankAccountResponse>;
   getAllUnblockUserBankAccounts(): Promise<GetAllunblockUserBankAccountsResponse>;
-  simulateOnRamp(params: SimulateOnRampRequest): Promise<SimulateOnRampResponse>;
+  simulate(params: simulateRequest): Promise<simulateResponse>;
   getUnblockBankAccountByUuid(
     params: getUnblockBankAccountByUuidRequest,
   ): Promise<getUnblockBankAccountByUuidResponse>;
@@ -47,7 +47,7 @@ type getUnblockBankAccountByUuidResponse = UserBankAccount & UserBankAccountDeta
 | ---------- | ------------------------------------ |
 | currency   | [Currency](COMMON_TYPES.md#Currency) |
 
-#### <span id="SimulateOnRampRequest"></span>SimulateOnRampRequest
+#### <span id="simulateRequest"></span>simulateRequest
 
 | Field Name | Type                                 |
 | ---------- | ------------------------------------ |
@@ -81,7 +81,7 @@ type getUnblockBankAccountByUuidResponse = UserBankAccount & UserBankAccountDeta
 | availableBalance | number |
 | sortCode         | string |
 
-#### <span id="SimulateOnRampResponse"></span>SimulateOnRampResponse
+#### <span id="simulateResponse"></span>simulateResponse
 
 | Field Name | Type   |
 | ---------- | ------ |
@@ -207,9 +207,9 @@ const { AuthenticationMethod } = require('@getunblock/sdk');
 })();
 ```
 
-#### simulateOnRamp
+#### simulate
 
-<div><pre>simulateOnRamp(params: <a href="#SimulateOnRampRequest">SimulateOnRampRequest</a>): Promise&#60;<a href="#SimulateOnRampResponse">SimulateOnRampResponse</a>&#62;</pre></div>
+<div><pre>simulate(params: <a href="#simulateRequest">simulateRequest</a>): Promise&#60;<a href="#simulateResponse">simulateResponse</a>&#62;</pre></div>
 
 ##### Overview
 
@@ -236,7 +236,7 @@ import getunblockSDK, { AuthenticationMethod, Currency } from '@getunblock/sdk';
   // * more info at https://docs.getunblock.com/docs/unblocker
 
   // SDK API call example
-  const result = await sdk.unblockBankAccount.simulateOnRamp({
+  const result = await sdk.unblockBankAccount.simulate({
     currency: Currency.GBP,
     value: 1,
   });
@@ -263,7 +263,7 @@ const { AuthenticationMethod, Currency } = require('@getunblock/sdk');
   // * more info at https://docs.getunblock.com/docs/unblocker
 
   // SDK API call example
-  const result = await sdk.unblockBankAccount.simulateOnRamp({
+  const result = await sdk.unblockBankAccount.simulate({
     currency: Currency.GBP,
     value: 1,
   });

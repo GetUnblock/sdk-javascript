@@ -1,15 +1,15 @@
 import { AxiosResponse } from 'axios';
 import { BaseService } from '../../BaseService';
 import { ErrorHandler } from '../../ErrorHandler';
-import { UserSessionDataNotSetError } from '../../errors';
+import { UnsupportedEnvironmentError, UserSessionDataNotSetError } from '../../errors';
 import {
   CreateUnblockUserBankAccountRequest,
   CreateUnblockUserBankAccountResponse,
   GetAllunblockUserBankAccountsResponse,
   GetUnblockBankAccountByUuidRequest,
   GetUnblockBankAccountByUuidResponse,
-  SimulateOnRampRequest,
   UnblockBankAccount,
+  simulateRequest,
 } from './definitions';
 
 export interface IUserFiatToCryptoService {
@@ -19,7 +19,7 @@ export interface IUserFiatToCryptoService {
 
   getAllUnblockUserBankAccounts(): Promise<GetAllunblockUserBankAccountsResponse>;
 
-  simulateOnRamp(params: SimulateOnRampRequest): Promise<void>;
+  simulate(params: simulateRequest): Promise<void>;
 
   getUnblockBankAccountByUuid(
     params: GetUnblockBankAccountByUuidRequest,
@@ -84,11 +84,15 @@ export class UserFiatToCryptoService extends BaseService implements IUserFiatToC
     }
   }
 
-  async simulateOnRamp(params: SimulateOnRampRequest): Promise<void> {
+  async simulate(params: simulateRequest): Promise<void> {
     const { apiKey } = this.props;
     try {
       if (!this.props.userSessionData?.unblockSessionId) {
         throw new UserSessionDataNotSetError();
+      }
+
+      if (this.props.prod) {
+        throw new UnsupportedEnvironmentError('production');
       }
 
       const path = `/user/bank-account/unblock/${params.accountUuid}/simulate`;

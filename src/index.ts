@@ -55,8 +55,8 @@ export {
   GetAllunblockUserBankAccountsResponse,
   GetUnblockBankAccountByUuidRequest,
   GetUnblockBankAccountByUuidResponse,
-  SimulateOnRampRequest,
   UnblockBankAccount,
+  simulateRequest,
 } from './user/fiat-to-crypto/definitions';
 
 export {

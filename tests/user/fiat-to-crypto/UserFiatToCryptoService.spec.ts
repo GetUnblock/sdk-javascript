@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { Currency } from '../../../src';
 import { SdkSettings } from '../../../src/SdkSettings';
-import { UserSessionDataNotSetError } from '../../../src/errors';
+import { UnsupportedEnvironmentError, UserSessionDataNotSetError } from '../../../src/errors';
 import { UserFiatToCryptoService } from '../../../src/user/fiat-to-crypto/UserFiatToCryptoService';
 import {
   CreateUnblockUserBankAccountResponse,
@@ -28,6 +28,7 @@ describe('UserFiatToCryptoService', () => {
   let axiosError: AxiosError;
   let randomError: unknown;
   let userSessionDataNotSetError: UserSessionDataNotSetError;
+  let unsupportedEnvironmentError: UnsupportedEnvironmentError;
 
   beforeAll(() => {
     axiosClient = mockedAxios.create();
@@ -38,6 +39,7 @@ describe('UserFiatToCryptoService', () => {
     axiosError = axiosErrorMock();
     randomError = randomErrorMock();
     userSessionDataNotSetError = new UserSessionDataNotSetError();
+    unsupportedEnvironmentError = new UnsupportedEnvironmentError('production');
 
     userUuid = faker.datatype.uuid();
     unblockSessionId = faker.datatype.uuid();
@@ -335,7 +337,7 @@ describe('UserFiatToCryptoService', () => {
     });
   });
 
-  describe('simulateOnRamp', () => {
+  describe('simulate', () => {
     // Happy
     it('should call axios post method with expected params and return the expected response', async () => {
       // Arrange
@@ -364,7 +366,7 @@ describe('UserFiatToCryptoService', () => {
       const service = new UserFiatToCryptoService(props);
 
       // Act
-      await service.simulateOnRamp({
+      await service.simulate({
         accountUuid,
         value: amount,
       });
@@ -386,7 +388,7 @@ describe('UserFiatToCryptoService', () => {
 
       // Act
       try {
-        await service.simulateOnRamp({
+        await service.simulate({
           accountUuid: faker.datatype.uuid(),
           value: amount,
         });
@@ -397,6 +399,37 @@ describe('UserFiatToCryptoService', () => {
       // Assert
       expect(resultedError).toBeInstanceOf(Error);
       expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
+
+    // Sad
+    it('Should throw an error if environment is prod', async () => {
+      // Arrange
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+
+      const expectedErrorMessage = `Bad request: ${unsupportedEnvironmentError}`;
+      let resultedError;
+
+      const service = new UserFiatToCryptoService(props);
+
+      props.prod = true;
+      props.setUserSessionData({
+        userUuid,
+        unblockSessionId,
+      });
+
+      // Act
+      try {
+        await service.simulate({
+          accountUuid: faker.datatype.uuid(),
+          value: 100,
+        });
+      } catch (e) {
+        resultedError = e;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMessage);
     });
 
     it('should throw expected error when an Axios Error Happens', async () => {
@@ -416,7 +449,7 @@ describe('UserFiatToCryptoService', () => {
 
       // Act
       try {
-        await service.simulateOnRamp({
+        await service.simulate({
           accountUuid: faker.datatype.uuid(),
           value: amount,
         });
@@ -447,7 +480,7 @@ describe('UserFiatToCryptoService', () => {
 
       // Act
       try {
-        await service.simulateOnRamp({
+        await service.simulate({
           accountUuid: faker.datatype.uuid(),
           value: amount,
         });

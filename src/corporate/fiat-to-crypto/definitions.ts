@@ -28,7 +28,7 @@ export type GetCorporateUnblockBankAccountRequest = {
 
 export type GetCorporateUnblockBankAccountResponse = UnblockBankAccount;
 
-export type SimulateFiatToCryptoRequest = {
+export type simulateRequest = {
   corporateUuid: string;
   accountUuid: string;
   value: number;
