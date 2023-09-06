@@ -70,6 +70,8 @@ type RemoteBankAccount = {
 
 #### <span id ="GetCorporateUnblockWalletResponse"></span>GetCorporateUnblockWalletResponse
 
+**Array of**
+
 | Field Name | Type                              |
 | ---------- | --------------------------------- |
 | chain      | [Chain](../common-types.md#chain) |

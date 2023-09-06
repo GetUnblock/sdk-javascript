@@ -8,50 +8,57 @@ category: 64aebfcf6c645e002384ccdc
 
 ```typescript
 interface IProcessService {
-  getOnrampProcessStatus(
-    paramsGetOnrampProcessStatusRequest,
-  ): Promise<GetOnrampProcessStatusResponse>;
-  getOfframpProcessStatus(
-    paramsGetOfframpProcessStatusRequest,
-  ): Promise<GetOfframpProcessStatusResponse>;
+  getTransactionDetails(
+    params: GetTransactionDetailsRequest,
+  ): Promise<GetTransactionDetailsResponse>;
 }
 ```
 
 ### Structures used
 
-#### <span id="GetOnrampProcessStatusRequest"></span>GetOnrampProcessStatusRequest
+#### Union types, Literal types, Enums and Other Interfaces
+
+<span id="InputDetail"></span>
+
+```typescript
+type InputDetail = {
+  amount: number;
+  currency: Currency | Token;
+  transactionId: string;
+};
+```
+
+<span id="OutputDetail"></span>
+
+```typescript
+type OutputDetail = InputDetail;
+```
+
+#### <span id="GetTransactionDetailsRequest"></span>GetTransactionDetailsRequest
 
 | Field Name  | Type   |
 | ----------- | ------ |
 | processUuid | string |
 
-#### <span id="GetOfframpProcessStatusRequest"></span>GetOfframpProcessStatusRequest
+#### <span id="GetTransactionDetailsResponse"></span>GetTransactionDetailsResponse
 
-| Field Name  | Type   |
-| ----------- | ------ |
-| processUuid | string |
-
-#### <span id="GetOnrampProcessStatusResponse"></span>GetOnrampProcessStatusResponse
-
-| Field Name | Type                                           |
-| ---------- | ---------------------------------------------- |
-| status     | [ProcessStatus](COMMON_TYPES.md#Processstatus) |
-
-#### <span id="GetOfframpProcessStatusResponse"></span>GetOfframpProcessStatusResponse
-
-| Field Name | Type                                           |
-| ---------- | ---------------------------------------------- |
-| status     | [ProcessStatus](COMMON_TYPES.md#Processstatus) |
+| Field Name | Type                                                    |
+| ---------- | ------------------------------------------------------- |
+| status     | [ProcessStatus](../common-types.md#processstatus)       |
+| userUuid   | string                                                  |
+| direction  | [ProcessDirection](../common-types.md#processdirection) |
+| input      | [InputDetail](#inputdetail)                             |
+| output     | [OutputDetail](#outputdetail)                           |
 
 ### Service Methods
 
-#### getOnrampProcessStatus
+#### getTransactionDetails
 
-<div><pre>getOnrampProcessStatus(params: <a href="#GetOnrampProcessStatusRequest">GetOnrampProcessStatusRequest</a>): Promise&#60;<a href="#GetOnrampProcessStatusResponse">GetOnrampProcessStatusResponse</a>&#62;</pre></div>
+<div><pre>getOnrampProcessStatus(params: <a href="#GetTransactionDetailsRequest">GetTransactionDetailsRequest</a>): Promise&#60;<a href="#GetTransactionDetailsResponse">GetTransactionDetailsResponse</a>&#62;</pre></div>
 
 ##### Overview
 
-This method returns the status of an onramp process.
+This method allows a merchant to obtain details on a specific process
 
 ##### Usage
 
@@ -68,7 +75,7 @@ import getunblockSDK from '@getunblock/sdk';
   });
 
   // SDK API call example
-  const result = await sdk.process.getOnrampProcessStatus({
+  const result = await sdk.general.process.getTransactionDetails({
     processUuid: '[target process uuid]',
   });
 })();
@@ -87,55 +94,7 @@ const getunblockSDK = require('@getunblock/sdk').default;
   });
 
   // SDK API call example
-  const result = await sdk.process.getOnrampProcessStatus({
-    processUuid: '[target process uuid]',
-  });
-})();
-```
-
-#### getOfframpProcessStatus
-
-<div><pre>getOfframpProcessStatus(params: <a href="#GetOfframpProcessStatusRequest">GetOfframpProcessStatusRequest</a>): Promise&#60;<a href="#GetOfframpProcessStatusResponse">GetOfframpProcessStatusResponse</a>&#62;</pre></div>
-
-##### Overview
-
-This method returns the status of an offramp process.
-
-##### Usage
-
-###### Typescript
-
-```typescript
-import getunblockSDK from '@getunblock/sdk';
-
-(async () => {
-  // setup SDK
-  const sdk = getunblockSDK({
-    apiKey: 'API-Key [Some merchant Key]', // Key generated at the moment the merchant was created in getunblock system
-    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-  });
-
-  // SDK API call example
-  const result = await sdk.process.getOfframpProcessStatus({
-    processUuid: '[target process uuid]',
-  });
-})();
-```
-
-###### Javascript
-
-```javascript
-const getunblockSDK = require('@getunblock/sdk').default;
-
-(async () => {
-  // setup SDK
-  const sdk = getunblockSDK({
-    apiKey: 'API-Key [Some merchant Key]', // Key generated at the moment the merchant was created in getunblock system
-    prod: false, // If true Production environment will be used otherwise Sandbox will be used instead
-  });
-
-  // SDK API call example
-  const result = await sdk.process.getOfframpProcessStatus({
+  const result = await sdk.general.process.getTransactionDetails({
     processUuid: '[target process uuid]',
   });
 })();

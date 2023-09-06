@@ -22,7 +22,6 @@ export type TransactionFeeEstRequest = {
   direction: ProcessDirection;
   inputCurrency: Currency | Token;
   outputCurrency: Currency | Token;
-  amount: number;
 };
 
 type MerchantFee = {
@@ -43,7 +42,6 @@ export type ApiTransactionFeeEstRequest = {
   direction: ProcessDirection;
   input_currency: Currency | Token;
   output_currency: Currency | Token;
-  amount: number;
 };
 
 export type ApiTransactionFeeEstResponse = {

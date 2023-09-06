@@ -8,19 +8,19 @@ category: 64aebfcf6c645e002384ccdc
 
 ```typescript
 interface IOfframpService {
-  getUserOfframpAddress(params: GetUserOfframpAddressRequest): Promise<GetUserOfframpAddressResponse>;
+  getUserUnblockWallet(params: GetUserUnblockWalletRequest): Promise<GetUserUnblockWalletResponse>;
 }
 ```
 
 ### Structures used
 
-#### <span id="GetUserOfframpAddressRequest"></span>GetUserOfframpAddressRequest
+#### <span id="GetUserUnblockWalletRequest"></span>GetUserUnblockWalletRequest
 
 | Field Name | Type                           |
 | ---------- | ------------------------------ |
 | chain      | [Chain](COMMON_TYPES.md#chain) |
 
-#### <span id="GetUserOfframpAddressResponse"></span>GetUserOfframpAddressResponse
+#### <span id="GetUserUnblockWalletResponse"></span>GetUserUnblockWalletResponse
 
 | Field Name | Type     |
 | ---------- | -------- |
@@ -31,7 +31,7 @@ interface IOfframpService {
 
 #### getUserOfframpAddress
 
-<div><pre>getUserOfframpAddress(params: <a href="#GetUserOfframpAddressRequest">GetUserOfframpAddressRequest</a>): Promise&#60;<a href="#GetUserOfframpAddressResponse">GetUserOfframpAddressResponse</a>&#62;</pre></div>
+<div><pre>getUserUnblockWallet(params: <a href="#GetUserUnblockWalletRequest">GetUserUnblockWalletRequest</a>): Promise&#60;<a href="#GetUserUnblockWalletResponse">GetUserUnblockWalletResponse</a>&#62;</pre></div>
 
 ##### Overview
 
@@ -58,7 +58,7 @@ import getunblockSDK, { Chain } from '@getunblock/sdk';
   // * more info at https://docs.getunblock.com/docs/unblocker
 
   // SDK API call example
-  const result = await sdk.offramp.getUserOfframpAddress({
+  const result = await sdk.offramp.getUserUnblockWallet({
     chain: Chain.POLYGON,
   });
 })();
@@ -84,7 +84,7 @@ const { Chain } = require('@getunblock/sdk');
   // * more info at https://docs.getunblock.com/docs/unblocker
 
   // SDK API call example
-  const result = await sdk.offramp.getUserOfframpAddress({
+  const result = await sdk.offramp.getUserUnblockWallet({
     chain: Chain.POLYGON,
   });
 })();

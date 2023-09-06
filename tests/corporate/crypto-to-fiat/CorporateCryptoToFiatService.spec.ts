@@ -56,10 +56,12 @@ describe('CorporateCryptoToFiatService', () => {
       const address = faker.finance.ethereumAddress();
       const chain = Chain.POLYGON;
 
-      const expectedResult: GetCorporateUnblockWalletResponse = {
-        chain,
-        address,
-      };
+      const expectedResult: GetCorporateUnblockWalletResponse = [
+        {
+          chain,
+          address,
+        },
+      ];
       const responseData = expectedResult;
       const expectedPath = `/corporate/${corporateUuid}/wallet/${chain}`;
       const expectedConfig = {

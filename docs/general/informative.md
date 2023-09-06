@@ -47,7 +47,6 @@ type MerchantFee = {
 | direction      | [ProcessDirection](../common_types.md#ProcessDirection)                      |
 | inputCurrency  | [Currency](../common-types.md#currency) OR [Token](../common-types.md#token) |
 | outputCurrency | [Currency](../common_types.md#Currency) OR [Token](../common-types.md#token) |
-| amount         | number                                                                       |
 
 #### <span id="TransactionFeeEstResponse"></span>TransactionFeeEstResponse
 
@@ -86,7 +85,6 @@ import getunblockSDK, { Currency, PaymentMethods, ProcessDirection } from '@getu
     direction: ProcessDirection.fiatToCrypto,
     inputCurrency: Currency.EUR,
     outputCurrency: Currency.USD,
-    amount: 100,
   });
 })();
 ```
@@ -110,7 +108,6 @@ const { Currency, PaymentMethods, ProcessDirection } = require('@getunblock/sdk'
     direction: ProcessDirection.fiatToCrypto,
     inputCurrency: Currency.EUR,
     outputCurrency: Currency.USD,
-    amount: 100,
   });
 })();
 ```
