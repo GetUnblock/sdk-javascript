@@ -28,10 +28,9 @@ export type DocumentObject = {
 /** KYC statuses */
 export type KycStatuses = 'KYC_NEEDED' | 'PENDING_KYC_DATA' | 'KYC_PENDING' | 'SOFT_KYC_FAILED' | 'HARD_KYC_FAILED';
 
-/** Response dto */
-export type GetSumsubTokenForIDVCollectionResponse = {
-  token: string;
-};
+/** User statuses patching*/
+export type UserStatusesPatchSandbox =  'FULL_USER' | 'SOFT_KYC_FAILED' | 'HARD_KYC_FAILED'
+
 
 /** KYC document type */
 export type DocumentType = 'SELFIE' | 'PASSPORT' | 'DRIVERS' | 'ID_CARD' ;
@@ -64,19 +63,25 @@ export type GetKYCApplicationResponse = {
 
 /** Response dto */
 export type GetSumsubTokenForIDVCollectionResponse = {
-  token: string
-}
+  token: string;
+};
 
 /** Request dto */
 export type UploadKycDocumentRequest = UploadDocumentData;
 
+/** Response dto */
+export type UploadKycDocumentResponse = {};
 
 /** Response dto */
 export type StartKycVerificationResponse = {};
 
 /** Response dto */
-export type GetRequiredKycInformationResponse = {
-  documentClass: string;
-  documentTypes: DocumentType[];
+export type PatchKYCVerificationStatusSandboxRequest = {
+  status: UserStatusesPatchSandbox;
 };
+
+/** Response dto */
+export type PatchKYCVerificationStatusSandboxResponse = {};
+
+
 
