@@ -66,6 +66,11 @@ export type GetSumsubTokenForIDVCollectionResponse = {
   token: string;
 };
 
+/** Response dto */
+export type InitSumsubSdkResponse = {
+  token: string;
+};
+
 /** Request dto */
 export type UploadKycDocumentRequest = UploadDocumentData;
 
