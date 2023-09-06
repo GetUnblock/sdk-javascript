@@ -72,6 +72,26 @@ export type InitSumsubSdkResponse = {
 };
 
 /** Request dto */
+export type OnboardingRequest = {
+  applicantData: ApplicantData;
+  documentData: UploadDocumentData;
+};
+
+/** Response dto */
+export type OnboardingResponse = {
+  verificationStarted: boolean;
+};
+
+/** Request dto */
+export type InitSumsubSdkRequest = {
+  applicantData: ApplicantData;
+};
+
+export type InitSumsubSdkResponse = {
+  token: string;
+};
+
+/** Request dto */
 export type UploadKycDocumentRequest = UploadDocumentData;
 
 /** Response dto */

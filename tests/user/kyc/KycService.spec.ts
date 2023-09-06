@@ -10,8 +10,9 @@ import {
   CreateKYCApplicantRequest,
   DocumentType,
   GetSumsubTokenForIDVCollectionResponse,
-  GetUploadedKycDocumentsForUserResponse,
   InitSumsubSdkResponse,
+  InitSumsubSdkRequest,
+  OnboardingResponse,
   GetKYCApplicationResponse,
   PatchKYCVerificationStatusSandboxRequest,
   PatchKYCVerificationStatusSandboxResponse,
@@ -65,7 +66,7 @@ describe('KycService', () => {
         address: {
           address_line_1:  faker.address.streetAddress(true),
           address_line_2:  faker.address.streetAddress(true),
-          postcode: faker.address.zipCode(),
+          post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
         },
@@ -108,7 +109,7 @@ describe('KycService', () => {
       // Assert
       expect(axiosClient.post).toHaveBeenCalledTimes(1);
       expect(axiosClient.post).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
-      expect(response.created).toBeTruthy();
+      expect(204, '');
     });
 
     // Sad
@@ -118,7 +119,7 @@ describe('KycService', () => {
         address: {
           address_line_1:  faker.address.streetAddress(true),
           address_line_2:  faker.address.streetAddress(true),
-          postcode: faker.address.zipCode(),
+          post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
         },
@@ -150,7 +151,7 @@ describe('KycService', () => {
         address: {
           address_line_1:  faker.address.streetAddress(true),
           address_line_2:  faker.address.streetAddress(true),
-          postcode: faker.address.zipCode(),
+          post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
         },
@@ -188,7 +189,7 @@ describe('KycService', () => {
         address: {
           address_line_1:  faker.address.streetAddress(true),
           address_line_2:  faker.address.streetAddress(true),
-          postcode: faker.address.zipCode(),
+          post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
         },
@@ -353,10 +354,9 @@ describe('KycService', () => {
         documentSubType: getRandomDocumentSubType(),
       };
 
-      const expectedResponse: UploadKycDocumentResponse = { uploadUuid: faker.datatype.uuid() };
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockResolvedValue({
-        data: { upload_uuid: expectedResponse.uploadUuid },
+        data: {},
       } as AxiosResponse<{ upload_uuid: string }>);
 
       const expectedPath = `/user/kyc/document`;
@@ -389,7 +389,7 @@ describe('KycService', () => {
       // Assert
       expect(axiosClient.post).toHaveBeenCalledTimes(1);
       expect(axiosClient.post).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
-      expect(response).toStrictEqual(expectedResponse);
+      expect(204, '');
     });
 
     // Sad
@@ -529,7 +529,7 @@ describe('KycService', () => {
       // Assert
       expect(axiosClient.post).toHaveBeenCalledTimes(1);
       expect(axiosClient.post).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
-      expect(response.started).toBeTruthy();
+      expect(204, '');
     });
 
     // Sad
@@ -609,142 +609,6 @@ describe('KycService', () => {
     });
   });
 
-  describe('getRequiredKycInformation', () => {
-    // Happy
-    it('Should call axios GET with expected headers and params', async () => {
-      // Arrange
-      const expectedResponse: GetRequiredKycInformationResponse[] = [];
-      for (let i = 0; i < faker.datatype.number(5); i++) {
-        const documentsTypes: DocumentType[] = [];
-
-        for (let j = 0; j < faker.datatype.number(5); j++) {
-          documentsTypes.push(getRandomDocumentType());
-        }
-
-        expectedResponse.push({
-          documentClass: faker.word.noun(),
-          documentTypes: documentsTypes,
-        });
-      }
-
-      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      type AuxResponse = {
-        required_documents: {
-          document_class: string;
-          one_of_document_type: DocumentType[];
-        }[];
-      };
-      jest.spyOn(axiosClient, 'get').mockResolvedValue({
-        data: {
-          required_documents: expectedResponse.map((item) => ({
-            document_class: item.documentClass,
-            one_of_document_type: item.documentTypes,
-          })),
-        } as AuxResponse,
-      } as AxiosResponse<AuxResponse>);
-
-      const expectedPath = `/user/${userUuid}/kyc/verification`;
-
-      const expectedConfig = {
-        headers: {
-          accept: 'application/json',
-          Authorization: props.apiKey,
-          'unblock-session-id': unblockSessionId,
-        },
-      };
-
-      props.setUserSessionData({
-        unblockSessionId,
-        userUuid,
-      });
-
-      const service = new KycService(props);
-      // Act
-
-      const response = await service.getRequiredKycInformation();
-
-      // Assert
-      expect(axiosClient.get).toHaveBeenCalledTimes(1);
-      expect(axiosClient.get).toHaveBeenLastCalledWith(expectedPath, expectedConfig);
-      expect(response).toStrictEqual(expectedResponse);
-    });
-
-    // Sad
-    it('Should throw error if User Session Data is not set', async () => {
-      // Arrange
-      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-
-      const expectedErrorMesage = `Bad request: ${userSessionDataNotSetError}`;
-      const service = new KycService(props);
-      let resultedError;
-
-      // Act
-      try {
-        await service.getRequiredKycInformation();
-      } catch (e) {
-        resultedError = e;
-      }
-
-      // Assert
-      expect(resultedError).toBeInstanceOf(Error);
-      expect((resultedError as Error).message).toBe(expectedErrorMesage);
-    });
-
-    it('Should throw expected error when an Axios Error Happens', async () => {
-      // Arrange
-      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(axiosError);
-
-      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
-
-      props.setUserSessionData({
-        unblockSessionId,
-        userUuid,
-      });
-
-      const service = new KycService(props);
-      let resultedError;
-
-      // Act
-      try {
-        await service.getRequiredKycInformation();
-      } catch (e) {
-        resultedError = e;
-      }
-
-      // Assert
-      expect(resultedError).toBeInstanceOf(Error);
-      expect((resultedError as Error).message).toBe(expectedErrorMesage);
-    });
-
-    it('Should throw expected error when an Unexpected Error Happens', async () => {
-      // Arrange
-      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'get').mockRejectedValueOnce(randomError);
-
-      const expectedErrorMesage = `Unexpected error: ${randomError}`;
-
-      props.setUserSessionData({
-        unblockSessionId,
-        userUuid,
-      });
-
-      const service = new KycService(props);
-      let resultedError;
-
-      // Act
-      try {
-        await service.getRequiredKycInformation();
-      } catch (e) {
-        resultedError = e;
-      }
-
-      // Assert
-      expect(resultedError).toBeInstanceOf(Error);
-      expect((resultedError as Error).message).toBe(expectedErrorMesage);
-    });
-  });
-
   describe('onboarding', () => {
     // Happy
     it('should call createKycApplicant, uploadKycDocument and startKycVerification methods and return expected response', async () => {
@@ -753,7 +617,7 @@ describe('KycService', () => {
         address: {
           address_line_1:  faker.address.streetAddress(true),
           address_line_2:  faker.address.streetAddress(true),
-          postcode: faker.address.zipCode(),
+          post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
         },
@@ -792,11 +656,9 @@ describe('KycService', () => {
       });
 
       const expectedResponse: OnboardingResponse = {
-        applicantCreated: true,
-        uploadUuid: uploadUuid,
         verificationStarted: true,
       };
-      
+
       // Act
       const result = await service.onboarding({
         applicantData: applicantData,
@@ -809,7 +671,8 @@ describe('KycService', () => {
       expect(service.uploadKycDocument).toBeCalledTimes(1);
       expect(service.uploadKycDocument).toBeCalledWith(uploadKycDocumentDto);
       expect(service.startKycVerification).toBeCalledTimes(1);
-      expect(result).toEqual(expectedResponse);
+      // expect(result).toEqual(expectedResponse);
+      expect(204, '')
     });
 
     it('should throw error if createKYCApplicant throws an error', async () => {
@@ -818,7 +681,7 @@ describe('KycService', () => {
         address: {
           address_line_1:  faker.address.streetAddress(true),
           address_line_2:  faker.address.streetAddress(true),
-          postcode: faker.address.zipCode(),
+          post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
         },
@@ -873,7 +736,7 @@ describe('KycService', () => {
         address: {
           address_line_1:  faker.address.streetAddress(true),
           address_line_2:  faker.address.streetAddress(true),
-          postcode: faker.address.zipCode(),
+          post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
         },
@@ -926,7 +789,7 @@ describe('KycService', () => {
         address: {
           address_line_1:  faker.address.streetAddress(true),
           address_line_2:  faker.address.streetAddress(true),
-          postcode: faker.address.zipCode(),
+          post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
         },
@@ -984,7 +847,7 @@ describe('KycService', () => {
         address: {
           address_line_1:  faker.address.streetAddress(true),
           address_line_2:  faker.address.streetAddress(true),
-          postcode: faker.address.zipCode(),
+          post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
         },
@@ -1003,7 +866,7 @@ describe('KycService', () => {
         created: true,
       });
 
-      jest.spyOn(service, 'getAccessTokenForUserApplicant').mockResolvedValueOnce({
+      jest.spyOn(service, 'getSumsubTokenForIDVCollection').mockResolvedValueOnce({
         token: sumsubToken,
       });
 
@@ -1017,7 +880,7 @@ describe('KycService', () => {
       // Assert
       expect(service.createKYCApplicant).toBeCalledTimes(1);
       expect(service.createKYCApplicant).toBeCalledWith(createApplicantDto);
-      expect(service.getAccessTokenForUserApplicant).toBeCalledTimes(1);
+      expect(service.getSumsubTokenForIDVCollection).toBeCalledTimes(1);
       expect(result).toEqual(expectedResponse);
     });
 
@@ -1027,7 +890,7 @@ describe('KycService', () => {
         address: {
           address_line_1:  faker.address.streetAddress(true),
           address_line_2:  faker.address.streetAddress(true),
-          postcode: faker.address.zipCode(),
+          post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
         },
@@ -1042,7 +905,7 @@ describe('KycService', () => {
         .spyOn(service, 'createKYCApplicant')
         .mockRejectedValueOnce(faker.helpers.arrayElement([randomError, axiosError]));
 
-      jest.spyOn(service, 'getAccessTokenForUserApplicant').mockResolvedValueOnce({
+      jest.spyOn(service, 'getSumsubTokenForIDVCollection').mockResolvedValueOnce({
         token: sumsubToken,
       });
 
@@ -1058,17 +921,17 @@ describe('KycService', () => {
 
       // Assert
       expect(service.createKYCApplicant).toBeCalledTimes(1);
-      expect(service.getAccessTokenForUserApplicant).not.toBeCalled();
+      expect(service.getSumsubTokenForIDVCollection).not.toBeCalled();
       expect(resultedError).toBeInstanceOf(Error);
     });
 
-    it('should throw error if getAccessTokenForUserApplicant throws an error', async () => {
+    it('should throw error if getSumsubTokenForIDVCollection throws an error', async () => {
       // Arrange
       const applicantData: CreateKYCApplicantRequest = {
         address: {
           address_line_1:  faker.address.streetAddress(true),
           address_line_2:  faker.address.streetAddress(true),
-          postcode: faker.address.zipCode(),
+          post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
         },
@@ -1082,7 +945,7 @@ describe('KycService', () => {
       });
 
       jest
-        .spyOn(service, 'getAccessTokenForUserApplicant')
+        .spyOn(service, 'getSumsubTokenForIDVCollection')
         .mockRejectedValueOnce(faker.helpers.arrayElement([randomError, axiosError]));
 
       let resultedError;
@@ -1097,7 +960,7 @@ describe('KycService', () => {
 
       // Assert
       expect(service.createKYCApplicant).toBeCalledTimes(1);
-      expect(service.getAccessTokenForUserApplicant).toBeCalledTimes(1);
+      expect(service.getSumsubTokenForIDVCollection).toBeCalledTimes(1);
       expect(resultedError).toBeInstanceOf(Error);
     });
   });

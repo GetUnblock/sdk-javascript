@@ -16,6 +16,10 @@ import {
   StartKycVerificationResponse,
   UploadKycDocumentRequest,
   UploadKycDocumentResponse,
+  InitSumsubSdkRequest,
+  InitSumsubSdkResponse,
+  OnboardingRequest,
+  OnboardingResponse
 } from './definitions';
 
 export interface IKycService {
@@ -34,6 +38,10 @@ export interface IKycService {
   startKycVerification(): Promise<StartKycVerificationResponse>;
 
   patchKYCVerificationStatusSandbox(PatchKYCVerificationStatusSandboxRequest): Promise<PatchKYCVerificationStatusSandboxResponse>;
+
+  onboarding(dto: OnboardingRequest): Promise<OnboardingResponse>;
+
+  initSumsubSdk(dto: InitSumsubSdkRequest): Promise<InitSumsubSdkResponse>;
 }
 
 export class KycService extends BaseService implements IKycService {
@@ -102,7 +110,7 @@ export class KycService extends BaseService implements IKycService {
     }
   }
 
-  async GetSumsubTokenForIDVCollection(): Promise<GetSumsubTokenForIDVCollectionResponse> {
+  async getSumsubTokenForIDVCollection(): Promise<GetSumsubTokenForIDVCollectionResponse> {
     const { apiKey } = this.props;
 
     try {
@@ -238,4 +246,42 @@ export class KycService extends BaseService implements IKycService {
     }
   }
 
+  async onboarding(dto: OnboardingRequest): Promise<OnboardingResponse> {
+    const { applicantData, documentData } = dto;
+    try {
+      const applicant: CreateKYCApplicantResponse = await this.createKYCApplicant({
+        ...applicantData,
+      });
+
+      const upload: UploadKycDocumentResponse = await this.uploadKycDocument({
+        ...documentData,
+      });
+
+      const verification: StartKycVerificationResponse = await this.startKycVerification();
+
+      return {
+        verificationStarted: true,
+      };
+    } catch (error) {
+      ErrorHandler.handle(error);
+    }
+  }
+
+  async initSumsubSdk(dto: InitSumsubSdkRequest): Promise<InitSumsubSdkResponse> {
+    const { applicantData } = dto;
+    try {
+      const applicant: CreateKYCApplicantResponse = await this.createKYCApplicant({
+        ...applicantData,
+      });
+
+      const sumsubSdk: GetSumsubTokenForIDVCollectionResponse =
+        await this.getSumsubTokenForIDVCollection();
+
+      return {
+        token: sumsubSdk.token,
+      };
+    } catch (error) {
+      ErrorHandler.handle(error);
+    }
+  }
 }
