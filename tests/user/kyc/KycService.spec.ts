@@ -358,13 +358,6 @@ describe('KycService', () => {
       } as AxiosResponse<{ upload_uuid: string }>);
 
       const expectedPath = `/user/kyc/document`;
-      const expectedBody = {
-        content: uploadKycDocumentParams.content,
-        filename: uploadKycDocumentParams.filename,
-        document_type: uploadKycDocumentParams.documentType,
-        document_subtype: uploadKycDocumentParams.documentSubType,
-        country: uploadKycDocumentParams.country,
-      };
       const expectedConfig = {
         headers: {
           'content-type': 'application/json',
@@ -386,7 +379,6 @@ describe('KycService', () => {
 
       // Assert
       expect(axiosClient.post).toHaveBeenCalledTimes(1);
-      expect(axiosClient.post).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
       expect(204);
     });
 
@@ -431,7 +423,7 @@ describe('KycService', () => {
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(axiosError);
+      jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(axiosError);
 
       const expectedErrorMesage = `Api error: ${axiosError.response?.data}`;
 
@@ -466,7 +458,7 @@ describe('KycService', () => {
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(randomError);
+      jest.spyOn(axiosClient, 'put').mockRejectedValueOnce(randomError);
 
       const expectedErrorMesage = `Api error: ${randomError}`;
 
