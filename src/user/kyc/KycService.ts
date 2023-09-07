@@ -72,7 +72,7 @@ export class KycService extends BaseService implements IKycService {
         },
       };
 
-      await this.axiosClient.put(path, body, config);
+      await this.axiosClient.post(path, body, config);
 
       return {
         created: true,
@@ -236,7 +236,7 @@ export class KycService extends BaseService implements IKycService {
         },
       };
 
-      await this.axiosClient.put(
+      await this.axiosClient.patch(
         path,
         body,
         config,
@@ -259,7 +259,7 @@ export class KycService extends BaseService implements IKycService {
         ...documentData,
       });
 
-      const verification: StartKycVerificationResponse = await this.startKycVerification();
+      await this.startKycVerification();
 
       return {
         verificationStarted: true,
@@ -272,7 +272,7 @@ export class KycService extends BaseService implements IKycService {
   async initSumsubSdk(dto: InitSumsubSdkRequest): Promise<InitSumsubSdkResponse> {
     const { applicantData } = dto;
     try {
-      const applicant: CreateKYCApplicantResponse = await this.createKYCApplicant({
+      await this.createKYCApplicant({
         ...applicantData,
       });
 
