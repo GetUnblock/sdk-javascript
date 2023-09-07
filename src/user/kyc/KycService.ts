@@ -36,7 +36,9 @@ export interface IKycService {
 
   startKycVerification(): Promise<StartKycVerificationResponse>;
 
-  patchKYCVerificationStatusSandbox(dto: PatchKYCVerificationStatusSandboxRequest): Promise<PatchKYCVerificationStatusSandboxResponse>;
+  patchKYCVerificationStatusSandbox(
+    dto: PatchKYCVerificationStatusSandboxRequest,
+  ): Promise<PatchKYCVerificationStatusSandboxResponse>;
 
   onboarding(dto: OnboardingRequest): Promise<OnboardingResponse>;
 
@@ -236,11 +238,7 @@ export class KycService extends BaseService implements IKycService {
         },
       };
 
-      await this.axiosClient.patch(
-        path,
-        body,
-        config,
-      );
+      await this.axiosClient.patch(path, body, config);
 
       return {};
     } catch (error) {
@@ -251,11 +249,11 @@ export class KycService extends BaseService implements IKycService {
   async onboarding(dto: OnboardingRequest): Promise<OnboardingResponse> {
     const { applicantData, documentData } = dto;
     try {
-      const applicant: CreateKYCApplicantResponse = await this.createKYCApplicant({
+      await this.createKYCApplicant({
         ...applicantData,
       });
 
-      const upload: UploadKycDocumentResponse = await this.uploadKycDocument({
+      await this.uploadKycDocument({
         ...documentData,
       });
 

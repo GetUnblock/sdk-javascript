@@ -13,7 +13,9 @@ interface IUserKycService {
   getSumsubTokenForIDVCollection(): Promise<GetSumsubTokenForIDVCollectionResponse>;
   uploadKycDocument(params: UploadKycDocumentRequest): Promise<UploadKycDocumentResponse>;
   startKycVerification(): Promise<StartKycVerificationResponse>;
-  patchKYCVerificationStatusSandbox(params: PatchKYCVerificationStatusSandboxRequest): Promise<PatchKYCVerificationStatusSandboxResponse>;
+  patchKYCVerificationStatusSandbox(
+    params: PatchKYCVerificationStatusSandboxRequest,
+  ): Promise<PatchKYCVerificationStatusSandboxResponse>;
 }
 ```
 
@@ -24,14 +26,13 @@ interface IUserKycService {
 <span id="AddressDetails"></span>AddressDetails
 
 ```typescript
-type AddressDetails =
-  {
-    address_line_1: string,
-    address_line_2: string,
-    post_code: string,
-    city: string,
-    country: Country
-  };
+type AddressDetails = {
+  address_line_1: string;
+  address_line_2: string;
+  post_code: string;
+  city: string;
+  country: Country;
+};
 ```
 
 <span id="SourceOfFundsType"></span>
@@ -55,7 +56,12 @@ type DocumentSubType = 'FRONT_SIDE' | 'BACK_SIDE';
 <span id="KycStatuses"></span>
 
 ```typescript
-type KycStatuses = 'KYC_NEEDED' | 'PENDING_KYC_DATA' | 'KYC_PENDING' | 'SOFT_KYC_FAILED' | 'HARD_KYC_FAILED';
+type KycStatuses =
+  | 'KYC_NEEDED'
+  | 'PENDING_KYC_DATA'
+  | 'KYC_PENDING'
+  | 'SOFT_KYC_FAILED'
+  | 'HARD_KYC_FAILED';
 ```
 
 <span id="DocumentTypesResponse"></span>
@@ -67,49 +73,46 @@ type KycStatuses = 'FRONT_SIDE' | 'BACK_SIDE';
 <span id="UserStatusesPatchSandbox"></span>
 
 ```typescript
-type UserStatusesPatchSandbox =  'FULL_USER' | 'SOFT_KYC_FAILED' | 'HARD_KYC_FAILED';
+type UserStatusesPatchSandbox = 'FULL_USER' | 'SOFT_KYC_FAILED' | 'HARD_KYC_FAILED';
 ```
 
 #### <span id="DocsMissing"></span>DocsMissing
 
-| Field Name               | Type                                    |
-| ------------------------ | --------------------------------------- |
-| docType                  | [DocumentType](#DocumentType)           |
-| docSubtype               | [DocumentSubType](#DocumentSubType)     |
-
+| Field Name | Type                                |
+| ---------- | ----------------------------------- |
+| docType    | [DocumentType](#DocumentType)       |
+| docSubtype | [DocumentSubType](#DocumentSubType) |
 
 #### <span id="ApplicantData"></span>ApplicantData
 
-| Field Name               | Type                                    |
-| ------------------------ | --------------------------------------- |
-| address                  | [AddressDetails](#AddressDetails)       |
-| dateOfBirth              | Date                                    |
-| sourceOfFunds            | [SourceOfFundsType](#SourceOfFundsType) |
-
+| Field Name    | Type                                    |
+| ------------- | --------------------------------------- |
+| address       | [AddressDetails](#AddressDetails)       |
+| dateOfBirth   | Date                                    |
+| sourceOfFunds | [SourceOfFundsType](#SourceOfFundsType) |
 
 #### <span id="CreateKYCApplicantRequest"></span>CreateKYCApplicantRequest
 
-| Field Name               | Type                                    |
-| ------------------------ | --------------------------------------- |
-| address                  | [AddressDetails](#AddressDetails)       |
-| dateOfBirth              | Date                                    |
-| sourceOfFunds            | [SourceOfFundsType](#SourceOfFundsType) |
+| Field Name    | Type                                    |
+| ------------- | --------------------------------------- |
+| address       | [AddressDetails](#AddressDetails)       |
+| dateOfBirth   | Date                                    |
+| sourceOfFunds | [SourceOfFundsType](#SourceOfFundsType) |
 
 #### <span id="GetKYCApplicationResponse"></span>GetKYCApplicationResponse
 
-| Field Name               | Type                                    |
-| ------------------------ | --------------------------------------- |
-| status                   | [KycStatuses](#KycStatuses)             |
-| docs_missing             | [DocsMissing](#DocsMissing)[]           |
-| kyc_enduser_error_message| string                                  |
-| kyc_reject_label         | string[]                                |
+| Field Name                | Type                          |
+| ------------------------- | ----------------------------- |
+| status                    | [KycStatuses](#KycStatuses)   |
+| docs_missing              | [DocsMissing](#DocsMissing)[] |
+| kyc_enduser_error_message | string                        |
+| kyc_reject_label          | string[]                      |
 
 #### <span id="GetSumsubTokenForIDVCollectionResponse"></span>GetSumsubTokenForIDVCollectionResponse
 
-| Field Name               | Type                                    |
-| ------------------------ | --------------------------------------- |
-| token                    | string                                  |
-
+| Field Name | Type   |
+| ---------- | ------ |
+| token      | string |
 
 #### <span id="UploadKycDocumentRequest"></span>UploadKycDocumentRequest
 
@@ -123,10 +126,9 @@ type UserStatusesPatchSandbox =  'FULL_USER' | 'SOFT_KYC_FAILED' | 'HARD_KYC_FAI
 
 #### <span id="PatchKYCVerificationStatusSandboxRequest"></span>PatchKYCVerificationStatusSandboxRequest
 
-| Field Name    | Type                                                  |
-| ------------- | ----------------------------------------------------- |
-| status        | [UserStatusesPatchSandbox](#UserStatusesPatchSandbox) |
-
+| Field Name | Type                                                  |
+| ---------- | ----------------------------------------------------- |
+| status     | [UserStatusesPatchSandbox](#UserStatusesPatchSandbox) |
 
 ### Service Methods
 
@@ -161,11 +163,11 @@ import getunblockSDK, { AuthenticationMethod, Country } from '@getunblock/sdk';
 
   const result = await sdk.kyc.createKYCApplicant({
     address: {
-        address_line_1: '[user address line 1]',
-        address_line_2: '[user address line 2]',
-        post_code: '[user postcode]',
-        city: '[user city]',
-        country: Country.UnitedKingdom
+      address_line_1: '[user address line 1]',
+      address_line_2: '[user address line 2]',
+      post_code: '[user postcode]',
+      city: '[user city]',
+      country: Country.UnitedKingdom,
     },
     dateOfBirth: new Date('[user birhday]'),
     sourceOfFunds: "['SALARY' | 'BUSINESS_INCOME' | 'PENSION' | 'OTHER']",
@@ -195,11 +197,11 @@ const { AuthenticationMethod, Country } = require('@getunblock/sdk');
   // SDK API call example
   const result = await sdk.kyc.createKYCApplicant({
     address: {
-        address_line_1: '[user address line 1]',
-        address_line_2: '[user address line 2]',
-        post_code: '[user postcode]',
-        city: '[user city]',
-        country: Country.UnitedKingdom
+      address_line_1: '[user address line 1]',
+      address_line_2: '[user address line 2]',
+      post_code: '[user postcode]',
+      city: '[user city]',
+      country: Country.UnitedKingdom,
     },
     dateOfBirth: new Date('[user birhday]'),
     sourceOfFunds: "['SALARY' | 'BUSINESS_INCOME' | 'PENSION' | 'OTHER']",
@@ -446,7 +448,6 @@ const { AuthenticationMethod } = require('@getunblock/sdk');
 })();
 ```
 
-
 #### patchKYCVerificationStatusSandbox
 
 <div><pre>patchKYCVerificationStatusSandbox(params: <a href="#patchKYCVerificationStatusSandboxRequest">patchKYCVerificationStatusSandboxRequest</a>): Promise&#60;<a href="#patchKYCVerificationStatusSandboxResponse">patchKYCVerificationStatusSandboxResponse</a>&#62;</pre></div>
@@ -477,7 +478,7 @@ import getunblockSDK, { AuthenticationMethod, Country } from '@getunblock/sdk';
   // * more info at https://docs.getunblock.com/docs/unblocker
 
   const result = await sdk.kyc.patchKYCVerificationStatusSandbox({
-    status:  "['FULL_USER' | 'SOFT_KYC_FAILED' | 'HARD_KYC_FAILED']",
+    status: "['FULL_USER' | 'SOFT_KYC_FAILED' | 'HARD_KYC_FAILED']",
   });
 })();
 ```
@@ -507,7 +508,6 @@ const { AuthenticationMethod, Country } = require('@getunblock/sdk');
   });
 })();
 ```
-
 
 <div class="CodeMirror-gutter-filler">
 

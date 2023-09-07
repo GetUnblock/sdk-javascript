@@ -6,18 +6,12 @@ import Country from '../../../src/enums/Country';
 import { UserSessionDataNotSetError } from '../../../src/errors';
 import { KycService } from '../../../src/user/kyc/KycService';
 import {
-  ApplicantData,
   CreateKYCApplicantRequest,
-  DocumentType,
   GetSumsubTokenForIDVCollectionResponse,
   InitSumsubSdkResponse,
-  InitSumsubSdkRequest,
-  OnboardingResponse,
-  GetKYCApplicationResponse,
   SourceOfFundsType,
   UploadDocumentData,
   UploadKycDocumentRequest,
-  UploadKycDocumentResponse,
 } from '../../../src/user/kyc/definitions';
 import { axiosErrorMock, randomErrorMock } from '../../mocks/errors.mock';
 import { propsMock } from '../../mocks/props.mock';
@@ -62,8 +56,8 @@ describe('KycService', () => {
       // Arrange
       const createKYCApplicantParams: CreateKYCApplicantRequest = {
         address: {
-          address_line_1:  faker.address.streetAddress(true),
-          address_line_2:  faker.address.streetAddress(true),
+          address_line_1: faker.address.streetAddress(true),
+          address_line_2: faker.address.streetAddress(true),
           post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
@@ -102,7 +96,7 @@ describe('KycService', () => {
       const service = new KycService(props);
       // Act
 
-      const response = await service.createKYCApplicant(createKYCApplicantParams);
+      await service.createKYCApplicant(createKYCApplicantParams);
 
       // Assert
       expect(axiosClient.post).toHaveBeenCalledTimes(1);
@@ -115,8 +109,8 @@ describe('KycService', () => {
       // Arrange
       const createKYCApplicantParams: CreateKYCApplicantRequest = {
         address: {
-          address_line_1:  faker.address.streetAddress(true),
-          address_line_2:  faker.address.streetAddress(true),
+          address_line_1: faker.address.streetAddress(true),
+          address_line_2: faker.address.streetAddress(true),
           post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
@@ -147,8 +141,8 @@ describe('KycService', () => {
       // Arrange
       const createKYCApplicantParams: CreateKYCApplicantRequest = {
         address: {
-          address_line_1:  faker.address.streetAddress(true),
-          address_line_2:  faker.address.streetAddress(true),
+          address_line_1: faker.address.streetAddress(true),
+          address_line_2: faker.address.streetAddress(true),
           post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
@@ -185,8 +179,8 @@ describe('KycService', () => {
       // Arrange
       const createKYCApplicantParams: CreateKYCApplicantRequest = {
         address: {
-          address_line_1:  faker.address.streetAddress(true),
-          address_line_2:  faker.address.streetAddress(true),
+          address_line_1: faker.address.streetAddress(true),
+          address_line_2: faker.address.streetAddress(true),
           post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
@@ -357,16 +351,6 @@ describe('KycService', () => {
         data: {},
       } as AxiosResponse<{ upload_uuid: string }>);
 
-      const expectedPath = `/user/kyc/document`;
-      const expectedConfig = {
-        headers: {
-          'content-type': 'application/json',
-          accept: 'application/json',
-          Authorization: props.apiKey,
-          'unblock-session-id': unblockSessionId,
-        },
-      };
-
       props.setUserSessionData({
         unblockSessionId,
         userUuid,
@@ -375,7 +359,7 @@ describe('KycService', () => {
       const service = new KycService(props);
       // Act
 
-      const response = await service.uploadKycDocument(uploadKycDocumentParams);
+      await service.uploadKycDocument(uploadKycDocumentParams);
 
       // Assert
       expect(axiosClient.put).toHaveBeenCalledTimes(1);
@@ -484,7 +468,6 @@ describe('KycService', () => {
   });
 
   // NO TESTS FOR GetKYCApplicationResponse to be implemented
- 
 
   describe('startKycVerification', () => {
     // Happy
@@ -514,7 +497,7 @@ describe('KycService', () => {
       const service = new KycService(props);
       // Act
 
-      const response = await service.startKycVerification();
+      await service.startKycVerification();
 
       // Assert
       expect(axiosClient.post).toHaveBeenCalledTimes(1);
@@ -605,8 +588,8 @@ describe('KycService', () => {
       // Arrange
       const applicantData: CreateKYCApplicantRequest = {
         address: {
-          address_line_1:  faker.address.streetAddress(true),
-          address_line_2:  faker.address.streetAddress(true),
+          address_line_1: faker.address.streetAddress(true),
+          address_line_2: faker.address.streetAddress(true),
           post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
@@ -645,12 +628,8 @@ describe('KycService', () => {
         started: true,
       });
 
-      const expectedResponse: OnboardingResponse = {
-        verificationStarted: true,
-      };
-
       // Act
-      const result = await service.onboarding({
+      await service.onboarding({
         applicantData: applicantData,
         documentData: uploadDocumentData,
       });
@@ -662,15 +641,15 @@ describe('KycService', () => {
       expect(service.uploadKycDocument).toBeCalledWith(uploadKycDocumentDto);
       expect(service.startKycVerification).toBeCalledTimes(1);
       // expect(result).toEqual(expectedResponse);
-      expect(204)
+      expect(204);
     });
 
     it('should throw error if createKYCApplicant throws an error', async () => {
       // Arrange
       const applicantData: CreateKYCApplicantRequest = {
         address: {
-          address_line_1:  faker.address.streetAddress(true),
-          address_line_2:  faker.address.streetAddress(true),
+          address_line_1: faker.address.streetAddress(true),
+          address_line_2: faker.address.streetAddress(true),
           post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
@@ -724,8 +703,8 @@ describe('KycService', () => {
       // Arrange
       const applicantData: CreateKYCApplicantRequest = {
         address: {
-          address_line_1:  faker.address.streetAddress(true),
-          address_line_2:  faker.address.streetAddress(true),
+          address_line_1: faker.address.streetAddress(true),
+          address_line_2: faker.address.streetAddress(true),
           post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
@@ -777,8 +756,8 @@ describe('KycService', () => {
       // Arrange
       const applicantData: CreateKYCApplicantRequest = {
         address: {
-          address_line_1:  faker.address.streetAddress(true),
-          address_line_2:  faker.address.streetAddress(true),
+          address_line_1: faker.address.streetAddress(true),
+          address_line_2: faker.address.streetAddress(true),
           post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
@@ -835,8 +814,8 @@ describe('KycService', () => {
       // Arrange
       const applicantData: CreateKYCApplicantRequest = {
         address: {
-          address_line_1:  faker.address.streetAddress(true),
-          address_line_2:  faker.address.streetAddress(true),
+          address_line_1: faker.address.streetAddress(true),
+          address_line_2: faker.address.streetAddress(true),
           post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
@@ -878,8 +857,8 @@ describe('KycService', () => {
       // Arrange
       const applicantData: CreateKYCApplicantRequest = {
         address: {
-          address_line_1:  faker.address.streetAddress(true),
-          address_line_2:  faker.address.streetAddress(true),
+          address_line_1: faker.address.streetAddress(true),
+          address_line_2: faker.address.streetAddress(true),
           post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,
@@ -919,8 +898,8 @@ describe('KycService', () => {
       // Arrange
       const applicantData: CreateKYCApplicantRequest = {
         address: {
-          address_line_1:  faker.address.streetAddress(true),
-          address_line_2:  faker.address.streetAddress(true),
+          address_line_1: faker.address.streetAddress(true),
+          address_line_2: faker.address.streetAddress(true),
           post_code: faker.address.zipCode(),
           city: faker.address.city(),
           country: faker.address.countryCode('alpha-2') as Country,

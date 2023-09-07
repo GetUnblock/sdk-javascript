@@ -3,37 +3,40 @@ import Country from '../../enums/Country';
 export type SourceOfFundsType = 'SALARY' | 'BUSINESS_INCOME' | 'PENSION' | 'OTHER';
 
 /** Address Details */
-export type AddressDetails =
-  {
-    address_line_1: string,
-    address_line_2: string,
-    post_code: string,
-    city: string,
-    country: Country
-  };
+export type AddressDetails = {
+  address_line_1: string;
+  address_line_2: string;
+  post_code: string;
+  city: string;
+  country: Country;
+};
 
 /** Aplicant Data */
 export type ApplicantData = {
-  address: AddressDetails
+  address: AddressDetails;
   dateOfBirth: Date;
   sourceOfFunds: SourceOfFundsType;
 };
 
 /** Document Object */
 export type DocumentObject = {
-  docType : DocumentType,
-  docSubtype: DocumentSubType
+  docType: DocumentType;
+  docSubtype: DocumentSubType;
 };
 
 /** KYC statuses */
-export type KycStatuses = 'KYC_NEEDED' | 'PENDING_KYC_DATA' | 'KYC_PENDING' | 'SOFT_KYC_FAILED' | 'HARD_KYC_FAILED';
+export type KycStatuses =
+  | 'KYC_NEEDED'
+  | 'PENDING_KYC_DATA'
+  | 'KYC_PENDING'
+  | 'SOFT_KYC_FAILED'
+  | 'HARD_KYC_FAILED';
 
 /** User statuses patching*/
-export type UserStatusesPatchSandbox =  'FULL_USER' | 'SOFT_KYC_FAILED' | 'HARD_KYC_FAILED'
-
+export type UserStatusesPatchSandbox = 'FULL_USER' | 'SOFT_KYC_FAILED' | 'HARD_KYC_FAILED';
 
 /** KYC document type */
-export type DocumentType = 'SELFIE' | 'PASSPORT' | 'DRIVERS' | 'ID_CARD' ;
+export type DocumentType = 'SELFIE' | 'PASSPORT' | 'DRIVERS' | 'ID_CARD';
 
 /** KYC document subtype (side) */
 export type DocumentSubType = 'FRONT_SIDE' | 'BACK_SIDE';
@@ -51,15 +54,15 @@ export type UploadDocumentData = {
 export type CreateKYCApplicantRequest = ApplicantData;
 
 /** Response dto */
-export type CreateKYCApplicantResponse = {};
+export type CreateKYCApplicantResponse = object;
 
 /** Response dto */
 export type GetKYCApplicationResponse = {
-  status: KycStatuses
-  docsMissing?: DocumentObject[],
-  kycEnduserErrorMessage?: string,
-  kcyRejectLabel?: string
-}
+  status: KycStatuses;
+  docsMissing?: DocumentObject[];
+  kycEnduserErrorMessage?: string;
+  kcyRejectLabel?: string;
+};
 
 /** Response dto */
 export type GetSumsubTokenForIDVCollectionResponse = {
@@ -91,10 +94,10 @@ export type InitSumsubSdkRequest = {
 export type UploadKycDocumentRequest = UploadDocumentData;
 
 /** Response dto */
-export type UploadKycDocumentResponse = {};
+export type UploadKycDocumentResponse = object;
 
 /** Response dto */
-export type StartKycVerificationResponse = {};
+export type StartKycVerificationResponse = object;
 
 /** Response dto */
 export type PatchKYCVerificationStatusSandboxRequest = {
@@ -102,7 +105,4 @@ export type PatchKYCVerificationStatusSandboxRequest = {
 };
 
 /** Response dto */
-export type PatchKYCVerificationStatusSandboxResponse = {};
-
-
-
+export type PatchKYCVerificationStatusSandboxResponse = object;
