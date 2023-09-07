@@ -159,7 +159,7 @@ describe('KycService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockRejectedValueOnce(axiosError);
 
-      const expectedErrorMesage = `Api error: ${axiosError.response?.data}`;
+      const expectedErrorMesage = `Api error: ${axiosError.response?.status} ${axiosError.response?.data}`;
 
       props.setUserSessionData({
         unblockSessionId,
