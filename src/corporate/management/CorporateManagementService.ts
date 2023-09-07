@@ -19,7 +19,6 @@ import {
   UnlinkUserFromCorporateResponse,
   UpdateCorporateRequest,
   UpdateCorporateTokenPreferencesRequest,
-  UpdateCorporateTokenPreferencesResponse,
 } from './definitions';
 import { UserSessionDataNotSetError } from '../../errors';
 
@@ -33,13 +32,11 @@ export interface ICorporateManagementService {
   ): Promise<UnlinkUserFromCorporateResponse>;
   getCorporateTransactions(
     params: GetCorporateTransactionsRequest,
-  ): Promise<GetCorporateTransactionsResponse>;
+  ): Promise<GetCorporateTransactionsResponse[]>;
   getCorporateTokenPreferences(
     params: GetCorporateTokenPreferencesRequest,
-  ): Promise<GetCorporateTokenPreferencesResponse>;
-  updateCorporateTokenPreferences(
-    params: UpdateCorporateTokenPreferencesRequest,
-  ): Promise<UpdateCorporateTokenPreferencesResponse>;
+  ): Promise<GetCorporateTokenPreferencesResponse[]>;
+  updateCorporateTokenPreferences(params: UpdateCorporateTokenPreferencesRequest): Promise<void>;
 }
 
 export class CorporateManagementService extends BaseService implements ICorporateManagementService {
@@ -97,6 +94,10 @@ export class CorporateManagementService extends BaseService implements ICorporat
   ): Promise<LinkUserToCorporateResponse> {
     const { apiKey } = this.props;
 
+    if (!this.props.userSessionData?.unblockSessionId) {
+      throw new UserSessionDataNotSetError();
+    }
+
     const path = `/corporate/${params.corporateUuid}/user`;
     const body: AddUserToCorporateApiRequestBody = {
       corporate_uuid: params.corporateUuid,
@@ -108,6 +109,7 @@ export class CorporateManagementService extends BaseService implements ICorporat
         'content-type': 'application/json',
         accept: 'application/json',
         Authorization: apiKey,
+        'unblock-session-id': this.props.userSessionData.unblockSessionId,
       },
     };
 
@@ -179,22 +181,88 @@ export class CorporateManagementService extends BaseService implements ICorporat
     }
   }
 
-  getCorporateTransactions(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async getCorporateTransactions(
     params: GetCorporateTransactionsRequest,
-  ): Promise<GetCorporateTransactionsResponse> {
-    throw new Error('Method not implemented.');
+  ): Promise<GetCorporateTransactionsResponse[]> {
+    const { apiKey } = this.props;
+
+    try {
+      const path = `/corporate/${params.corporate_uuid}/transactions`;
+
+      const config: any = {
+        headers: {
+          accept: 'application/json',
+          Authorization: apiKey,
+        },
+      };
+      if (this.props.userSessionData?.userUuid) {
+        config.headers['user-uuid'] = this.props.userSessionData.userUuid;
+      } else if (this.props.userSessionData?.unblockSessionId) {
+        config.headers['unblock-session-id'] = this.props.userSessionData.unblockSessionId;
+      } else {
+        throw new UserSessionDataNotSetError();
+      }
+      const response: AxiosResponse<GetCorporateTransactionsResponse[]> =
+        await this.axiosClient.get(path, config);
+
+      return response.data;
+    } catch (error) {
+      ErrorHandler.handle(error);
+    }
   }
-  getCorporateTokenPreferences(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async getCorporateTokenPreferences(
     params: GetCorporateTokenPreferencesRequest,
-  ): Promise<GetCorporateTokenPreferencesResponse> {
-    throw new Error('Method not implemented.');
+  ): Promise<GetCorporateTokenPreferencesResponse[]> {
+    const { apiKey } = this.props;
+
+    try {
+      const path = `/corporate/${params.corporate_uuid}/token-preferences`;
+
+      const config: any = {
+        headers: {
+          accept: 'application/json',
+          Authorization: apiKey,
+        },
+      };
+      if (this.props.userSessionData?.userUuid) {
+        config.headers['user-uuid'] = this.props.userSessionData.userUuid;
+      } else if (this.props.userSessionData?.unblockSessionId) {
+        config.headers['unblock-session-id'] = this.props.userSessionData.unblockSessionId;
+      } else {
+        throw new UserSessionDataNotSetError();
+      }
+      const response: AxiosResponse<GetCorporateTokenPreferencesResponse[]> =
+        await this.axiosClient.get(path, config);
+
+      return response.data;
+    } catch (error) {
+      ErrorHandler.handle(error);
+    }
   }
-  updateCorporateTokenPreferences(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async updateCorporateTokenPreferences(
     params: UpdateCorporateTokenPreferencesRequest,
-  ): Promise<UpdateCorporateTokenPreferencesResponse> {
-    throw new Error('Method not implemented.');
+  ): Promise<void> {
+    const { apiKey } = this.props;
+
+    if (!this.props.userSessionData?.unblockSessionId) {
+      throw new UserSessionDataNotSetError();
+    }
+
+    const { corporate_uuid, ...body } = params;
+    const path = `/corporate/${corporate_uuid}/token-preferences`;
+    const config = {
+      headers: {
+        'content-type': 'application/json',
+        accept: 'application/json',
+        Authorization: apiKey,
+        'unblock-session-id': this.props.userSessionData.unblockSessionId,
+      },
+    };
+
+    try {
+      await this.axiosClient.patch(path, body, config);
+    } catch (error) {
+      ErrorHandler.handle(error);
+    }
   }
 }

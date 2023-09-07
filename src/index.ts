@@ -12,14 +12,11 @@ const GetUnblock = (props: SdkProps): SDK => {
 export * from './general/auth/definitions';
 
 export {
-  CorporateDetails,
   CreateCorporateResponse,
   LinkUserToCorporateRequest,
   LinkUserToCorporateResponse,
-  TargetAddress,
   UnlinkUserFromCorporateRequest,
   UnlinkUserFromCorporateResponse,
-  UpdateCorporateResponse,
 } from './corporate/management/definitions';
 
 export { SdkProps } from './definitions';
