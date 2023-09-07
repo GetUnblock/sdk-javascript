@@ -20,15 +20,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm run build
-
-  linter:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x]
-
-    steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -37,7 +28,7 @@ jobs:
       - run: npm ci
       - run: npm run lint
 
-  prettier:
+  prettier and linter:
     runs-on: ubuntu-latest
 
     strategy:
@@ -60,6 +51,7 @@ jobs:
           prettier_options: --write --tab-width 4 --no-semi --print-width 120 .
       - run: npm ci
       - run: npm run prettier
+      - run: npm run lint
 
   tests:
     runs-on: ubuntu-latest
