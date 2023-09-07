@@ -353,7 +353,7 @@ describe('KycService', () => {
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      jest.spyOn(axiosClient, 'post').mockResolvedValue({
+      jest.spyOn(axiosClient, 'put').mockResolvedValue({
         data: {},
       } as AxiosResponse<{ upload_uuid: string }>);
 
@@ -378,7 +378,7 @@ describe('KycService', () => {
       const response = await service.uploadKycDocument(uploadKycDocumentParams);
 
       // Assert
-      expect(axiosClient.post).toHaveBeenCalledTimes(1);
+      expect(axiosClient.put).toHaveBeenCalledTimes(1);
       expect(204);
     });
 
