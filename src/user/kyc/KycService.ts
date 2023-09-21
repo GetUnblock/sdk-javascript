@@ -224,7 +224,7 @@ export class KycService extends BaseService implements IKycService {
         throw new UserSessionDataNotSetError();
       }
 
-      const path = `/user/kyc/document`;
+      const path = `user/kyc/verification`;
       const body = {
         status: patchKYCVerificationStatusSandboxParams.status,
       };
