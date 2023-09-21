@@ -9,20 +9,17 @@ import { UserManagementService } from '../../../src/user/management/UserManageme
 import {
   CreateUserRequest,
   CreateUserResponse,
-  GetUserRampTransactionsResponse,
-  GetUserStatusResponse,
+  ExternalProcessDirection,
+  GetUserResponse,
   GetUserTokenPreferenceResponse,
   GetUserTokenPreferenceResponseData,
-  RampTransactionProcess,
+  ProcessDetails,
   TokenPreference,
-  UpdateUserTokenPreferenceRequestBody,
-  UpdateUserTokenPreferencesRequest,
-  UpdateUserTokenPreferencesResponse,
-  UpdateUserTokenPreferencesResponseData,
 } from '../../../src/user/management/definitions';
 import { axiosErrorMock, randomErrorMock } from '../../mocks/errors.mock';
 import { propsMock } from '../../mocks/props.mock';
 import { tokenPreferencesMock } from './tokenPreferences.mock';
+import { Currency } from '../../../dist';
 
 describe('UserManagementService', () => {
   jest.mock('axios');
@@ -67,7 +64,6 @@ describe('UserManagementService', () => {
       };
 
       const expectedResponse: CreateUserResponse = {
-        message: faker.lorem.sentence(),
         status: faker.helpers.arrayElement(Object.values(UserStatus)),
         userUuid: faker.datatype.uuid(),
       };
@@ -75,7 +71,6 @@ describe('UserManagementService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockResolvedValue({
         data: {
-          message: expectedResponse.message,
           status: expectedResponse.status,
           user_uuid: expectedResponse.userUuid,
         },
@@ -190,29 +185,32 @@ describe('UserManagementService', () => {
     });
   });
 
-  describe('getUserStatus', () => {
+  describe('getUserDetails', () => {
     // Happy
     it('Should call axios GET with expected headers and params and return an expected response', async () => {
       // Arrange
-      const expectedResponse: GetUserStatusResponse = {
+      const expectedResponse: GetUserResponse = {
+        uuid: faker.datatype.uuid(),
+        first_name: faker.name.firstName(),
+        last_name: faker.name.lastName(),
+        date_of_birth: faker.date.recent(),
+        email: faker.internet.email(),
+        address: {},
         status: faker.helpers.arrayElement(Object.values(UserStatus)),
+        linked_corporates_uuid: [],
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'get').mockResolvedValue({
-        data: {
-          status: expectedResponse.status,
-        },
-      } as AxiosResponse<{
-        status: UserStatus;
-      }>);
+        data: expectedResponse,
+      } as AxiosResponse<GetUserResponse>);
 
-      const expectedPath = `/user/${userUuid}/status`;
+      const expectedPath = `/user`;
       const expectedConfig = {
         headers: {
           accept: 'application/json',
           Authorization: props.apiKey,
-          'unblock-session-id': unblockSessionId,
+          'user-uuid': userUuid,
         },
       };
 
@@ -224,7 +222,7 @@ describe('UserManagementService', () => {
       const service = new UserManagementService(props);
 
       // Act
-      const response = await service.getUserStatus();
+      const response = await service.getUserDetails();
 
       // Assert
       expect(response).toStrictEqual(expectedResponse);
@@ -244,7 +242,7 @@ describe('UserManagementService', () => {
 
       // Act
       try {
-        await service.getUserStatus();
+        await service.getUserDetails();
       } catch (e) {
         resultedError = e;
       }
@@ -271,7 +269,7 @@ describe('UserManagementService', () => {
 
       // Act
       try {
-        await service.getUserStatus();
+        await service.getUserDetails();
       } catch (e) {
         resultedError = e;
       }
@@ -298,7 +296,7 @@ describe('UserManagementService', () => {
 
       // Act
       try {
-        await service.getUserStatus();
+        await service.getUserDetails();
       } catch (e) {
         resultedError = e;
       }
@@ -312,87 +310,31 @@ describe('UserManagementService', () => {
   describe('getUserRampTransactions', () => {
     // Happy
     it('Should call axios GET with expected headers and params and return an expected response', async () => {
-      // Arrange
-      const offrampProcesses: RampTransactionProcess[] = [];
-      const onrampProcesses: RampTransactionProcess[] = [];
-
-      for (let i = 0; i < faker.datatype.number(5); i++) {
-        offrampProcesses.push({
-          amount: faker.datatype.number(),
-          createdAt: faker.datatype.datetime().toString(),
-          status: faker.helpers.arrayElement(Object.values(ProcessStatus)),
-          updatedAt: faker.datatype.datetime().toString(),
-          uuid: faker.datatype.uuid(),
-        });
-      }
-
-      for (let i = 0; i < faker.datatype.number(5); i++) {
-        onrampProcesses.push({
-          amount: faker.datatype.number(),
-          createdAt: faker.datatype.datetime().toString(),
-          status: faker.helpers.arrayElement(Object.values(ProcessStatus)),
-          updatedAt: faker.datatype.datetime().toString(),
-          uuid: faker.datatype.uuid(),
-        });
-      }
-
-      const expectedResponse: GetUserRampTransactionsResponse = {
-        message: faker.lorem.sentence(),
-        processes: {
-          offramp: offrampProcesses,
-          onramp: onrampProcesses,
-        },
-      };
-
-      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
-      type AuxType = {
-        message: string;
-        processes: {
-          onramp: {
-            uuid: string;
-            status: ProcessStatus;
-            amount: number;
-            created_at: string;
-            updated_at: string;
-          }[];
-          offramp: {
-            uuid: string;
-            status: ProcessStatus;
-            amount: number;
-            created_at: string;
-            updated_at: string;
-          }[];
-        };
-      };
-
-      jest.spyOn(axiosClient, 'get').mockResolvedValue({
-        data: {
-          message: expectedResponse.message,
-          processes: {
-            offramp: expectedResponse.processes.offramp.map((item) => ({
-              amount: item.amount,
-              created_at: item.createdAt,
-              status: item.status,
-              updated_at: item.updatedAt,
-              uuid: item.uuid,
-            })),
-            onramp: expectedResponse.processes.onramp.map((item) => ({
-              amount: item.amount,
-              created_at: item.createdAt,
-              status: item.status,
-              updated_at: item.updatedAt,
-              uuid: item.uuid,
-            })),
+      const expectedResponse: ProcessDetails[] = [
+        {
+          status: ProcessStatus.CRYPTO_TRANSFER_NOT_STARTED,
+          user_uuid: userUuid,
+          direction: ExternalProcessDirection.CRYPTO_TO_FIAT,
+          input: {
+            amount: 0,
+            currency: Currency.USD,
+            transaction_id: faker.datatype.uuid(),
           },
         },
-      } as AxiosResponse<AuxType>);
+      ];
 
-      const expectedPath = `user/${userUuid}/process`;
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+
+      jest.spyOn(axiosClient, 'get').mockResolvedValue({
+        data: expectedResponse,
+      } as AxiosResponse<ProcessDetails[]>);
+
+      const expectedPath = `/user/transactions`;
       const expectedConfig = {
         headers: {
           accept: 'application/json',
           Authorization: props.apiKey,
-          'unblock-session-id': unblockSessionId,
+          'user-uuid': userUuid,
         },
       };
 
@@ -496,12 +438,12 @@ describe('UserManagementService', () => {
 
       const expectedResult: GetUserTokenPreferenceResponse = tokenPreferences;
       const responseData: GetUserTokenPreferenceResponseData = tokenPreferences;
-      const expectedPath = `/user/${userUuid}/token-preferences`;
+      const expectedPath = `/user/token-preferences`;
       const expectedConfig = {
         headers: {
           accept: 'application/json',
           Authorization: props.apiKey,
-          'unblock-session-id': unblockSessionId,
+          'user-uuid': userUuid,
         },
       };
 
@@ -611,16 +553,9 @@ describe('UserManagementService', () => {
     // Happy
     it('should call axios patch method with expected params and return the expected response', async () => {
       // Arrange
-      const params: UpdateUserTokenPreferencesRequest = {
-        preferences: tokenPreferences,
-      };
-
-      const expectedResult: UpdateUserTokenPreferencesResponse = { preferences: tokenPreferences };
-      const responseData: UpdateUserTokenPreferencesResponseData = {
-        preferences: tokenPreferences,
-      };
-      const expectedPath = `/user/${userUuid}/token-preferences`;
-      const expectedBody: UpdateUserTokenPreferenceRequestBody = tokenPreferences;
+      const params: TokenPreference = tokenPreferences[0];
+      const expectedPath = `/user/token-preferences`;
+      const expectedBody: TokenPreference = tokenPreferences[0];
       const expectedConfig = {
         headers: {
           'content-type': 'application/json',
@@ -633,7 +568,6 @@ describe('UserManagementService', () => {
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'patch').mockResolvedValueOnce({
         status: 200,
-        data: responseData,
       });
 
       props.setUserSessionData({
@@ -644,7 +578,7 @@ describe('UserManagementService', () => {
       const service = new UserManagementService(props);
 
       // Act
-      const result = await service.updateUserTokenPreference(params);
+      await service.updateUserTokenPreference(params);
 
       // Assert
       expect(axiosClient.patch).toBeCalledTimes(1);
@@ -653,15 +587,12 @@ describe('UserManagementService', () => {
         expectedBody,
         expectedConfig,
       );
-      expect(result).toStrictEqual(expectedResult);
     });
 
     // Sad
     it('Should throw error if User Session Data is not set', async () => {
       // Arrange
-      const params: UpdateUserTokenPreferencesRequest = {
-        preferences: tokenPreferences,
-      };
+      const params: TokenPreference = tokenPreferences[0];
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
 
@@ -682,9 +613,7 @@ describe('UserManagementService', () => {
     });
     it('should throw expected error when an Axios Error Happens', async () => {
       // Arrange
-      const params: UpdateUserTokenPreferencesRequest = {
-        preferences: tokenPreferences,
-      };
+      const params: TokenPreference = tokenPreferences[0];
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'patch').mockRejectedValueOnce(axiosError);
@@ -714,9 +643,7 @@ describe('UserManagementService', () => {
 
     it('should throw expected error when an Unexpected Error Happens', async () => {
       // Arrange
-      const params: UpdateUserTokenPreferencesRequest = {
-        preferences: tokenPreferences,
-      };
+      const params: TokenPreference = tokenPreferences[0];
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'patch').mockRejectedValueOnce(randomError);

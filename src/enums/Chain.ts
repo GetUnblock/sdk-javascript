@@ -4,4 +4,5 @@ export enum Chain {
   OPTIMISM = 'optimism',
   MAINNET = 'mainnet',
   ARBITRUM = 'arbitrum',
+  TRON = 'tron',
 }
