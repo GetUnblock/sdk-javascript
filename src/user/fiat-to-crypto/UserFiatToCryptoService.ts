@@ -1,17 +1,15 @@
 import { AxiosResponse } from 'axios';
 import { BaseService } from '../../BaseService';
 import { ErrorHandler } from '../../ErrorHandler';
-import { UserSessionDataNotSetError } from '../../errors';
+import { UnsupportedEnvironmentError, UserSessionDataNotSetError } from '../../errors';
 import {
   CreateUnblockUserBankAccountRequest,
   CreateUnblockUserBankAccountResponse,
   GetAllunblockUserBankAccountsResponse,
-  GetUnblockBankAccountByIdRequest,
-  GetUnblockBankAccountByIdResponse,
-  SimulateOnRampRequest,
-  SimulateOnRampResponse,
-  UnblockUserBankAccount,
-  UnblockUserBankAccountFull,
+  GetUnblockBankAccountByUuidRequest,
+  GetUnblockBankAccountByUuidResponse,
+  UnblockBankAccount,
+  simulateRequest,
 } from './definitions';
 
 export interface IUserFiatToCryptoService {
@@ -21,11 +19,11 @@ export interface IUserFiatToCryptoService {
 
   getAllUnblockUserBankAccounts(): Promise<GetAllunblockUserBankAccountsResponse>;
 
-  simulateOnRamp(params: SimulateOnRampRequest): Promise<SimulateOnRampResponse>;
+  simulate(params: simulateRequest): Promise<void>;
 
-  getUnblockBankAccountById(
-    params: GetUnblockBankAccountByIdRequest,
-  ): Promise<GetUnblockBankAccountByIdResponse>;
+  getUnblockBankAccountByUuid(
+    params: GetUnblockBankAccountByUuidRequest,
+  ): Promise<GetUnblockBankAccountByUuidResponse>;
 }
 
 export class UserFiatToCryptoService extends BaseService implements IUserFiatToCryptoService {
@@ -34,31 +32,26 @@ export class UserFiatToCryptoService extends BaseService implements IUserFiatToC
   ): Promise<CreateUnblockUserBankAccountResponse> {
     const { apiKey } = this.props;
     try {
-      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+      if (!this.props.userSessionData?.unblockSessionId) {
         throw new UserSessionDataNotSetError();
       }
 
-      const path = `/user/${this.props.userSessionData.userUuid}/bank-account/unblock`;
+      const path = `/user/bank-account/unblock`;
       const body = { currency: params.currency };
       const config = {
         headers: {
-          'content-type': 'application/json',
+          'Content-type': 'application/json',
           accept: 'application/json',
           Authorization: apiKey,
           'unblock-session-id': this.props.userSessionData.unblockSessionId,
         },
       };
-      const response: AxiosResponse<UnblockUserBankAccount> = await this.axiosClient.post(
+      const response: AxiosResponse<{ [key: string]: any }> = await this.axiosClient.post(
         path,
         body,
         config,
       );
-      return {
-        currency: response.data.currency,
-        createdAt: response.data.created_at,
-        updatedAt: response.data.updated_at,
-        uuid: response.data.uuid,
-      };
+      return this.mapUnblockBankAccountToCamelCase(response.data);
     } catch (error) {
       ErrorHandler.handle(error);
     }
@@ -67,11 +60,11 @@ export class UserFiatToCryptoService extends BaseService implements IUserFiatToC
   async getAllUnblockUserBankAccounts(): Promise<GetAllunblockUserBankAccountsResponse> {
     const { apiKey } = this.props;
     try {
-      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+      if (!this.props.userSessionData?.unblockSessionId) {
         throw new UserSessionDataNotSetError();
       }
 
-      const path = `/user/${this.props.userSessionData.userUuid}/bank-account/unblock`;
+      const path = `/user/bank-account/unblock`;
       const config = {
         headers: {
           accept: 'application/json',
@@ -79,62 +72,54 @@ export class UserFiatToCryptoService extends BaseService implements IUserFiatToC
           'unblock-session-id': this.props.userSessionData.unblockSessionId,
         },
       };
-      const response: AxiosResponse<UnblockUserBankAccount[]> = await this.axiosClient.get(
+      const response: AxiosResponse<{ [key: string]: any }[]> = await this.axiosClient.get(
         path,
         config,
       );
-      const mappedResponse = response.data.map((item) => {
-        return {
-          currency: item.currency,
-          createdAt: item.created_at,
-          updatedAt: item.updated_at,
-          uuid: item.uuid,
-        };
+      return response.data.map((bankAccount) => {
+        return this.mapUnblockBankAccountToCamelCase(bankAccount);
       });
-      return mappedResponse;
     } catch (error) {
       ErrorHandler.handle(error);
     }
   }
 
-  async simulateOnRamp(params: SimulateOnRampRequest): Promise<SimulateOnRampResponse> {
+  async simulate(params: simulateRequest): Promise<void> {
     const { apiKey } = this.props;
     try {
-      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+      if (!this.props.userSessionData?.unblockSessionId) {
         throw new UserSessionDataNotSetError();
       }
 
-      const path = `/user/${this.props.userSessionData.userUuid}/bank-account/unblock/test`;
-      const body = { currency: params.currency, value: params.value };
+      if (this.props.prod) {
+        throw new UnsupportedEnvironmentError('production');
+      }
+
+      const path = `/user/bank-account/unblock/${params.accountUuid}/simulate`;
+      const body = { account_uuid: params.accountUuid, value: params.value };
       const config = {
         headers: {
-          'content-type': 'application/json',
-          accept: 'application/json',
+          'Content-type': 'application/json',
           Authorization: apiKey,
           'unblock-session-id': this.props.userSessionData.unblockSessionId,
         },
       };
-      const response: AxiosResponse<{ message: string }> = await this.axiosClient.post(
-        path,
-        body,
-        config,
-      );
-      return response.data;
+      await this.axiosClient.post(path, body, config);
     } catch (error) {
       ErrorHandler.handle(error);
     }
   }
 
-  async getUnblockBankAccountById(
-    params: GetUnblockBankAccountByIdRequest,
-  ): Promise<GetUnblockBankAccountByIdResponse> {
+  async getUnblockBankAccountByUuid(
+    params: GetUnblockBankAccountByUuidRequest,
+  ): Promise<GetUnblockBankAccountByUuidResponse> {
     const { apiKey } = this.props;
     try {
-      if (!this.props.userSessionData?.userUuid || !this.props.userSessionData.unblockSessionId) {
+      if (!this.props.userSessionData?.unblockSessionId) {
         throw new UserSessionDataNotSetError();
       }
 
-      const path = `/user/${this.props.userSessionData.userUuid}/bank-account/unblock/${params.accountUuid}`;
+      const path = `/user/bank-account/unblock/${params.accountUuid}`;
       const config = {
         headers: {
           accept: 'application/json',
@@ -142,26 +127,27 @@ export class UserFiatToCryptoService extends BaseService implements IUserFiatToC
           'unblock-session-id': this.props.userSessionData.unblockSessionId,
         },
       };
-      const response: AxiosResponse<UnblockUserBankAccountFull> = await this.axiosClient.get(
+      const response: AxiosResponse<{ [key: string]: any }> = await this.axiosClient.get(
         path,
         config,
       );
 
-      return {
-        currency: response.data.currency,
-        createdAt: response.data.created_at,
-        updatedAt: response.data.updated_at,
-        uuid: response.data.uuid,
-        bic: response.data.bic,
-        accountNumber: response.data.account_number,
-        iban: response.data.iban,
-        holderName: response.data.holder_name,
-        currentBalance: response.data.current_balance,
-        availableBalance: response.data.available_balance,
-        sortCode: response.data.sort_code,
-      };
+      return this.mapUnblockBankAccountToCamelCase(response.data);
     } catch (error) {
       ErrorHandler.handle(error);
     }
+  }
+
+  private mapUnblockBankAccountToCamelCase(bankAccount: {
+    [key: string]: any;
+  }): UnblockBankAccount {
+    return {
+      uuid: bankAccount.uuid,
+      currency: bankAccount.currency,
+      iban: bankAccount.iban,
+      bic: bankAccount.bic,
+      accountNumber: bankAccount.account_number,
+      sortCode: bankAccount.sort_code,
+    };
   }
 }

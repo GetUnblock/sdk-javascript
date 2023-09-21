@@ -1,15 +1,13 @@
 import { faker } from '@faker-js/faker';
 import axios, { AxiosError, AxiosInstance } from 'axios';
+import { Currency } from '../../../src';
 import { SdkSettings } from '../../../src/SdkSettings';
-import { UserSessionDataNotSetError } from '../../../src/errors';
+import { UnsupportedEnvironmentError, UserSessionDataNotSetError } from '../../../src/errors';
 import { UserFiatToCryptoService } from '../../../src/user/fiat-to-crypto/UserFiatToCryptoService';
 import {
   CreateUnblockUserBankAccountResponse,
   GetAllunblockUserBankAccountsResponse,
-  GetUnblockBankAccountByIdResponse,
-  SimulateOnRampResponse,
-  UnblockUserBankAccount,
-  UnblockUserBankAccountFull,
+  GetUnblockBankAccountByUuidResponse,
 } from '../../../src/user/fiat-to-crypto/definitions';
 import { axiosErrorMock, randomErrorMock } from '../../mocks/errors.mock';
 import { propsMock } from '../../mocks/props.mock';
@@ -22,10 +20,7 @@ describe('UserFiatToCryptoService', () => {
 
   let userUuid: string;
   let unblockSessionId: string;
-  let currency: string;
 
-  let createdAt: string;
-  let updatedAt: string;
   let uuid: string;
 
   let amount: number;
@@ -33,6 +28,7 @@ describe('UserFiatToCryptoService', () => {
   let axiosError: AxiosError;
   let randomError: unknown;
   let userSessionDataNotSetError: UserSessionDataNotSetError;
+  let unsupportedEnvironmentError: UnsupportedEnvironmentError;
 
   beforeAll(() => {
     axiosClient = mockedAxios.create();
@@ -43,13 +39,11 @@ describe('UserFiatToCryptoService', () => {
     axiosError = axiosErrorMock();
     randomError = randomErrorMock();
     userSessionDataNotSetError = new UserSessionDataNotSetError();
+    unsupportedEnvironmentError = new UnsupportedEnvironmentError('production');
 
     userUuid = faker.datatype.uuid();
     unblockSessionId = faker.datatype.uuid();
-    currency = faker.finance.currencyCode();
 
-    createdAt = faker.date.recent().toDateString();
-    updatedAt = createdAt;
     uuid = faker.datatype.uuid();
 
     amount = faker.datatype.number({ min: 0.01, max: 100000000, precision: 0.01 });
@@ -63,29 +57,36 @@ describe('UserFiatToCryptoService', () => {
     // Happy
     it('should call axios post method with expected params and return the expected response', async () => {
       // Arrange
-      const expectedPath = `/user/${userUuid}/bank-account/unblock`;
-      const expectedBody = { currency: currency };
+      const expectedPath = `/user/bank-account/unblock`;
+      const expectedBody = { currency: Currency.EURO };
       const expectedConfig = {
         headers: {
-          'content-type': 'application/json',
+          'Content-type': 'application/json',
           accept: 'application/json',
           Authorization: props.apiKey,
           'unblock-session-id': unblockSessionId,
         },
       };
 
+      const uuid = faker.datatype.uuid();
+      const iban = faker.finance.iban();
+      const bic = faker.finance.bic();
       const expectedResult: CreateUnblockUserBankAccountResponse = {
-        currency: currency,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-        uuid: uuid,
+        uuid,
+        currency: Currency.EURO,
+        iban,
+        bic,
+        accountNumber: '',
+        sortCode: '',
       };
 
       const responseData = {
-        currency: currency,
-        created_at: createdAt,
-        updated_at: updatedAt,
-        uuid: uuid,
+        uuid,
+        currency: Currency.EURO,
+        iban,
+        bic,
+        account_number: '',
+        sort_code: '',
       };
 
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
@@ -103,7 +104,7 @@ describe('UserFiatToCryptoService', () => {
 
       // Act
       const result = await service.createUnblockUserBankAccount({
-        currency: currency,
+        currency: Currency.EURO,
       });
 
       // Assert
@@ -125,7 +126,7 @@ describe('UserFiatToCryptoService', () => {
       // Act
       try {
         await service.createUnblockUserBankAccount({
-          currency: currency,
+          currency: Currency.EURO,
         });
       } catch (error) {
         resultedError = error;
@@ -154,7 +155,7 @@ describe('UserFiatToCryptoService', () => {
       // Act
       try {
         await service.createUnblockUserBankAccount({
-          currency: currency,
+          currency: Currency.EURO,
         });
       } catch (error) {
         resultedError = error;
@@ -184,7 +185,7 @@ describe('UserFiatToCryptoService', () => {
       // Act
       try {
         await service.createUnblockUserBankAccount({
-          currency: currency,
+          currency: Currency.EURO,
         });
       } catch (error) {
         resultedError = error;
@@ -200,7 +201,7 @@ describe('UserFiatToCryptoService', () => {
     // Happy
     it('should call axios get method with expected params and return the expected response', async () => {
       // Arrange
-      const expectedPath = `/user/${userUuid}/bank-account/unblock`;
+      const expectedPath = `/user/bank-account/unblock`;
       const expectedConfig = {
         headers: {
           accept: 'application/json',
@@ -214,20 +215,24 @@ describe('UserFiatToCryptoService', () => {
 
       for (let i = 0; i < accountsLength; i++) {
         accounts.push({
-          currency: faker.finance.currencyCode(),
-          createdAt: faker.date.recent().toDateString(),
-          updatedAt: createdAt,
+          currency: Currency.EURO,
           uuid: faker.datatype.uuid(),
+          iban: faker.finance.iban(),
+          bic: faker.finance.bic(),
+          accountNumber: faker.finance.account(),
+          sortCode: faker.finance.account(),
         });
       }
 
       const expectedResult: GetAllunblockUserBankAccountsResponse = accounts;
 
-      const responseData: UnblockUserBankAccount[] = accounts.map((item) => {
+      const responseData = accounts.map((item) => {
         return {
           currency: item.currency,
-          created_at: item.createdAt,
-          updated_at: item.updatedAt,
+          iban: item.iban,
+          bic: item.bic,
+          sort_code: item.sortCode,
+          account_number: item.accountNumber,
           uuid: item.uuid,
         };
       });
@@ -332,35 +337,25 @@ describe('UserFiatToCryptoService', () => {
     });
   });
 
-  describe('simulateOnRamp', () => {
+  describe('simulate', () => {
     // Happy
     it('should call axios post method with expected params and return the expected response', async () => {
       // Arrange
-      const expectedPath = `/user/${userUuid}/bank-account/unblock/test`;
-      const expectedBody = { currency: currency, value: amount };
+      const accountUuid = faker.datatype.uuid();
+      const expectedPath = `/user/bank-account/unblock/${accountUuid}/simulate`;
+      const expectedBody = { account_uuid: accountUuid, value: amount };
       const expectedConfig = {
         headers: {
-          'content-type': 'application/json',
-          accept: 'application/json',
+          'Content-type': 'application/json',
           Authorization: props.apiKey,
           'unblock-session-id': unblockSessionId,
         },
       };
 
-      const message = faker.lorem.sentence();
-
-      const expectedResult: SimulateOnRampResponse = {
-        message: message,
-      };
-
-      const responseData = {
-        message: message,
-      };
-
       jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
       jest.spyOn(axiosClient, 'post').mockResolvedValueOnce({
         status: 200,
-        data: responseData,
+        data: null,
       });
 
       props.setUserSessionData({
@@ -371,15 +366,14 @@ describe('UserFiatToCryptoService', () => {
       const service = new UserFiatToCryptoService(props);
 
       // Act
-      const result = await service.simulateOnRamp({
-        currency: currency,
+      await service.simulate({
+        accountUuid,
         value: amount,
       });
 
       // Assert
       expect(axiosClient.post).toBeCalledTimes(1);
       expect(axiosClient.post).toHaveBeenLastCalledWith(expectedPath, expectedBody, expectedConfig);
-      expect(result).toStrictEqual(expectedResult);
     });
 
     // Sad
@@ -394,8 +388,8 @@ describe('UserFiatToCryptoService', () => {
 
       // Act
       try {
-        await service.simulateOnRamp({
-          currency: currency,
+        await service.simulate({
+          accountUuid: faker.datatype.uuid(),
           value: amount,
         });
       } catch (error) {
@@ -405,6 +399,37 @@ describe('UserFiatToCryptoService', () => {
       // Assert
       expect(resultedError).toBeInstanceOf(Error);
       expect((resultedError as Error).message).toBe(expectedErrorMesage);
+    });
+
+    // Sad
+    it('Should throw an error if environment is prod', async () => {
+      // Arrange
+      jest.spyOn(axios, 'create').mockReturnValueOnce(axiosClient);
+
+      const expectedErrorMessage = `Bad request: ${unsupportedEnvironmentError}`;
+      let resultedError;
+
+      const service = new UserFiatToCryptoService(props);
+
+      props.prod = true;
+      props.setUserSessionData({
+        userUuid,
+        unblockSessionId,
+      });
+
+      // Act
+      try {
+        await service.simulate({
+          accountUuid: faker.datatype.uuid(),
+          value: 100,
+        });
+      } catch (e) {
+        resultedError = e;
+      }
+
+      // Assert
+      expect(resultedError).toBeInstanceOf(Error);
+      expect((resultedError as Error).message).toBe(expectedErrorMessage);
     });
 
     it('should throw expected error when an Axios Error Happens', async () => {
@@ -424,8 +449,8 @@ describe('UserFiatToCryptoService', () => {
 
       // Act
       try {
-        await service.simulateOnRamp({
-          currency: currency,
+        await service.simulate({
+          accountUuid: faker.datatype.uuid(),
           value: amount,
         });
       } catch (error) {
@@ -455,8 +480,8 @@ describe('UserFiatToCryptoService', () => {
 
       // Act
       try {
-        await service.simulateOnRamp({
-          currency: currency,
+        await service.simulate({
+          accountUuid: faker.datatype.uuid(),
           value: amount,
         });
       } catch (error) {
@@ -469,11 +494,12 @@ describe('UserFiatToCryptoService', () => {
     });
   });
 
-  describe('getUnblockBankAccountById', () => {
+  describe('getUnblockBankAccountByUuid', () => {
     // Happy
     it('should call axios get method with expected params and return the expected response', async () => {
       // Arrange
-      const expectedPath = `/user/${userUuid}/bank-account/unblock/${uuid}`;
+      const uuid = faker.datatype.uuid();
+      const expectedPath = `/user/bank-account/unblock/${uuid}`;
       const expectedConfig = {
         headers: {
           accept: 'application/json',
@@ -485,39 +511,22 @@ describe('UserFiatToCryptoService', () => {
       const bic = faker.finance.bic();
       const accountNumber = faker.finance.account();
       const iban = faker.finance.iban();
-      const holderName = faker.lorem.word();
-      const currentBalance = faker.datatype.number({ min: 0.01, max: 100000000, precision: 0.01 });
-      const availableBalance = faker.datatype.number({
-        min: 0.01,
-        max: 100000000,
-        precision: 0.01,
-      });
       const sortCode = faker.finance.account(6);
 
-      const expectedResult: GetUnblockBankAccountByIdResponse = {
-        currency: currency,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-        uuid: uuid,
-        bic: bic,
-        accountNumber: accountNumber,
-        iban: iban,
-        holderName: holderName,
-        currentBalance: currentBalance,
-        availableBalance: availableBalance,
-        sortCode: sortCode,
+      const expectedResult: GetUnblockBankAccountByUuidResponse = {
+        currency: Currency.EURO,
+        uuid,
+        bic,
+        accountNumber,
+        iban,
+        sortCode,
       };
-      const responseData: UnblockUserBankAccountFull = {
-        currency: currency,
-        created_at: createdAt,
-        updated_at: updatedAt,
-        uuid: uuid,
-        bic: bic,
+      const responseData = {
+        currency: Currency.EURO,
+        uuid,
+        bic,
         account_number: accountNumber,
-        iban: iban,
-        holder_name: holderName,
-        current_balance: currentBalance,
-        available_balance: availableBalance,
+        iban,
         sort_code: sortCode,
       };
 
@@ -535,7 +544,7 @@ describe('UserFiatToCryptoService', () => {
       const service = new UserFiatToCryptoService(props);
 
       // Act
-      const result = await service.getUnblockBankAccountById({
+      const result = await service.getUnblockBankAccountByUuid({
         accountUuid: uuid,
       });
 
@@ -557,7 +566,7 @@ describe('UserFiatToCryptoService', () => {
 
       // Act
       try {
-        await service.getUnblockBankAccountById({ accountUuid: uuid });
+        await service.getUnblockBankAccountByUuid({ accountUuid: uuid });
       } catch (error) {
         resultedError = error;
       }
@@ -584,7 +593,7 @@ describe('UserFiatToCryptoService', () => {
 
       // Act
       try {
-        await service.getUnblockBankAccountById({ accountUuid: uuid });
+        await service.getUnblockBankAccountByUuid({ accountUuid: uuid });
       } catch (error) {
         resultedError = error;
       }
@@ -612,7 +621,7 @@ describe('UserFiatToCryptoService', () => {
 
       // Act
       try {
-        await service.getUnblockBankAccountById({ accountUuid: uuid });
+        await service.getUnblockBankAccountByUuid({ accountUuid: uuid });
       } catch (error) {
         resultedError = error;
       }

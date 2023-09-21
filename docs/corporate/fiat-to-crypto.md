@@ -17,7 +17,7 @@ interface ICorporateFiatToCryptoService {
   getCorporateUnblockBankAccount(
     params: GetCorporateUnblockBankAccountRequest,
   ): Promise<GetCorporateUnblockBankAccountResponse>;
-  simulateFiatToCrypto(params: SimulateFiatToCryptoRequest): Promise<void>;
+  simulate(params: simulateRequest): Promise<void>;
 }
 ```
 
@@ -70,7 +70,7 @@ type UnblockBankAccount = {
 
 **Object** [UnblockBankAccount](#UnblockBankAccount)
 
-#### <span id="SimulateFiatToCryptoRequest"></span>SimulateFiatToCryptoRequest
+#### <span id="simulateRequest"></span>simulateRequest
 
 | Field Name    | Type   |
 | ------------- | ------ |
@@ -226,9 +226,9 @@ import getUnblockSDK from '@getunblock/sdk';
 })();
 ```
 
-#### simulateFiatToCrypto
+#### simulate
 
-<div><pre>simulateFiatToCrypto(params: <a href="#simulatefiattocryptorequest">SimulateFiatToCryptoRequest</a>): Promise&#60;void&#62;</pre></div>
+<div><pre>simulate(params: <a href="#simulaterequest">simulateRequest</a>): Promise&#60;void&#62;</pre></div>
 
 ##### Overview
 
@@ -249,7 +249,7 @@ import getUnblockSDK from '@getunblock/sdk';
   });
 
   // Api call
-  const result = await sdk.corporate.fiatToCrypto.simulateFiatToCrypto({
+  const result = await sdk.corporate.fiatToCrypto.simulate({
     corporateUuid: 'The uuid of the corporate',
     accountUuid: 'The uuid of the account',
     value: 100, // The amount of the account's currency used for simulation
@@ -270,7 +270,7 @@ import getUnblockSDK from '@getunblock/sdk';
   });
 
   // Api call
-  const result = await sdk.corporate.fiatToCrypto.simulateFiatToCrypto({
+  const result = await sdk.corporate.fiatToCrypto.simulate({
     corporateUuid: 'The uuid of the corporate',
     accountUuid: 'The uuid of the account',
     value: 100, // The amount of the account's currency used for simulation
