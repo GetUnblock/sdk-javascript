@@ -12,14 +12,11 @@ const GetUnblock = (props: SdkProps): SDK => {
 export * from './general/auth/definitions';
 
 export {
-  CorporateDetails,
   CreateCorporateResponse,
   LinkUserToCorporateRequest,
   LinkUserToCorporateResponse,
-  TargetAddress,
   UnlinkUserFromCorporateRequest,
   UnlinkUserFromCorporateResponse,
-  UpdateCorporateResponse,
 } from './corporate/management/definitions';
 
 export { SdkProps } from './definitions';
@@ -63,7 +60,6 @@ export {
   CreateUserRequest,
   CreateUserResponse,
   GetUserRampTransactionsResponse,
-  GetUserStatusResponse,
   GetUserTokenPreferenceResponse,
   RampTransactionProcess,
   TokenPreference,
@@ -73,7 +69,6 @@ export {
   TokenPreferenceOptimism,
   TokenPreferencePolygon,
   UpdateUserRequest,
-  UpdateUserResponse,
   UpdateUserTokenPreferencesRequest,
   UpdateUserTokenPreferencesResponse,
 } from './user/management/definitions';

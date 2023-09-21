@@ -20,13 +20,53 @@ export type CreateUserRequest = {
 };
 
 export type CreateUserResponse = {
-  message: string;
   userUuid: string;
   status: UserStatus;
 };
 
-export type GetUserStatusResponse = {
-  status: UserStatus;
+type UserAddress = {
+  address_line_1?: string;
+  address_line_2?: string;
+  city?: string;
+  country?: string;
+  post_code?: string;
+};
+
+export type GetUserResponse = {
+  uuid: string;
+  first_name: string;
+  last_name: string;
+  date_of_birth: Date;
+  target_address?: string;
+  email: string;
+  address: UserAddress;
+  status: string;
+  linked_corporates_uuid: string[];
+};
+
+type ProcessInput = {
+  amount: number;
+  currency: string;
+  transaction_id: string;
+};
+
+type ProcessOutput = {
+  amount: number | undefined;
+  currency: string;
+  transaction_id: string | undefined;
+};
+
+export enum ExternalProcessDirection {
+  CRYPTO_TO_FIAT = 'cryptoToFiat',
+  FIAT_TO_CRYPTO = 'fiatToCrypto',
+}
+
+export type ProcessDetails = {
+  status: ProcessStatus;
+  user_uuid: string;
+  direction: ExternalProcessDirection;
+  input: ProcessInput;
+  output?: ProcessOutput;
 };
 
 export type RampTransactionProcess = {
@@ -45,16 +85,13 @@ export type GetUserRampTransactionsResponse = {
   };
 };
 
-export type UpdateUserRequest = CreateUserRequest & {
-  userUuid: string;
-  dateOfBirth: string;
-  addressLine1: string;
-  addressLine2: string;
-  city: string;
-  postCode: string;
-};
-export type UpdateUserResponse = {
-  updated: true;
+export type UpdateUserRequest = {
+  target_address?: string;
+  first_name?: string;
+  last_name?: string;
+  date_of_birth?: string;
+  email?: string;
+  address?: UserAddress;
 };
 
 /** Polygon token preference */
@@ -113,9 +150,3 @@ export type UpdateUserTokenPreferencesRequest = {
 
 /** Response dto */
 export type UpdateUserTokenPreferencesResponse = { preferences: TokenPreference[] };
-
-/** GetUnblock API request body */
-export type UpdateUserTokenPreferenceRequestBody = TokenPreference[];
-
-/** GetUnblock API response data */
-export type UpdateUserTokenPreferencesResponseData = { preferences: TokenPreference[] };
