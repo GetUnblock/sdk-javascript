@@ -53,13 +53,10 @@ export {
   CreateUnblockUserBankAccountRequest,
   CreateUnblockUserBankAccountResponse,
   GetAllunblockUserBankAccountsResponse,
-  GetUnblockBankAccountByIdRequest,
-  GetUnblockBankAccountByIdResponse,
-  SimulateOnRampRequest,
-  SimulateOnRampResponse,
-  UserBankAccount,
-  UserBankAccountDetails,
-  UserBankAccountFull,
+  GetUnblockBankAccountByUuidRequest,
+  GetUnblockBankAccountByUuidResponse,
+  UnblockBankAccount,
+  simulateRequest,
 } from './user/fiat-to-crypto/definitions';
 
 export {
