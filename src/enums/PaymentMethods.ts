@@ -1,3 +1,4 @@
 export enum PaymentMethods {
-  OPEN_PAYD_BANK_TRANSFER = 'OPEN_PAYD_BANK_TRANSFER',
+  BANK_TRANSFER = 'bank_transfer',
+  MOBILE_MONEY = 'mobile_money',
 }

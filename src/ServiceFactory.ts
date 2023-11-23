@@ -1,85 +1,92 @@
 import { SdkSettings } from './SdkSettings';
-import { AuthService, IAuthService } from './auth/AuthService';
-import { CompanyService, ICompanyService } from './company/CompanyService';
-import { ExchangeRatesService, IExchangeRatesService } from './exchange-rates/ExchangeRatesService';
-import { IKycService, KycService } from './kyc/KycService';
-import { IOfframpService, OfframpService } from './offramp/OfframpService';
-import { IProcessService, ProcessService } from './process/ProcessService';
 import {
-  IRemoteBankAccountService,
-  RemoteBankAccountService,
-} from './remote-bank-account/RemoteBankAccountService';
+  CorporateCryptoToFiatService,
+  ICorporateCryptoToFiatService,
+} from './corporate/crypto-to-fiat/CorporateCryptoToFiatService';
 import {
-  ITokenPreferenceService,
-  TokenPreferenceService,
-} from './token-preference/TokenPreferenceService';
+  CorporateFiatToCryptoService,
+  ICorporateFiatToCryptoService,
+} from './corporate/fiat-to-crypto/CorporateFiatToCryptoService';
+import { IKybService, KybService } from './corporate/kyb/KybService';
 import {
-  ITransactionFeeService,
-  TransactionFeeService,
-} from './transaction-fee/TransactionFeeService';
+  CorporateManagementService,
+  ICorporateManagementService,
+} from './corporate/management/CorporateManagementService';
+import { AuthService, IAuthService } from './general/auth/AuthService';
+import { IInformativeService, InformativeService } from './general/informative/InformativeService';
+import { IProcessService, ProcessService } from './general/process/ProcessService';
 import {
-  IUnblockBankAccountService,
-  UnblockBankAccountService,
-} from './unblock-bank-account/UnblockBankAccountService';
-import { IUserService, UserService } from './user/UserService';
+  IUserCryptoToFiatService,
+  UserCryptoToFiatService,
+} from './user/crypto-to-fiat/UserCryptoToFiatService';
+import {
+  IUserFiatToCryptoService,
+  UserFiatToCryptoService,
+} from './user/fiat-to-crypto/UserFiatToCryptoService';
+import { IKycService, KycService } from './user/kyc/KycService';
+import {
+  IUserManagementService,
+  UserManagementService,
+} from './user/management/UserManagementService';
 
 export interface IServiceFactory {
+  createKybService(): IKybService;
   createAuthService(): IAuthService;
-  createRemoteBankAccountService(): IRemoteBankAccountService;
-  createKycService(): IKycService;
-  createUserService(): IUserService;
-  createExchangeRatesService(): IExchangeRatesService;
-  createUnblockBankAccountService(): IUnblockBankAccountService;
-  createTransactionFeeService(): ITransactionFeeService;
+  createInformativeService(): IInformativeService;
   createProcessService(): IProcessService;
-  createCompanyService(): ICompanyService;
-  createTokenPreferenceService(): ITokenPreferenceService;
-  createOfframpService(): IOfframpService;
+  createUserManagementService(): IUserManagementService;
+  createUserFiatToCryptoService(): IUserFiatToCryptoService;
+  createUserCryptoToFiatService(): IUserCryptoToFiatService;
+  createKycService(): IKycService;
+  createCorporateManagementService(): ICorporateManagementService;
+  createCorporateCryptoToFiatService(): ICorporateCryptoToFiatService;
+  createCorporateFiatToCryptoService(): ICorporateFiatToCryptoService;
 }
 
 export class ServiceFactory implements IServiceFactory {
   constructor(private props: SdkSettings) {}
-  createOfframpService(): IOfframpService {
-    return new OfframpService(this.props);
+
+  createUserCryptoToFiatService(): IUserCryptoToFiatService {
+    return new UserCryptoToFiatService(this.props);
   }
 
-  createTokenPreferenceService(): ITokenPreferenceService {
-    return new TokenPreferenceService(this.props);
-  }
-
-  createCompanyService(): ICompanyService {
-    return new CompanyService(this.props);
+  createCorporateManagementService(): ICorporateManagementService {
+    return new CorporateManagementService(this.props);
   }
 
   createProcessService(): IProcessService {
     return new ProcessService(this.props);
   }
 
-  createTransactionFeeService(): ITransactionFeeService {
-    return new TransactionFeeService(this.props);
-  }
-
-  createUnblockBankAccountService(): IUnblockBankAccountService {
-    return new UnblockBankAccountService(this.props);
-  }
-
-  createExchangeRatesService(): IExchangeRatesService {
-    return new ExchangeRatesService(this.props);
-  }
-
-  createRemoteBankAccountService(): IRemoteBankAccountService {
-    return new RemoteBankAccountService(this.props);
+  createUserFiatToCryptoService(): IUserFiatToCryptoService {
+    return new UserFiatToCryptoService(this.props);
   }
 
   createKycService(): IKycService {
     return new KycService(this.props);
   }
 
-  createUserService(): IUserService {
-    return new UserService(this.props);
+  createUserManagementService(): IUserManagementService {
+    return new UserManagementService(this.props);
   }
 
   createAuthService(): IAuthService {
     return new AuthService(this.props);
+  }
+
+  createInformativeService(): IInformativeService {
+    return new InformativeService(this.props);
+  }
+
+  createCorporateCryptoToFiatService(): ICorporateCryptoToFiatService {
+    return new CorporateCryptoToFiatService(this.props);
+  }
+
+  createCorporateFiatToCryptoService(): ICorporateFiatToCryptoService {
+    return new CorporateFiatToCryptoService(this.props);
+  }
+
+  createKybService(): IKybService {
+    return new KybService(this.props);
   }
 }

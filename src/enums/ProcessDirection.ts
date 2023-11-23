@@ -1,4 +1,4 @@
 export enum ProcessDirection {
-  ONRAMP = 'ONRAMP',
-  OFFRAMP = 'OFFRAMP',
+  fiatToCrypto = 'fiatToCrypto',
+  cryptoToFiat = 'cryptoToFiat',
 }

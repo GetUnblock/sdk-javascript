@@ -9,32 +9,22 @@ const GetUnblock = (props: SdkProps): SDK => {
 };
 
 // Types
-export * from './auth/definitions';
+export * from './general/auth/definitions';
 
 export {
-  AddUserToCompanyRequest,
-  AddUserToCompanyResponse,
-  CompanyDetails,
-  CreateCompanyResponse,
-  RemoveUserFromCompanyRequest,
-  RemoveUserFromCompanyResponse,
-  TargetAddress,
-  UpdateCompanyResponse,
-} from './company/definitions';
+  CreateCorporateResponse,
+  LinkUserToCorporateRequest,
+  LinkUserToCorporateResponse,
+  UnlinkUserFromCorporateRequest,
+  UnlinkUserFromCorporateResponse,
+} from './corporate/management/definitions';
 
 export { SdkProps } from './definitions';
 
-export * from './exchange-rates/definitions';
-
-export * from './kyc/definitions';
-
-export { GetUserOfframpAddressRequest, GetUserOfframpAddressResponse } from './offramp/definitions';
-
-export * from './process/definitions';
+export * from './user/kyc/definitions';
 
 export {
   ChangeMainUserRemoteBankAccountRequest,
-  CreateRemoteUserBankAccount,
   CreateRemoteUserBankAccountRequest,
   CreateRemoteUserBankAccountResponse,
   EurAccountDetails,
@@ -42,48 +32,57 @@ export {
   GetAllRemoteBankAccountsResponse,
   GetRemoteBankAccountByUuidRequest,
   GetRemoteBankAccountByUuidResponse,
+  GetUserUnblockWalletRequest,
+  GetUserUnblockWalletResponse,
   RemoteUserBankAccount,
-} from './remote-bank-account/definitions';
+} from './user/crypto-to-fiat/definitions';
+
+export * from './general/process/definitions';
 
 export {
+  ExchangeRatesServiceRequest,
+  ExchangeRatesServiceResponse,
+  TransactionFeeEstRequest,
+  TransactionFeeEstResponse,
+} from './general/informative/definitions';
+
+export {
+  CreateUnblockUserBankAccountRequest,
+  CreateUnblockUserBankAccountResponse,
+  GetAllunblockUserBankAccountsResponse,
+  GetUnblockBankAccountByUuidRequest,
+  GetUnblockBankAccountByUuidResponse,
+  UnblockBankAccount,
+  simulateRequest,
+} from './user/fiat-to-crypto/definitions';
+
+export {
+  CreateUserRequest,
+  CreateUserResponse,
+  GetUserRampTransactionsResponse,
   GetUserTokenPreferenceResponse,
+  RampTransactionProcess,
   TokenPreference,
   TokenPreferenceArbitrum,
   TokenPreferenceCelo,
   TokenPreferenceMainnet,
   TokenPreferenceOptimism,
   TokenPreferencePolygon,
+  UpdateUserRequest,
   UpdateUserTokenPreferencesRequest,
   UpdateUserTokenPreferencesResponse,
-} from './token-preference/definitions';
-
-export { TransactionFeeEstRequest, TransactionFeeEstResponse } from './transaction-fee/definitions';
-
-export {
-  CreateUnblockUserBankAccountRequest,
-  CreateUnblockUserBankAccountResponse,
-  GetAllunblockUserBankAccountsResponse,
-  GetUnblockBankAccountByIdRequest,
-  GetUnblockBankAccountByIdResponse,
-  SimulateOnRampRequest,
-  SimulateOnRampResponse,
-  UserBankAccount,
-  UserBankAccountDetails,
-  UserBankAccountFull,
-} from './unblock-bank-account/definitions';
-
-export * from './user/definitions';
+} from './user/management/definitions';
 
 // Enums
 export * from './enums/Chain';
-export * from './enums/CompanyType';
+export * from './enums/CorporateType';
 export * from './enums/Country';
 export * from './enums/Currency';
 export * from './enums/PaymentMethods';
 export * from './enums/ProcessDirection';
 export * from './enums/ProcessStatus';
-export * from './enums/Tokens';
-export * from './enums/UserCompanyRole';
+export * from './enums/Token';
+export * from './enums/UserCorporateRole';
 export * from './enums/UserStatus';
 
 // Default
